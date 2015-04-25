@@ -7,7 +7,7 @@ class XMLParser(object):
         super(XMLParser, self).__init__()
         self.file = filename
 
-    def parse(self):
+    def parseUsers(self):
         tree = ET.parse(self.file)
         root = tree.getroot()
         sublist = []
@@ -47,7 +47,7 @@ class XMLParser(object):
 
 def main():
     parser = XMLParser('../data/users.xml')
-    sublist, tempuserlist = parser.parse()
+    sublist, tempuserlist = parser.parseUsers()
     print (tempuserlist)
 
 if __name__ == '__main__':
