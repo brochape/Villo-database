@@ -10,6 +10,7 @@ class CSVParser(object):
             self.itemsList = f.read().splitlines()
             for i in range(len(self.itemsList)):
                 self.itemsList[i] = self.itemsList[i].split(";")
+        return self.columnnames, self.itemsList
 
     def __str__(self):
         string = ""
@@ -26,7 +27,7 @@ class CSVParser(object):
 
 
 def main():
-    parser = CSVParser("../data/trips.csv")
+    parser = CSVParser("../data/stations.csv")
     parser.parse()
     print(parser)
 
