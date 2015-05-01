@@ -72,6 +72,15 @@ def populate_trips(data):
     cursor.close()
     db.close()
 
+def create_admin():
+    db = sqlite3.connect(DB_FILENAME)
+    cursor = db.cursor()
+    cursor.execute(create_insert_statement("users", ["userID", "password", "expiryDate", "card"], ["1000", "admin", "", ""]))
+    cursor.execute(create_insert_statement("admins", ["userID"], ["1000"]))
+    db.commit()
+    cursor.close()
+    db.close()
+
 def main():
     # stations
     parser = CSVParser("../data/stations.csv")
@@ -94,6 +103,8 @@ def main():
     parser = CSVParser("../data/trips.csv")
     _, parsedData = parser.parse()
     populate_trips(parsedData)
+
+    create_admin()
 
     # db = sqlite3.connect(DB_FILENAME)
     # cursor = db.cursor()
