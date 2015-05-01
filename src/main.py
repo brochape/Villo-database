@@ -30,11 +30,12 @@ def create_table(name, columns, data):
     db = sqlite3.connect(DB_FILENAME)
     cursor = db.cursor()
     # cursor.execute(create_create_statement(name, columns, constraints))
-    for row in data:
+    def execute(row):
         try:
             cursor.execute(create_insert_statement(name, columns, row))
         except Exception, e:
             print e
+    map(execute, data)
     db.commit()
     cursor.close()
     db.close()
