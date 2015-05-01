@@ -1,11 +1,12 @@
 from flask import Flask, request, render_template, session, redirect, url_for
 app = Flask(__name__)
+app.testing=True
 import os
 from functools import wraps
 # TODO secret key secured ?
 Flask.secret_key = os.urandom(512)
 
-import users
+import users as Users
 
 def require_login(f):
     @wraps(f)
@@ -16,6 +17,15 @@ def require_login(f):
             return f(*args, **kwargs)
     return g
 
+def require_admin(f):
+    @wraps(f)
+    def g(*args, **kwargs):
+        if Users.isAdmin(session["user"]):
+            return f(*args, **kwargs)
+        else:
+            return redirect(url_for('home'))
+    return g
+
 @app.route("/login", methods=['get', 'post'])
 def login():
     print request.method
@@ -24,7 +34,6 @@ def login():
             return render_template("login.html", redirect_url=request.values["redirect_url"])
         else:
             return render_template("login.html")
-        
     elif request.method == "POST":
         if users.login(request.values["user"], request.values["password"]):
             session["user"] = request.values["user"]
@@ -39,13 +48,23 @@ def login():
 def gmap():
     return render_template('gmap.html')
 
-
 @app.route("/logout", methods=['get'])
 @require_login
 def logout():
     del session["user"]
     return redirect(url_for('login'))
 
+
+@app.route("/register", methods=['get', 'post'])
+def register():
+    if request.method == "GET":
+        return render_template("register.html")
+    elif request.method == "POST":
+        errors = Users.register(request.values)
+        if errors:
+            return render_template("register.html", errors=errors)
+        else:
+            return redirect(url_for('login'))
 
 @app.route("/home", methods=['get'])
 @require_login
@@ -55,6 +74,12 @@ def home():
 @app.route("/trips", methods=['get'])
 @require_login
 def trips():
+    return ""
+
+@app.route("/users", methods=['get'])
+@require_login
+@require_admin
+def users():
     return ""
 
 app.run('0.0.0.0', debug=True)
