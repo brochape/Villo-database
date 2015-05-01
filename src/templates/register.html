@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Register{% endblock title %}
+{% block content %}
+<table>
+	<form method="POST" action="">
+		<tr>
+			<td>Validity time</td>
+			<td>
+				<select name="validity">
+					<option value="0">24 hours</option>
+					<option value="1">7 days</option>
+					<option value="2">A year</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>First name</td>
+			<td><input type="text" name="firstname" /></td>
+			<td>Last name</td>
+			<td><input type="text" name="lastname" /></td>
+		</tr>
+		<tr>
+			<td>Phone number</td>
+			<td><input type="text" name="phone" /></td>
+		</tr>
+		<tr>
+			<td>Password</td>
+			<td><input type="password" name="password" /></td>
+		</tr>
+		<th><td>Address</td></th>
+		<tr>
+			<td>Street name</td>
+			<td><input type="text" name="addressstreet" /></td>
+			<td>Street number</td>
+			<td><input type="text" name="addressnumber" /></td>
+		</tr>
+		<tr>
+			<td>Postal code</td>
+			<td><input type="text" name="addresscp" /></td>
+			<td>City</td>
+			<td><input type="text" name="addresscity" /></td>
+		</tr>
+	</form>
+	{% if errors is defined %}
+		{% for error in errors %}
+			<tr>
+				<td>{{ error }}</td>
+			</tr>
+		{% endfor %}
+	{% endif %}
+</table>
+{% endblock content %}

@@ -17,6 +17,9 @@ def login(user, password):
 	else:
 		return False
 
+def register(user):
+	pass
+
 def isAdmin(user):
 	global ISADMIN_QUERY
 	db = sqlite3.connect(db_filename)

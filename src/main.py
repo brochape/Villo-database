@@ -50,6 +50,17 @@ def logout():
 	del session["user"]
 	return redirect(url_for('login'))
 
+@app.route("/register", methods=['get'])
+def register():
+	if request.method == "GET":
+		return render_template("register.html")
+	elif request.method == "POST":
+		errors = Users.register(request.values)
+		if errors:
+			return render_template("register.html", errors=errors)
+		else:
+			return redirect(url_for('login'))
+
 @app.route("/home", methods=['get'])
 @require_login
 def home():
