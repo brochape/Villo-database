@@ -1,12 +1,12 @@
 DBFILE=../data/villo.sq3
 
-all: create insert
+database: create insert
 
 create:
-	cat tables.sql | sqlite3 ${DBFILE}
+	sqlite3 ${DBFILE} < tables.sql
 
 insert:
-	python2 main.py
+	python2 populate_db.py
 
 sqlite:
 	sqlite3 ${DBFILE}
