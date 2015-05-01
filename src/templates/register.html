@@ -15,34 +15,34 @@
 		</tr>
 		<tr>
 			<td>First name</td>
-			<td><input type="text" name="firstname" /></td>
+			<td><input type="text" name="firstname"  {% if values is defined %}value="{{values["firstname"]}}"{% endif %}/></td>
 			<td>Last name</td>
-			<td><input type="text" name="lastname" /></td>
+			<td><input type="text" name="lastname" {% if values is defined %}value="{{values["lastname"]}}"{% endif %}/></td>
 		</tr>
 		<tr>
 			<td>Password</td>
-			<td><input type="password" name="password" /></td>
+			<td><input type="password" name="password" {% if values is defined %}value="{{values["password"]}}"{% endif %}/></td>
 		</tr>
 		<tr>
 			<td>Card number</td>
-			<td><input type="text" name="card" /></td>
+			<td><input type="text" name="card" {% if values is defined %}value="{{values["card"]}}"{% endif %}/></td>
 		</tr>
 		<tr>
 			<td>Phone number</td>
-			<td><input type="text" name="phone" /></td>
+			<td><input type="text" name="phone" {% if values is defined %}value="{{values["phone"]}}"{% endif %}/></td>
 		</tr>
 		<th><td>Address</td></th>
 		<tr>
 			<td>Street name</td>
-			<td><input type="text" name="addressstreet" /></td>
+			<td><input type="text" name="addressstreet" {% if values is defined %}value="{{values["addressstreet"]}}"{% endif %}/></td>
 			<td>Street number</td>
-			<td><input type="text" name="addressnumber" /></td>
+			<td><input type="text" name="addressnumber" {% if values is defined %}value="{{values["addressnumber"]}}"{% endif %}/></td>
 		</tr>
 		<tr>
 			<td>Postal code</td>
-			<td><input type="text" name="addresscp" /></td>
+			<td><input type="text" name="addresscp" {% if values is defined %}value="{{values["addresscp"]}}"{% endif %}/></td>
 			<td>City</td>
-			<td><input type="text" name="addresscity" /></td>
+			<td><input type="text" name="addresscity" {% if values is defined %}value="{{values["addresscity"]}}"{% endif %}/></td>
 		</tr>
 		<tr>
 			<td><input type="submit" value="Register" /></td>

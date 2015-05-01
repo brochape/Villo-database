@@ -28,21 +28,21 @@ def require_admin(f):
 
 @app.route("/login", methods=['get', 'post'])
 def login():
-    print request.method
-    if request.method == "GET":
-        if "redirect_url" in request.values:
-            return render_template("login.html", redirect_url=request.values["redirect_url"])
-        else:
-            return render_template("login.html")
-    elif request.method == "POST":
-        if users.login(request.values["user"], request.values["password"]):
-            session["user"] = request.values["user"]
-            if "redirect_url" in request.values:
-                return redirect(request.values["redirect_url"])
-            else:
-                return redirect(url_for('home'))
-        else:
-            return render_template("login.html", error="Incorrect user ID or password")
+	if request.method == "GET":
+		if "redirect_url" in request.values:
+			return render_template("login.html", redirect_url=request.values["redirect_url"])
+		else:
+			return render_template("login.html")
+		
+	elif request.method == "POST":
+		if Users.login(request.values["user"], request.values["password"]):
+			session["user"] = request.values["user"]
+			if "redirect_url" in request.values:
+				return redirect(request.values["redirect_url"])
+			else:
+				return redirect(url_for('home'))
+		else:
+			return render_template("login.html", error="Incorrect user ID or password")
 
 @app.route("/gmap", methods=['get'])
 @require_login
@@ -58,14 +58,14 @@ def logout():
 
 @app.route("/register", methods=['get', 'post'])
 def register():
-    if request.method == "GET":
-        return render_template("register.html")
-    elif request.method == "POST":
-        errors = Users.register(request.values)
-        if errors:
-            return render_template("register.html", errors=errors)
-        else:
-            return redirect(url_for('login'))
+	if request.method == "GET":
+		return render_template("register.html")
+	elif request.method == "POST":
+		errors = Users.register(request.values)
+		if errors:
+			return render_template("register.html", errors=errors, values=request.values)
+		else:
+			return redirect(url_for('login'))
 
 @app.route("/home", methods=['get'])
 @require_login
