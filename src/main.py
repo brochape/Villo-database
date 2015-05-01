@@ -5,7 +5,7 @@ from functools import wraps
 # TODO secret key secured ?
 Flask.secret_key = os.urandom(512)
 
-import users
+import users as Users
 
 def require_login(f):
     @wraps(f)
@@ -15,6 +15,15 @@ def require_login(f):
         else:
             return f(*args, **kwargs)
     return g
+
+def require_admin(f):
+	@wraps(f)
+	def g(*args, **kwargs):
+		if Users.isAdmin(session["user"]):
+			return f(*args, **kwargs)
+		else:
+			return redirect(url_for('home'))
+	return g
 
 @app.route("/login", methods=['get', 'post'])
 def login():
@@ -26,7 +35,7 @@ def login():
 			return render_template("login.html")
 		
 	elif request.method == "POST":
-		if users.login(request.values["user"], request.values["password"]):
+		if Users.login(request.values["user"], request.values["password"]):
 			session["user"] = request.values["user"]
 			if "redirect_url" in request.values:
 				return redirect(request.values["redirect_url"])
@@ -49,6 +58,12 @@ def home():
 @app.route("/trips", methods=['get'])
 @require_login
 def trips():
+	return ""
+
+@app.route("/users", methods=['get'])
+@require_login
+@require_admin
+def users():
 	return ""
 
 app.run('0.0.0.0', debug=True)
