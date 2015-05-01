@@ -41,10 +41,14 @@ def populate_table(name, columns, data):
     cursor.close()
     db.close()
 
-def create_update_statement(velo, station):
+def veloToStation(velo, station):
     statement = "UPDATE bicycles SET station=" + station + " WHERE id=" + velo
-    # print statement
     return statement
+
+def veloToUser(velo, user):
+    statement = "UPDATE bicycles SET user=" + user + " WHERE id=" + velo
+    return statement
+
 
 def populate_trips(data):
     db = sqlite3.connect(DB_FILENAME)
@@ -52,8 +56,11 @@ def populate_trips(data):
     cursor.execute("PRAGMA temp_store = 2")
     populate_table("trips", ["bicycle", "user", "start", "startTime", "ending", "endingTime"], data)
     for row in data:
-        if row[0] != "None" and row[4] != "None":
-            cursor.execute(create_update_statement(row[0], row[4]))
+        # trip is still pending
+        if row[4] == "None":
+            cursor.execute(veloToUser(row[0], row[1]))
+        else:
+            cursor.execute(veloToStation(row[0], row[4]))
     db.commit()
     cursor.close()
     db.close()
