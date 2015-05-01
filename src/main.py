@@ -12,19 +12,19 @@ def require_login(f):
     @wraps(f)
     def g(*args, **kwargs):
         if "user" not in session:
-        	return redirect(url_for('login', redirect_url=request.url))
+            return redirect(url_for('login', redirect_url=request.url))
         else:
             return f(*args, **kwargs)
     return g
 
 def require_admin(f):
-	@wraps(f)
-	def g(*args, **kwargs):
-		if Users.isAdmin(session["user"]):
-			return f(*args, **kwargs)
-		else:
-			return redirect(url_for('home'))
-	return g
+    @wraps(f)
+    def g(*args, **kwargs):
+        if Users.isAdmin(session["user"]):
+            return f(*args, **kwargs)
+        else:
+            return redirect(url_for('home'))
+    return g
 
 @app.route("/login", methods=['get', 'post'])
 def login():
@@ -44,11 +44,16 @@ def login():
 		else:
 			return render_template("login.html", error="Incorrect user ID or password")
 
+@app.route("/gmap", methods=['get'])
+def gmap():
+    return render_template('gmap.html')
+
 @app.route("/logout", methods=['get'])
 @require_login
 def logout():
-	del session["user"]
-	return redirect(url_for('login'))
+    del session["user"]
+    return redirect(url_for('login'))
+
 
 @app.route("/register", methods=['get', 'post'])
 def register():
@@ -64,17 +69,17 @@ def register():
 @app.route("/home", methods=['get'])
 @require_login
 def home():
-	return ""
+    return ""
 
 @app.route("/trips", methods=['get'])
 @require_login
 def trips():
-	return ""
+    return ""
 
 @app.route("/users", methods=['get'])
 @require_login
 @require_admin
 def users():
-	return ""
+    return ""
 
 app.run('0.0.0.0', debug=True)

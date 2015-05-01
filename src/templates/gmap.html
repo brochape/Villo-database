@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Map{% endblock title %}
+{% block content %}
+<html>
+  <head>
+    <style>
+      #map-canvas {
+        text-align: center;
+        width: 800px;
+        height: 600px;
+      }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js"></script>
+    <script>
+      function initialize() {
+        var Latlng = new google.maps.LatLng(50.846041, 4.352512);
+        var mapCanvas = document.getElementById('map-canvas');
+        var mapOptions = {
+          center: new google.maps.LatLng(50.846041, 4.352512),
+          zoom: 13,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+        var map = new google.maps.Map(mapCanvas, mapOptions);
+        // TODO : unhardcode
+        addMarkers(map);
+      }
+      
+      function addMarkers(map){
+        var markerList = [[50.846041, 4.352512],[50.8222176815,4.36353184718]];
+        var lglt = new Array(markerList.lenght);
+        var markers = new Array(markerList.lenght);
+        var i;
+        for(i = 0; i < markerList.length ; ++i){
+            lglt[i] = new google.maps.LatLng(markerList[i][0], markerList[i][1]);
+            markers[i] = new google.maps.Marker({
+                position: lglt[i],
+                map: map,
+                title: i.toString()
+            });
+        }
+        return null;
+      }
+      
+
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+  </head>
+  <body>
+    <div id="map-canvas"></div>
+  </body>
+</html>
+{% endblock content %}
