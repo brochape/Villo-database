@@ -1,0 +1,8 @@
+#R1 u.addresscity='Ixelles'
+
+
+#R2
+    SELECT users.userID FROM (trips INNER JOIN users)
+    ON trips.user=users.userID
+    GROUP BY userID
+    HAVING Count(trips.user) > 2;

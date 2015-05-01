@@ -14,11 +14,14 @@ dicodegros = {
     "datetime": "DATETIME"
 }
 
+
 def listToSQL(l):
     return str(l).replace("[", "(").replace("]", ")")
 
+
 def escapeToSQL(l):
     return map(lambda s: s.replace('\xcc\x81', '').replace('\xcc\x80', '').replace(" ", "_"), l)
+
 
 def create_insert_statement(name, columns, row):
     statement = "INSERT INTO " + name + " " + listToSQL(columns) + " VALUES"
@@ -26,11 +29,13 @@ def create_insert_statement(name, columns, row):
     # print statement
     return statement
 
+
 def populate_table(name, columns, data):
     db = sqlite3.connect(DB_FILENAME)
     cursor = db.cursor()
     cursor.execute("PRAGMA temp_store = 2")
     # cursor.execute(create_create_statement(name, columns, constraints))
+    
     def execute(row):
         try:
             cursor.execute(create_insert_statement(name, columns, row))
@@ -41,9 +46,11 @@ def populate_table(name, columns, data):
     cursor.close()
     db.close()
 
+
 def veloToStation(velo, station):
     statement = "UPDATE bicycles SET station=" + station + " WHERE id=" + velo
     return statement
+
 
 def veloToUser(velo, user):
     statement = "UPDATE bicycles SET user=" + user + " WHERE id=" + velo
@@ -65,12 +72,10 @@ def populate_trips(data):
     cursor.close()
     db.close()
 
-
-
 def main():
     # stations
     parser = CSVParser("../data/stations.csv")
-    _,parsedData = parser.parse()
+    _, parsedData = parser.parse()
     populate_table("stations", ["num", "name", "seller", "capacity", "coordX", "coordY"], parsedData)
     # velos
     parser = CSVParser("../data/villos.csv")
@@ -80,7 +85,7 @@ def main():
     parser = XMLParser("../data/users.xml")
     subscribers, temporary = parser.parseUsers()
     populate_table("users", ["userID", "password", "expiryDate", "card"], map(lambda sub: [sub[0], sub[4], sub[-2], sub[-1]], subscribers))
-    populate_table("subs", 
+    populate_table("subs",
         ["userID", "RFID", "lastname", "firstname", "phone", "addresscity", "addresscp", "addressstreet", "addressnumber", "subscribeDate"],
         map(lambda sub: [sub[i] for i in range(0,4)] + [sub[i] for i in range(5,11)], subscribers))
     populate_table("users", ["userID", "password", "expiryDate", "card"], temporary)
