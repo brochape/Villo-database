@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template, session, redirect, url_for
 app = Flask(__name__)
+app.testing=True
 import os
 from functools import wraps
 # TODO secret key secured ?
@@ -50,7 +51,7 @@ def logout():
 	del session["user"]
 	return redirect(url_for('login'))
 
-@app.route("/register", methods=['get'])
+@app.route("/register", methods=['get', 'post'])
 def register():
 	if request.method == "GET":
 		return render_template("register.html")
