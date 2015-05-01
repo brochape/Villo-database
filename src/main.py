@@ -45,6 +45,7 @@ def login():
             return render_template("login.html", error="Incorrect user ID or password")
 
 @app.route("/gmap", methods=['get'])
+@require_login
 def gmap():
     return render_template('gmap.html')
 
