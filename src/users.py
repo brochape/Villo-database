@@ -46,7 +46,6 @@ def register(user):
 	errors = []
 	for attr, regex in attr_regex.iteritems():
 		if not re.match(regex, user[attr]):
-			print re.match(regex, user[attr])
 			errors.append(attr_names[attr] + " is not valid")
 
 	if user["validity"] == "2":

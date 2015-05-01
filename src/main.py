@@ -28,7 +28,6 @@ def require_admin(f):
 
 @app.route("/login", methods=['get', 'post'])
 def login():
-	print request.method
 	if request.method == "GET":
 		if "redirect_url" in request.values:
 			return render_template("login.html", redirect_url=request.values["redirect_url"])
@@ -58,7 +57,7 @@ def register():
 	elif request.method == "POST":
 		errors = Users.register(request.values)
 		if errors:
-			return render_template("register.html", errors=errors)
+			return render_template("register.html", errors=errors, values=request.values)
 		else:
 			return redirect(url_for('login'))
 
