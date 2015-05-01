@@ -11,8 +11,7 @@ def require_login(f):
     @wraps(f)
     def g(*args, **kwargs):
         if "user" not in session:
-        	# TODO redirect to login with auto redirect
-        	return ""
+        	return redirect(url_for('login', redirect_url=request.url))
         else:
             return f(*args, **kwargs)
     return g
@@ -21,12 +20,18 @@ def require_login(f):
 def login():
 	print request.method
 	if request.method == "GET":
-		return render_template("login.html")
+		if "redirect_url" in request.values:
+			return render_template("login.html", redirect_url=request.values["redirect_url"])
+		else:
+			return render_template("login.html")
+		
 	elif request.method == "POST":
 		if users.login(request.values["user"], request.values["password"]):
 			session["user"] = request.values["user"]
-			# TODO redirect to /home
-			return ""
+			if "redirect_url" in request.values:
+				return redirect(request.values["redirect_url"])
+			else:
+				return redirect(url_for('home'))
 		else:
 			# TODO add errors
 			return render_template("login.html")
@@ -35,5 +40,16 @@ def login():
 @require_login
 def logout():
 	del session["user"]
+	return redirect(url_for('login'))
+
+@app.route("/home", methods=['get'])
+@require_login
+def home():
+	return ""
+
+@app.route("/trips", methods=['get'])
+@require_login
+def trips():
+	return ""
 
 app.run('0.0.0.0', debug=True)
