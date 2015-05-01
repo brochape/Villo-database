@@ -1,3 +1,8 @@
+# TODO unique constraints
+# TODO card number in text
+# TODO RFID in text
+# TODO NOT NULL and NULL constraints
+
 CREATE TABLE IF NOT EXISTS stations (
     num INTEGER NOT NULL, 
     name TEXT NOT NULL, 
