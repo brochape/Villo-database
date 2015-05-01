@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block title %}Login{% endblock title %}
 {% block content %}
-<form method="post" action="">
-	<table>
+<table>
+	<form method="post" action="">
 		<tr>
 			<td><label>user</label></td>
 			<td><input type="text" name="user" /></td>
@@ -14,6 +14,14 @@
 		<tr>
 			<td><input type="submit" value="Login" /></td>
 		</tr>
-	</table>
-</form>
+		{% if redirect_url is defined %}
+		<input type="hidden" value="{{ redirect_url }}" name="redirect_url" />
+		{% endif %}
+	</form>
+		{% if error is defined %}
+		<tr>
+			<td>{{ error }}</td>
+		</tr>
+		{% endif %}
+</table>
 {% endblock content %}
