@@ -26,9 +26,10 @@ def create_insert_statement(name, columns, row):
     # print statement
     return statement
 
-def create_table(name, columns, data):
+def populate_table(name, columns, data):
     db = sqlite3.connect(DB_FILENAME)
     cursor = db.cursor()
+    cursor.execute("PRAGMA temp_store = 2")
     # cursor.execute(create_create_statement(name, columns, constraints))
     def execute(row):
         try:
@@ -40,32 +41,51 @@ def create_table(name, columns, data):
     cursor.close()
     db.close()
 
+def create_update_statement(velo, station):
+    statement = "UPDATE bicycles SET station=" + station + " WHERE id=" + velo
+    # print statement
+    return statement
+
+def populate_trips(data):
+    db = sqlite3.connect(DB_FILENAME)
+    cursor = db.cursor()
+    cursor.execute("PRAGMA temp_store = 2")
+    populate_table("trips", ["bicycle", "user", "start", "startTime", "ending", "endingTime"], data)
+    for row in data:
+        if row[0] != "None" and row[4] != "None":
+            cursor.execute(create_update_statement(row[0], row[4]))
+    db.commit()
+    cursor.close()
+    db.close()
+
+
 
 def main():
     # stations
     parser = CSVParser("../data/stations.csv")
     _,parsedData = parser.parse()
-    create_table("stations", ["num", "name", "seller", "capacity", "coordX", "coordY"], parsedData)
+    populate_table("stations", ["num", "name", "seller", "capacity", "coordX", "coordY"], parsedData)
     # velos
     parser = CSVParser("../data/villos.csv")
     _, parsedData = parser.parse()
-    create_table("bicycles", ["id", "servicedate", "model", "state"], parsedData)
+    populate_table("bicycles", ["id", "servicedate", "model", "state"], parsedData)
     # utilisateurs
     parser = XMLParser("../data/users.xml")
     subscribers, temporary = parser.parseUsers()
-    create_table("users", ["userID", "password", "expiryDate", "card"], map(lambda sub: [sub[0], sub[4], sub[-2], sub[-1]], subscribers))
-    create_table("subs", 
+    populate_table("users", ["userID", "password", "expiryDate", "card"], map(lambda sub: [sub[0], sub[4], sub[-2], sub[-1]], subscribers))
+    populate_table("subs", 
         ["userID", "RFID", "lastname", "firstname", "phone", "addresscity", "addresscp", "addressstreet", "addressnumber", "subscribeDate"],
         map(lambda sub: [sub[i] for i in range(0,4)] + [sub[i] for i in range(5,11)], subscribers))
-    create_table("users", ["userID", "password", "expiryDate", "card"], temporary)
-    create_table("tempUsers", ["userID"], map(lambda sub: [sub[0]], temporary))
-    # parser = CSVParser("../data/trips.csv")
-    # columns, parsedData = parser.parse()
-    # create_table("trajets", columns, [int, int, int, datetime, int, datetime], parsedData)
+    populate_table("users", ["userID", "password", "expiryDate", "card"], temporary)
+    populate_table("tempUsers", ["userID"], map(lambda sub: [sub[0]], temporary))
+    # trajets
+    parser = CSVParser("../data/trips.csv")
+    _, parsedData = parser.parse()
+    populate_trips(parsedData)
 
-    db = sqlite3.connect(DB_FILENAME)
-    cursor = db.cursor()
-    cursor.execute("SELECT * FROM stations")
+    # db = sqlite3.connect(DB_FILENAME)
+    # cursor = db.cursor()
+    # cursor.execute("SELECT * FROM stations")
     # for l in cursor:
     #     print(l)
 

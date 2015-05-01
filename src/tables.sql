@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS bicycles (
 );
 
 CREATE TABLE IF NOT EXISTS trips (
-    bycicle INTEGER REFERENCES bicycles(id) NOT NULL,
+    bicycle INTEGER REFERENCES bicycles(id) NOT NULL,
     user INTEGER REFERENCES users(userID),
     start INTEGER REFERENCES stations(num),
     startTime TEXT,
