@@ -4,7 +4,7 @@ import datetime
 import random
 from config import db_filename
 
-# should check expiry date
+# TODO should check expiry date
 ISADMIN_QUERY="SELECT userID FROM admins WHERE userID=?"
 LOGIN_QUERY="SELECT userID FROM users WHERE userID=? and password=?"
 USER_INSERT_QUERY="INSERT INTO users (password, expiryDate, card) VALUES(?, ?, ?)"
