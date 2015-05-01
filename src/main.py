@@ -22,7 +22,7 @@ def escapeToSQL(l):
 
 def create_insert_statement(name, columns, row):
     statement = "INSERT INTO " + name + " " + listToSQL(columns) + " VALUES"
-    statement += listToSQL(map(lambda s: '0' if s == 'False' else '1' if s == 'True' else s, row))
+    statement += listToSQL(map(lambda s: '0' if s == 'False' else '1' if s == 'True' else str(s), row))
     # print statement
     return statement
 
