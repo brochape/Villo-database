@@ -33,8 +33,7 @@ def login():
 			else:
 				return redirect(url_for('home'))
 		else:
-			# TODO add errors
-			return render_template("login.html")
+			return render_template("login.html", error="Incorrect user ID or password")
 
 @app.route("/logout", methods=['get'])
 @require_login
