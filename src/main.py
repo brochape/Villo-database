@@ -11,44 +11,50 @@ def require_login(f):
     @wraps(f)
     def g(*args, **kwargs):
         if "user" not in session:
-        	return redirect(url_for('login', redirect_url=request.url))
+            return redirect(url_for('login', redirect_url=request.url))
         else:
             return f(*args, **kwargs)
     return g
 
 @app.route("/login", methods=['get', 'post'])
 def login():
-	print request.method
-	if request.method == "GET":
-		if "redirect_url" in request.values:
-			return render_template("login.html", redirect_url=request.values["redirect_url"])
-		else:
-			return render_template("login.html")
-		
-	elif request.method == "POST":
-		if users.login(request.values["user"], request.values["password"]):
-			session["user"] = request.values["user"]
-			if "redirect_url" in request.values:
-				return redirect(request.values["redirect_url"])
-			else:
-				return redirect(url_for('home'))
-		else:
-			return render_template("login.html", error="Incorrect user ID or password")
+    print request.method
+    if request.method == "GET":
+        if "redirect_url" in request.values:
+            return render_template("login.html", redirect_url=request.values["redirect_url"])
+        else:
+            return render_template("login.html")
+        
+    elif request.method == "POST":
+        if users.login(request.values["user"], request.values["password"]):
+            session["user"] = request.values["user"]
+            if "redirect_url" in request.values:
+                return redirect(request.values["redirect_url"])
+            else:
+                return redirect(url_for('home'))
+        else:
+            return render_template("login.html", error="Incorrect user ID or password")
+
+@app.route("/gmap", methods=['get'])
+def gmap():
+    return render_template('gmap.html')
+
 
 @app.route("/logout", methods=['get'])
 @require_login
 def logout():
-	del session["user"]
-	return redirect(url_for('login'))
+    del session["user"]
+    return redirect(url_for('login'))
+
 
 @app.route("/home", methods=['get'])
 @require_login
 def home():
-	return ""
+    return ""
 
 @app.route("/trips", methods=['get'])
 @require_login
 def trips():
-	return ""
+    return ""
 
 app.run('0.0.0.0', debug=True)
