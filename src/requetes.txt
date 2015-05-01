@@ -1,8 +1,12 @@
-#R1 u.addresscity='Ixelles'
+#R1 
+    SELECT DISTINCT subs.userID,subs.lastname,subs.firstname from (subs INNER JOIN trips
+    ON subs.userID = trips.user)
+    WHERE subs.addresscity='Ixelles';
 
+    # Manque le fait que le trajet doit venir de Flagey
 
 #R2
-    SELECT users.userID FROM (trips INNER JOIN users)
-    ON trips.user=users.userID
+    SELECT users.userID FROM (trips INNER JOIN users
+    ON trips.user=users.userID)
     GROUP BY userID
-    HAVING Count(trips.user) > 2;
+    HAVING Count(trips.user) = 1;
