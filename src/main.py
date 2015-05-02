@@ -70,7 +70,8 @@ def register():
 @app.route("/home", methods=['get'])
 @require_login
 def home():
-    return ""
+    if request.method == "GET":
+    	return render_template("home.html")
 
 @app.route("/trips", methods=['get'])
 @require_login

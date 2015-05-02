@@ -26,6 +26,9 @@ attr_regex = {
 	"password": "[0-9]{4}",
 	"card": "[0-9]{17}"
 }
+	
+attr_names = dict(zip(attr_regex.keys(), ["Postal code", "Phone number", "Street number", "First name", "Street name", "Last name", "Card number", "Password", "City"]))
+
 
 def login(user, password):
 	global LOGIN_QUERY
@@ -40,11 +43,17 @@ def login(user, password):
 		return False
 
 def register(user):
-	global attr_regex
-	attr_names = dict(zip(attr_regex.keys(), ["Postal code", "Phone number", "Street number", "First name", "Street name", "Last name", "Card number", "Password", "City"]))
+	global attr_regex, attr_names
 
 	errors = []
-	for attr, regex in attr_regex.iteritems():
+	attr_regex_new = {}
+	if user["validity"] == "2":
+		attr_regex_new = attr_regex
+	elif user["validity"] == "0" or user["validity"] == "1":
+		attr_regex_new = {key: attr_regex[key] for key in ["password", "card"]}
+	else:
+		errors.append("Validity time is not valid")
+	for attr, regex in attr_regex_new.iteritems():
 		if not re.match(regex, user[attr]):
 			errors.append(attr_names[attr] + " is not valid")
 
