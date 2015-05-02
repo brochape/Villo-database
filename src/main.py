@@ -9,6 +9,7 @@ Flask.secret_key = os.urandom(512)
 import users as Users
 import trips as Trips
 import bicycles as Bicycles
+import stations as Stations
 
 def require_login(f):
     @wraps(f)
@@ -49,7 +50,8 @@ def login():
 @app.route("/gmap", methods=['get'])
 @require_login
 def gmap():
-    return render_template('gmap.html')
+    myStations = Stations.query_all()
+    return render_template('gmap.html', stationList=myStations)
 
 @app.route("/logout", methods=['get'])
 @require_login

@@ -12,7 +12,9 @@
     </style>
     <script src="https://maps.googleapis.com/maps/api/js"></script>
     <script>
+        window.alert("B4");
       function initialize() {
+        window.alert("B4");
         var Latlng = new google.maps.LatLng(50.846041, 4.352512);
         var mapCanvas = document.getElementById('map-canvas');
         var mapOptions = {
@@ -21,25 +23,17 @@
           mapTypeId: google.maps.MapTypeId.ROADMAP
         }
         var map = new google.maps.Map(mapCanvas, mapOptions);
-        // TODO : unhardcode
-        addMarkers(map);
-      }
-      
-      function addMarkers(map){
-        var markerList = [[50.846041, 4.352512],[50.8222176815,4.36353184718]];
-        var lglt = new Array(markerList.lenght);
-        var markers = new Array(markerList.lenght);
-        var i;
-        for(i = 0; i < markerList.length ; ++i){
-            lglt[i] = new google.maps.LatLng(markerList[i][0], markerList[i][1]);
-            markers[i] = new google.maps.Marker({
-                position: lglt[i],
+        window.alert("B4");
+        {% for x in stationList %}
+            window.alert("Coucou");
+            var lglt = new google.maps.LatLng({{x["coordY"]}}, {{x["coordX"]}});
+            var marker = new google.maps.Marker({
+                position: lglt,
                 map: map,
-                title: i.toString(),
+                title: {{x["name"]}},
                 icon: "http://www.google.com/mapfiles/arrow.png"
             });
-        }
-        return null;
+        {% endfor %}
       }
       
 
