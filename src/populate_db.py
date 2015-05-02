@@ -3,6 +3,7 @@ from collections import OrderedDict
 from CSVParser import CSVParser
 from XMLParser import XMLParser
 from datetime import datetime
+from helpers import create_insert_statement, populate_table
 
 DB_FILENAME = "../data/villo.sq3"
 
@@ -13,39 +14,6 @@ dicodegros = {
     "bool": "BOOLEAN",
     "datetime": "DATETIME"
 }
-
-
-def listToSQL(l):
-    return str(l).replace("[", "(").replace("]", ")")
-
-
-def escapeToSQL(l):
-    return map(lambda s: s.replace('\xcc\x81', '').replace('\xcc\x80', '').replace(" ", "_"), l)
-
-
-def create_insert_statement(name, columns, row):
-    statement = "INSERT INTO " + name + " " + listToSQL(columns) + " VALUES"
-    statement += listToSQL(map(lambda s: '0' if s == 'False' else '1' if s == 'True' else str(s), row))
-    # print statement
-    return statement
-
-
-def populate_table(name, columns, data):
-    db = sqlite3.connect(DB_FILENAME)
-    cursor = db.cursor()
-    cursor.execute("PRAGMA temp_store = 2")
-    # cursor.execute(create_create_statement(name, columns, constraints))
-    
-    def execute(row):
-        try:
-            cursor.execute(create_insert_statement(name, columns, row))
-        except Exception, e:
-            print e
-    map(execute, data)
-    db.commit()
-    cursor.close()
-    db.close()
-
 
 def veloToStation(velo, station):
     statement = "UPDATE bicycles SET station=" + station + " WHERE id=" + velo
