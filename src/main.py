@@ -8,6 +8,7 @@ Flask.secret_key = os.urandom(512)
 
 import users as Users
 import trips as Trips
+import bicycles as Bicycles
 
 def require_login(f):
     @wraps(f)
@@ -86,7 +87,12 @@ def bicycle():
     if "id" not in request.values:
         return abort(400)
     bicycleID = request.values["id"]
-    return bicycleID
+    result = Bicycles.select(bicycleID)
+    if not result:
+        return abort(400)
+    result["id"] = bicycleID
+    result["state"] = "No" if result["state"] == "0" else "Yes"
+    return render_template("bicycle.html", bicycle=result)
 
 
 @app.route("/users", methods=['get'])
