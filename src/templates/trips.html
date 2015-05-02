@@ -1,7 +1,34 @@
 {% extends "base.html" %}
 {% block title %}My trips{% endblock title %}
 {% block content %}
-<table>
+<style>
+#trips {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#trips td, #trips th {
+    font-size: 1em;
+    border: 1px solid #335CAD;
+    padding: 3px 7px 2px 7px;
+}
+
+#trips th {
+    font-size: 1.1em;
+    text-align: left;
+    padding-top: 5px;
+    padding-bottom: 4px;
+    background-color: #335CAD;
+    color: #ffffff;
+}
+
+#trips tr.alt td {
+    color: #000000;
+    background-color: #EAF2D3;
+}
+</style>
+<table id="trips">
 	<tr>
 		<th>Bicycle number</th>
 		<th>Start time</th>
