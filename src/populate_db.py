@@ -74,11 +74,5 @@ def main():
 
     create_admin()
 
-    # db = sqlite3.connect(DB_FILENAME)
-    # cursor = db.cursor()
-    # cursor.execute("SELECT * FROM stations")
-    # for l in cursor:
-    #     print(l)
-
 if __name__ == '__main__':
     main()

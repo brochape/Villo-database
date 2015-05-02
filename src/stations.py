@@ -22,5 +22,4 @@ def query_all():
         results.append(result)
     cursor.close()
     db.close()
-    print (results)
     return results
