@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}My trips{% endblock title %}
+{% block content %}
+<table>
+	<tr>
+		<th>Bicycle number</th>
+		<th>Start time</th>
+		<th>Start station</th>
+		<th>End time</th>
+		<th>End station</th>
+	</tr>
+	{% for trip in trips %}
+	<tr>
+		<td><a href="/bicycle?id={{ trip["bicycle"] }}">{{ trip["bicycle"] }}</a></td>
+		<td>{{ trip["startTime"] }}</td>
+		<td>{{ trip["start"] }}</td>
+		<td>{{ trip["endingTime"] }}</td>
+		<td>{{ trip["ending"] }}</td>
+	</tr>
+	{% endfor %}
+</table>
+{% endblock content %}

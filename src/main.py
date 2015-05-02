@@ -7,6 +7,8 @@ from functools import wraps
 Flask.secret_key = os.urandom(512)
 
 import users as Users
+import trips as Trips
+import bicycles as Bicycles
 
 def require_login(f):
     @wraps(f)
@@ -28,21 +30,21 @@ def require_admin(f):
 
 @app.route("/login", methods=['get', 'post'])
 def login():
-	if request.method == "GET":
-		if "redirect_url" in request.values:
-			return render_template("login.html", redirect_url=request.values["redirect_url"])
-		else:
-			return render_template("login.html")
-		
-	elif request.method == "POST":
-		if Users.login(request.values["user"], request.values["password"]):
-			session["user"] = request.values["user"]
-			if "redirect_url" in request.values:
-				return redirect(request.values["redirect_url"])
-			else:
-				return redirect(url_for('home'))
-		else:
-			return render_template("login.html", error="Incorrect user ID or password")
+    if request.method == "GET":
+        if "redirect_url" in request.values:
+            return render_template("login.html", redirect_url=request.values["redirect_url"])
+        else:
+            return render_template("login.html")
+        
+    elif request.method == "POST":
+        if Users.login(request.values["user"], request.values["password"]):
+            session["user"] = request.values["user"]
+            if "redirect_url" in request.values:
+                return redirect(request.values["redirect_url"])
+            else:
+                return redirect(url_for('home'))
+        else:
+            return render_template("login.html", error="Incorrect user ID or password")
 
 @app.route("/gmap", methods=['get'])
 @require_login
@@ -58,24 +60,50 @@ def logout():
 
 @app.route("/register", methods=['get', 'post'])
 def register():
-	if request.method == "GET":
-		return render_template("register.html")
-	elif request.method == "POST":
-		errors = Users.register(request.values)
-		if errors:
-			return render_template("register.html", errors=errors, values=request.values)
-		else:
-			return redirect(url_for('login'))
+    if request.method == "GET":
+        return render_template("register.html")
+    elif request.method == "POST":
+        errors = Users.register(request.values)
+        if errors:
+            return render_template("register.html", errors=errors, values=request.values)
+        else:
+            return redirect(url_for('login'))
 
 @app.route("/home", methods=['get'])
 @require_login
 def home():
-    return ""
+    if request.method == "GET":
+        return render_template("home.html")
 
 @app.route("/trips", methods=['get'])
 @require_login
 def trips():
-    return ""
+    myTrips = Trips.query_all(session["user"])
+    return render_template("trips.html", trips=myTrips)
+
+@app.route("/bicycle", methods=['get', 'post'])
+@require_login
+def bicycle():
+    if "id" not in request.values:
+        return abort(400)
+    bicycleID = request.values["id"]
+    # show bicycle information
+    if request.method == "GET":
+        result = Bicycles.select(bicycleID)
+        if not result:
+            return abort(400)
+        result["id"] = bicycleID
+        result["state"] = "No" if result["state"] == 0 else "Yes"
+        if result["state"] == "Yes":
+            result["repair"] = True
+        else:
+            pass
+        return render_template("bicycle.html", bicycle=result)
+    # report broken bicycle
+    elif request.method == "POST":
+        Bicycles.report(bicycleID)
+        return redirect(url_for('bicycle', id=bicycleID))
+
 
 @app.route("/users", methods=['get'])
 @require_login

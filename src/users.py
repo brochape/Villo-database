@@ -4,9 +4,13 @@ import datetime
 import random
 from config import db_filename
 
-# should check expiry date
 ISADMIN_QUERY="SELECT userID FROM admins WHERE userID=?"
-LOGIN_QUERY="SELECT userID FROM users WHERE userID=? and password=?"
+# TODO change login query for production
+LOGIN_QUERY="""SELECT users.userID FROM users 
+	WHERE users.userID=? and users.password=?"""
+# LOGIN_QUERY="""SELECT users.userID FROM users 
+# 	INNER JOIN admins on admins.userID = users.userID
+# 	WHERE users.userID=? and users.password=? and (users.expiryDate > datetime('now') or admins.userID = users.userID)"""
 USER_INSERT_QUERY="INSERT INTO users (password, expiryDate, card) VALUES(?, ?, ?)"
 SUBSCRIBER_INSERT_QUERY="INSERT INTO subs(userID, RFID, lastname, firstname, phone, addresscity, addresscp, addressstreet, addressnumber, subscribeDate)\
 VALUES(last_insert_rowid(),?,?,?,?,?,?,?,?,?)"
@@ -26,6 +30,9 @@ attr_regex = {
 	"password": "[0-9]{4}",
 	"card": "[0-9]{17}"
 }
+	
+attr_names = dict(zip(attr_regex.keys(), ["Postal code", "Phone number", "Street number", "First name", "Street name", "Last name", "Card number", "Password", "City"]))
+
 
 def login(user, password):
 	global LOGIN_QUERY
@@ -40,11 +47,17 @@ def login(user, password):
 		return False
 
 def register(user):
-	global attr_regex
-	attr_names = dict(zip(attr_regex.keys(), ["Postal code", "Phone number", "Street number", "First name", "Street name", "Last name", "Card number", "Password", "City"]))
+	global attr_regex, attr_names
 
 	errors = []
-	for attr, regex in attr_regex.iteritems():
+	attr_regex_new = {}
+	if user["validity"] == "2":
+		attr_regex_new = attr_regex
+	elif user["validity"] == "0" or user["validity"] == "1":
+		attr_regex_new = {key: attr_regex[key] for key in ["password", "card"]}
+	else:
+		errors.append("Validity time is not valid")
+	for attr, regex in attr_regex_new.iteritems():
 		if not re.match(regex, user[attr]):
 			errors.append(attr_names[attr] + " is not valid")
 

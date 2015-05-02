@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Bicycle{% endblock title %}
+{% block content %}
+<table>
+	<tr>
+		<th>Service date</th>
+		<td>{{ bicycle["servicedate"] }}</td>
+	</tr>
+	<tr>
+		<th>Model</th>
+		<td>{{ bicycle["model"] }}</td>
+	</tr>
+	<tr>
+		<th>Working</th>
+		<td>{{ bicycle["state"] }}</td>
+		{% if bicycle["repair"] is defined %}
+		<td>
+			<form method="post" action="">
+				<input type="hidden" name="id" value="{{ bicycle["id"] }}" />
+				<input type="submit" value="Report broken bicycle" />
+			</form>
+		</td>
+		{% endif %}
+	</tr>
+</table>
+{% endblock content %}

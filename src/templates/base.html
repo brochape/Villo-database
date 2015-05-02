@@ -1,10 +1,24 @@
 <!DOCTYPE html>
+<!-- TODO find a way to make a dynamic navigation menu easily -->
+<!-- TODO find a way to make generic forms easily (save content, errors) -->
 <html lang="en">
 <head>
     <title>{% block title %}{% endblock title %}</title>
 </head>
 <body>
-	{% block content %}
-	{% endblock content %}
+	<div>
+		<table>
+			<tr>
+				<td><a href="/home">Home</a></td>
+				<td><a href="/logout">Logout</a></td>
+				<td><a href="/trips">Trips</a></td>
+				<td><a href="/register">Register</a></td>
+			</tr>
+		</table>
+	</div>
+	<div>
+		{% block content %}
+		{% endblock content %}
+	</div>
 </body>
 </html>
