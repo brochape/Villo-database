@@ -80,6 +80,15 @@ def trips():
     myTrips = Trips.query_all(session["user"])
     return render_template("trips.html", trips=myTrips)
 
+@app.route("/bicycle", methods=['get', 'post'])
+@require_login
+def bicycle():
+    if "id" not in request.values:
+        return abort(400)
+    bicycleID = request.values["id"]
+    return bicycleID
+
+
 @app.route("/users", methods=['get'])
 @require_login
 @require_admin

@@ -5,9 +5,12 @@ import random
 from config import db_filename
 
 ISADMIN_QUERY="SELECT userID FROM admins WHERE userID=?"
+# TODO change login query for production
 LOGIN_QUERY="""SELECT users.userID FROM users 
-	INNER JOIN admins on admins.userID = users.userID
-	WHERE users.userID=? and users.password=? and (users.expiryDate > datetime('now') or admins.userID = users.userID)"""
+	WHERE users.userID=? and users.password=?"""
+# LOGIN_QUERY="""SELECT users.userID FROM users 
+# 	INNER JOIN admins on admins.userID = users.userID
+# 	WHERE users.userID=? and users.password=? and (users.expiryDate > datetime('now') or admins.userID = users.userID)"""
 USER_INSERT_QUERY="INSERT INTO users (password, expiryDate, card) VALUES(?, ?, ?)"
 SUBSCRIBER_INSERT_QUERY="INSERT INTO subs(userID, RFID, lastname, firstname, phone, addresscity, addresscp, addressstreet, addressnumber, subscribeDate)\
 VALUES(last_insert_rowid(),?,?,?,?,?,?,?,?,?)"

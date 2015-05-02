@@ -11,7 +11,7 @@
 	</tr>
 	{% for trip in trips %}
 	<tr>
-		<td>{{ trip["bicycle"] }}</td>
+		<td><a href="/bicycle?id={{ trip["bicycle"] }}">{{ trip["bicycle"] }}</a></td>
 		<td>{{ trip["startTime"] }}</td>
 		<td>{{ trip["start"] }}</td>
 		<td>{{ trip["endingTime"] }}</td>
