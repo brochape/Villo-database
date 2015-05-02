@@ -87,12 +87,22 @@ def bicycle():
     if "id" not in request.values:
         return abort(400)
     bicycleID = request.values["id"]
-    result = Bicycles.select(bicycleID)
-    if not result:
-        return abort(400)
-    result["id"] = bicycleID
-    result["state"] = "No" if result["state"] == "0" else "Yes"
-    return render_template("bicycle.html", bicycle=result)
+    # show bicycle information
+    if request.method == "GET":
+        result = Bicycles.select(bicycleID)
+        if not result:
+            return abort(400)
+        result["id"] = bicycleID
+        result["state"] = "No" if result["state"] == 0 else "Yes"
+        if result["state"] == "Yes":
+            result["repair"] = True
+        else:
+            pass
+        return render_template("bicycle.html", bicycle=result)
+    # report broken bicycle
+    elif request.method == "POST":
+        Bicycles.report(bicycleID)
+        return redirect(url_for('bicycle', id=bicycleID))
 
 
 @app.route("/users", methods=['get'])
