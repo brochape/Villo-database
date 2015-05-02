@@ -43,7 +43,7 @@ def populate_trips(data):
 def create_admin():
     db = sqlite3.connect(DB_FILENAME)
     cursor = db.cursor()
-    cursor.execute(create_insert_statement("users", ["userID", "password", "expiryDate", "card"], ["1000", "admin", "", ""]))
+    cursor.execute(create_insert_statement("users", ["userID", "password", "expiryDate", "card"], ["1000", "1111", "", ""]))
     cursor.execute(create_insert_statement("admins", ["userID"], ["1000"]))
     db.commit()
     cursor.close()
