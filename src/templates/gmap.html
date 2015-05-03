@@ -26,6 +26,7 @@
         var i;
         var marker;
         var infowindow = new google.maps.InfoWindow();
+        var infoWindowContent;
         for(i = 0; i < markerList.length ; ++i){
             lglt[i] = new google.maps.LatLng(markerList[i][0], markerList[i][1]);
             marker = new google.maps.Marker({
@@ -34,10 +35,12 @@
                 title: markerList[i][2],
                 icon: "http://www.google.com/mapfiles/arrow.png"
             });
-
+            infoWindowContent = '<h1 id="firstHeading" class="firstHeading">'+ 'StationName' +'</h1>'+
+                                '<p> <b>X Coord : </b>' +  markerList[i][0]+'</p>'+
+                                '<p> <b>Y Coord : </b>' +  markerList[i][1]+'</p>'
             google.maps.event.addListener(marker, 'click', (function(marker, i) {
             return function() {
-              infowindow.setContent("Name : \nX Coord : "+ markerList[i][0] + "\nY Coord : " + markerList[i][1]);
+              infowindow.setContent(infoWindowContent);
               infowindow.open(map, marker);
               }
             })(marker, i));
