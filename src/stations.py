@@ -1,11 +1,24 @@
 import sqlite3
 from config import db_filename
+import helpers
+import datetime
 
 STATIONS_QUERY="""
     SELECT stations.num, stations.name, stations.seller, stations.capacity, stations.coordX, stations.coordY, COUNT(bicycles.station)
     FROM stations
     LEFT OUTER JOIN bicycles ON stations.num = bicycles.station
     GROUP BY bicycles.station"""
+
+TAKEBIKE_QUERY="""
+    UPDATE bicycles
+    SET station=NULL, user=?
+    WHERE id=?
+"""
+
+START_TRIP_QUERY="""
+    INSERT INTO trips (bycicle,user,start,startTime)
+    VALUES (?,?,?,?)
+"""
 
 
 def query_all():
@@ -26,3 +39,19 @@ def query_all():
     cursor.close()
     db.close()
     return results
+
+def take_bicycle(bycicleID, user, station):
+    db = sqlite3.connect(db_filename)
+    cursor = db.cursor()
+    cursor.execute(TAKEBIKE,(user,bycicleID))
+    currentTime = datetime.datetime.now();
+    timeStr =   str(currentTime.year)+"-"+\
+                "%02d"%currentTime.month+"-"+\
+                "%02d"%currentTime.day+"T"+\
+                "%02d"%currentTime.hour+":"+\
+                "%02d"%currentTime.minute+":"+\
+                "%02d"%currentTime.second
+    cursor.execute(START_TRIP_QUERY, (bycicleID, user, station, timeStr))
+    db.commit()
+    cursor.close()
+    db.close()
