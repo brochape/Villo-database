@@ -13,8 +13,8 @@ LOGIN_QUERY="""SELECT users.userID FROM users
 # 	WHERE users.userID=? and users.password=? and (users.expiryDate > datetime('now') or admins.userID = users.userID)"""
 USER_INSERT_QUERY="INSERT INTO users (password, expiryDate, card) VALUES(?, ?, ?)"
 SUBSCRIBER_INSERT_QUERY="INSERT INTO subs(userID, RFID, lastname, firstname, phone, addresscity, addresscp, addressstreet, addressnumber, subscribeDate)\
-VALUES(last_insert_rowid(),?,?,?,?,?,?,?,?,?)"
-TEMPUSER_INSERT_QUERY="INSERT INTO tempUsers(userID, paymentDate) VALUES(last_insert_rowid(), ?)"
+VALUES(last_insert_rowid(),?,?,?,?,?,?,?,?,Date('now'))"
+TEMPUSER_INSERT_QUERY="INSERT INTO tempUsers(userID, paymentDate) VALUES(last_insert_rowid(), Date('now'))"
 
 # TODO accents etc
 attr_regex = {
@@ -75,10 +75,9 @@ def register(user):
 		if user["validity"] == "2":
 			cursor.execute(SUBSCRIBER_INSERT_QUERY, 
 				(random.randint(10000000000,999999999999), user["lastname"], user["firstname"],
-				user["phone"], user["addresscity"], user["addresscp"], user["addressstreet"], user["addressnumber"],
-				datetime.datetime.now()))
+				user["phone"], user["addresscity"], user["addresscp"], user["addressstreet"], user["addressnumber"]))
 		elif user["validity"] == "0" or user["validity"] == "1":
-			cursor.execute(TEMPUSER_INSERT_QUERY, (datetime.datetime.now(),))
+			cursor.execute(TEMPUSER_INSERT_QUERY)
 		db.commit()
 		cursor.close()
 		db.close()
