@@ -1,4 +1,5 @@
 import sqlite3
+from config import db_filename as DB_FILENAME
 
 def listToSQL(l):
     return str(l).replace("[", "(").replace("]", ")")
