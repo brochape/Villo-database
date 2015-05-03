@@ -111,6 +111,12 @@ def stations():
     results = Stations.query_all()
     return jsonify(data=results)
 
+@app.route("/billing", methods=['get'])
+@require_login
+@require_admin
+def billing():
+    return ""
+
 @app.route("/users", methods=['get'])
 @require_login
 @require_admin
