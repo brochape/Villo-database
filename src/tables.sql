@@ -50,8 +50,8 @@ CREATE TABLE IF NOT EXISTS bicycles (
     servicedate TEXT,
     model TEXT NOT NULL,
     state BOOLEAN NOT NULL,
-    station INTEGER REFERENCES stations(num),
-    user INTEGER REFERENCES users(id)
+    station INTEGER REFERENCES stations(num) NULL,
+    user INTEGER REFERENCES users(id) NULL
 );
 
 CREATE TABLE IF NOT EXISTS trips (

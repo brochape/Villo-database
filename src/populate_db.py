@@ -30,11 +30,14 @@ def populate_trips(data):
     cursor = db.cursor()
     cursor.execute("PRAGMA temp_store = 2")
     populate_table("trips", ["bicycle", "user", "start", "startTime", "ending", "endingTime"], data)
+
     for row in data:
         # trip is still pending
         if row[4] == "None":
             cursor.execute(veloToUser(row[0], row[1]))
+            cursor.execute(veloToStation(row[0], "NULL"))
         else:
+            cursor.execute(veloToUser(row[0], "NULL"))
             cursor.execute(veloToStation(row[0], row[4]))
     db.commit()
     cursor.close()
