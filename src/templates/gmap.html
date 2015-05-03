@@ -24,14 +24,23 @@
         var lglt = new Array(markerList.lenght);
         var markers = new Array(markerList.lenght);
         var i;
+        var marker;
+        var infowindow = new google.maps.InfoWindow();
         for(i = 0; i < markerList.length ; ++i){
             lglt[i] = new google.maps.LatLng(markerList[i][0], markerList[i][1]);
-            markers[i] = new google.maps.Marker({
+            marker = new google.maps.Marker({
                 position: lglt[i],
                 map: map,
-                title: i.toString(),
+                title: markerList[i][2],
                 icon: "http://www.google.com/mapfiles/arrow.png"
             });
+
+            google.maps.event.addListener(marker, 'click', (function(marker, i) {
+            return function() {
+              infowindow.setContent("Name : \nX Coord : "+ markerList[i][0] + "\nY Coord : " + markerList[i][1]);
+              infowindow.open(map, marker);
+              }
+            })(marker, i));
         }
         return null;
       }
