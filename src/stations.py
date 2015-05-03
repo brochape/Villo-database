@@ -20,6 +20,11 @@ START_TRIP_QUERY="""
     VALUES (?,?,?,?)
 """
 
+BICYCLES_QUERY="""
+    SELECT bicycles.id
+    FROM bicycles
+    WHERE bicycles.station=?
+"""
 
 def query_all():
     db = sqlite3.connect(db_filename)
@@ -40,18 +45,35 @@ def query_all():
     db.close()
     return results
 
-def take_bicycle(bycicleID, user, station):
+def select_bicycles(stationID):
     db = sqlite3.connect(db_filename)
     cursor = db.cursor()
-    cursor.execute(TAKEBIKE,(user,bycicleID))
-    currentTime = datetime.datetime.now();
-    timeStr =   str(currentTime.year)+"-"+\
-                "%02d"%currentTime.month+"-"+\
-                "%02d"%currentTime.day+"T"+\
-                "%02d"%currentTime.hour+":"+\
-                "%02d"%currentTime.minute+":"+\
-                "%02d"%currentTime.second
-    cursor.execute(START_TRIP_QUERY, (bycicleID, user, station, timeStr))
-    db.commit()
+    cursor.execute(BICYCLES_QUERY,(stationID))
+    results = []
+    for row in cursor.fetchall():
+        results.append(row)
     cursor.close()
     db.close()
+    return results
+
+
+def take_bicycle(user, station):
+    try:
+        bicycleID = select_bicycles(station)[0]
+    except Exception, e:
+        return None
+    else:
+        db = sqlite3.connect(db_filename)
+        cursor = db.cursor()
+        cursor.execute(TAKEBIKE,(user,bycicleID))
+        currentTime = datetime.datetime.now();
+        timeStr =   str(currentTime.year)+"-"+\
+                    "%02d"%currentTime.month+"-"+\
+                    "%02d"%currentTime.day+"T"+\
+                    "%02d"%currentTime.hour+":"+\
+                    "%02d"%currentTime.minute+":"+\
+                    "%02d"%currentTime.second
+        cursor.execute(START_TRIP_QUERY, (bycicleID, user, station, timeStr))
+        db.commit()
+        cursor.close()
+        db.close()
