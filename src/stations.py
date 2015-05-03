@@ -2,9 +2,9 @@ import sqlite3
 from config import db_filename
 
 STATIONS_QUERY="""
-    SELECT stations.num, stations.name, stations.seller, stations.capacity, stations.coordX, stations.coordY, COUNT(*)
-    FROM bicycles
-    LEFT OUTER JOIN stations ON stations.num = bicycles.station
+    SELECT stations.num, stations.name, stations.seller, stations.capacity, stations.coordX, stations.coordY, COUNT(bicycles.station)
+    FROM stations
+    LEFT OUTER JOIN bicycles ON stations.num = bicycles.station
     GROUP BY bicycles.station"""
 
 
