@@ -6,8 +6,8 @@
     <style>
       #map-canvas {
         text-align: center;
-        width: 800px;
-        height: 600px;
+        min-width: 800px;
+        min-height: 600px;
       }
     </style>
     <script src="https://maps.googleapis.com/maps/api/js"></script>
@@ -53,7 +53,26 @@
     </script>
   </head>
   <body>
-    <div id="map-canvas"></div>
+    <div id="containter">
+      <div id="map-canvas"></div>
+      <div id="right">
+        <table>
+          <tr>
+            <th>Name</th><td id="name"></td>
+          </tr>
+          <tr>
+            <th>Coordinates</th><td id="coordinates"></td>
+          </tr>
+          <tr>
+            <!-- TODO add number of bicycles in the station -->
+            <th>Capacity</th><td id="capacity"></td>
+          </tr>
+          <tr>
+            <th>Is there a seller machine</th><td id="seller"></td>
+          </tr>
+        </table>
+      </div>
+    </div>
   </body>
 </html>
 {% endblock content %}
