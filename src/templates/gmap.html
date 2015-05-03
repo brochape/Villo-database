@@ -11,8 +11,14 @@
       }
     </style>
     <script src="https://maps.googleapis.com/maps/api/js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script>
-      function initialize() {
+      $.getJSON("/stations", "", function( data ) {
+        var stationList = data["data"];
+        initialize(stationList);
+      });
+
+      function initialize(stationList) {
         var mapCanvas = document.getElementById('map-canvas');
         var mapOptions = {
           center: new google.maps.LatLng(50.846041, 4.352512),
@@ -20,36 +26,33 @@
           mapTypeId: google.maps.MapTypeId.ROADMAP
         }
         var map = new google.maps.Map(mapCanvas, mapOptions);
-        var markerList = [{% for station in stationList %}[{{ station["coordY"] }},{{ station["coordX"] }}],{% endfor %}];
-        var lglt = new Array(markerList.lenght);
-        var markers = new Array(markerList.lenght);
+        var lglt = new Array(stationList.lenght);
+        var markers = new Array(stationList.lenght);
         var i;
         var marker;
         var infowindow = new google.maps.InfoWindow();
-        var infoWindowContent;
-        for(i = 0; i < markerList.length ; ++i){
-            lglt[i] = new google.maps.LatLng(markerList[i][0], markerList[i][1]);
+        for(i = 0; i < stationList.length ; ++i){
+            lglt[i] = new google.maps.LatLng(stationList[i]["coordY"], stationList[i]["coordX"]);
             marker = new google.maps.Marker({
                 position: lglt[i],
                 map: map,
-                title: markerList[i][2],
+                title: stationList[i]["name"],
                 icon: "http://www.google.com/mapfiles/arrow.png"
             });
-            infoWindowContent = '<h1 id="firstHeading" class="firstHeading">'+ 'StationName' +'</h1>'+
-                                '<p> <b>X Coord : </b>' +  markerList[i][0]+'</p>'+
-                                '<p> <b>Y Coord : </b>' +  markerList[i][1]+'</p>'
             google.maps.event.addListener(marker, 'click', (function(marker, i) {
-            return function() {
-              infowindow.setContent(infoWindowContent);
-              infowindow.open(map, marker);
+              return function() {
+                document.getElementById('name').textContent = stationList[i]["name"];
+                document.getElementById('coordinates').textContent = "".concat('(',stationList[i]["coordX"],',',stationList[i]["coordY"],')');
+                document.getElementById('capacity').textContent = "".concat(stationList[i]["bicycles"],'/',stationList[i]["capacity"]);
+                document.getElementById('seller').textContent = stationList[i]["seller"];
+                infowindow.setContent('<h1 id="firstHeading" class="firstHeading">'+ stationList[i]["name"] +'</h1>');
+                infowindow.open(map, marker);
               }
             })(marker, i));
         }
         return null;
       }
       
-
-      google.maps.event.addDomListener(window, 'load', initialize);
     </script>
   </head>
   <body>
@@ -64,7 +67,6 @@
             <th>Coordinates</th><td id="coordinates"></td>
           </tr>
           <tr>
-            <!-- TODO add number of bicycles in the station -->
             <th>Capacity</th><td id="capacity"></td>
           </tr>
           <tr>
