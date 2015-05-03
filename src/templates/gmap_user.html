@@ -1,0 +1,27 @@
+{% extends "gmap.html" %}
+{% block title %}Villo Map{% endblock title %}
+{% block buttons %}
+<style>
+.btn{
+    color: #0000FF;
+    background: #FFFFFF;
+    font-weight: bold;
+    border: 1px solid #0000FF;
+    font-size: 120%;
+    cursor: pointer;
+    position : right;
+
+}
+
+.btn:hover{
+    color: #FFFFFF;
+    background: #FF0000;
+}
+</style>
+<html>
+<form method="post" action="" id="button">
+    <input type="hidden" name="id" value="test" />
+    <input class="btn" type="submit" value="Take a bicycle from this station" />
+</form>
+</html>
+{% endblock buttons %}
