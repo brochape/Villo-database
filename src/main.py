@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, session, redirect, url_for
+from flask import Flask, request, render_template, session, redirect, url_for, jsonify
 app = Flask(__name__)
 app.testing=True
 import os
@@ -106,6 +106,10 @@ def bicycle():
         Bicycles.report(bicycleID)
         return redirect(url_for('bicycle', id=bicycleID))
 
+@app.route("/stations", methods=['get'])
+def stations():
+    results = Stations.query_all()
+    return jsonify(data=results)
 
 @app.route("/users", methods=['get'])
 @require_login
