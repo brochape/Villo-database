@@ -61,7 +61,7 @@ def gmap_user():
     elif request.method == "POST":
         if "id" not in request.values:
             return abort(400)
-        Stations.take_bicycle(session["user"], request.values["id"])# TODO:Reste a savoir quel station est celle consideree
+        Stations.take_bicycle(int(session["user"]), int(request.values["id"]))# TODO:Reste a savoir quel station est celle consideree
         return redirect(url_for('gmap_user'))
 
 @app.route("/logout", methods=['get'])

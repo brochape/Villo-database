@@ -59,6 +59,6 @@ CREATE TABLE IF NOT EXISTS trips (
     user INTEGER REFERENCES users(userID),
     start INTEGER REFERENCES stations(num),
     startTime TEXT,
-    ending INTEGER REFERENCES stations(num) NOT NULL,
-    endingTime TEXT NOT NULL
+    ending INTEGER REFERENCES stations(num),
+    endingTime TEXT
 );

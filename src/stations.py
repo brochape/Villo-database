@@ -29,7 +29,7 @@ PUTBIKE_QUERY="""
 END_TRIP_QUERY="""
     UPDATE trips
     SET ending=?, endingTime=?
-    WHERE user=? AND ending=NULL AND endingTime=NULL
+    WHERE user=? AND ending IS NULL AND endingTime IS NULL
 """
 
 BICYCLES_QUERY="""
@@ -60,7 +60,7 @@ def query_all():
 def select_bicycles(stationID):
     db = sqlite3.connect(db_filename)
     cursor = db.cursor()
-    cursor.execute(BICYCLES_QUERY,(stationID))
+    cursor.execute(BICYCLES_QUERY,(stationID,))
     results = []
     for row in cursor.fetchall():
         results.append(row)
@@ -71,13 +71,16 @@ def select_bicycles(stationID):
 
 def take_bicycle(user, station):
     try:
-        bicycleID = select_bicycles(station)[0]
+        bicycleID = select_bicycles(station)[0][0]
     except Exception, e:
+        print e
         return None
     else:
+        print user, station, bicycleID
         db = sqlite3.connect(db_filename)
         cursor = db.cursor()
-        cursor.execute(TAKEBIKE,(user,bicycleID))
+        print type(user), type(station), type(bicycleID)
+        cursor.execute(TAKEBIKE_QUERY,(user,bicycleID))
         currentTime = datetime.datetime.now();
         timeStr =   str(currentTime.year)+"-"+\
                     "%02d"%currentTime.month+"-"+\
