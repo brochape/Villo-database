@@ -12,10 +12,11 @@ SUBS_QUERY="""
 """
 
 TEMP_USERS_QUERY="""
-	SELECT COUNT(*) 
-	FROM users
-	INNER JOIN tempUsers ON tempUsers.userID = users.userID
-	WHERE users.expiryDate >= ? and users.expiryDate <= ?
+	SELECT COUNT(*)
+	FROM tempUsers
+	INNER JOIN users ON tempUsers.userID = users.userID
+	WHERE users.expiryDate >= ? AND users.expiryDate <= ?
+	AND CAST((julianday(users.expiryDate) - julianday(tempUsers.paymentDate)) AS INTEGER) == ?
 """
 
 def compute_dates(date):
@@ -40,13 +41,25 @@ def subscribers(date):
 	db.close()
 	return nb
 
-def temporaryUsers(date):
+def OneDayUsers(date):
 	""" Return number of temporary users on `date` 
 		`date` is "month" or "year" """
 	db = sqlite3.connect(db_filename)
 	cursor = db.cursor()
 	dateBeg, dateEnd = compute_dates(date)
-	cursor.execute(TEMP_USERS_QUERY, (dateBeg, dateEnd))
+	cursor.execute(TEMP_USERS_QUERY, (dateBeg, dateEnd, 1))
+	nb = cursor.fetchone()[0]
+	cursor.close()
+	db.close()
+	return nb
+
+def OneWeekUsers(date):
+	""" Return number of temporary users on `date` 
+		`date` is "month" or "year" """
+	db = sqlite3.connect(db_filename)
+	cursor = db.cursor()
+	dateBeg, dateEnd = compute_dates(date)
+	cursor.execute(TEMP_USERS_QUERY, (dateBeg, dateEnd, 7))
 	nb = cursor.fetchone()[0]
 	cursor.close()
 	db.close()
@@ -57,3 +70,4 @@ if __name__ == '__main__':
 	assert(compute_dates("2015") == (datetime.datetime(2015, 1, 1, 0, 0), datetime.datetime(2016, 1, 1, 0, 0)))
 	assert(subscribers("2011") == 552)
 	assert(subscribers("10/2011") == 46)
+	assert(OneDayUsers("2010") == 0)
