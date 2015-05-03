@@ -14,7 +14,7 @@ LOGIN_QUERY="""SELECT users.userID FROM users
 USER_INSERT_QUERY="INSERT INTO users (password, expiryDate, card) VALUES(?, ?, ?)"
 SUBSCRIBER_INSERT_QUERY="INSERT INTO subs(userID, RFID, lastname, firstname, phone, addresscity, addresscp, addressstreet, addressnumber, subscribeDate)\
 VALUES(last_insert_rowid(),?,?,?,?,?,?,?,?,?)"
-TEMPUSER_INSERT_QUERY="INSERT INTO tempUsers(userID) VALUES(last_insert_rowid())"
+TEMPUSER_INSERT_QUERY="INSERT INTO tempUsers(userID, paymentDate) VALUES(last_insert_rowid(), ?)"
 
 # TODO accents etc
 attr_regex = {
@@ -78,7 +78,7 @@ def register(user):
 				user["phone"], user["addresscity"], user["addresscp"], user["addressstreet"], user["addressnumber"],
 				datetime.datetime.now()))
 		elif user["validity"] == "0" or user["validity"] == "1":
-			cursor.execute(TEMPUSER_INSERT_QUERY)
+			cursor.execute(TEMPUSER_INSERT_QUERY, (datetime.datetime.now(),))
 		db.commit()
 		cursor.close()
 		db.close()

@@ -33,7 +33,8 @@ CREATE TABLE IF NOT EXISTS admins (
 );
 
 CREATE TABLE IF NOT EXISTS tempUsers (
-    userID INTEGER PRIMARY KEY REFERENCES users(userID)
+    userID INTEGER PRIMARY KEY REFERENCES users(userID),
+    paymentDate TEXT
 
 );
 
