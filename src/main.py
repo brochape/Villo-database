@@ -52,14 +52,17 @@ def gmap():
     myStations = Stations.query_all()
     return render_template('gmap.html', stationList=myStations)
 
-@app.route("/gmap_user", methods=['get'])
+@app.route("/gmap_user", methods=['get', 'post'])
 @require_login
 def gmap_user():
     if request.method == "GET":
         myStations = Stations.query_all()
         return render_template('gmap_user.html', stationList=myStations)
     elif request.method == "POST":
-        Stations.take_bicycle(session["user"])# TODO:Reste a savoir quel station est celle considérée
+        if "id" not in request.values:
+            return abort(400)
+        Stations.take_bicycle(session["user"], request.values["id"])# TODO:Reste a savoir quel station est celle consideree
+        return redirect(url_for('gmap_user'))
 
 @app.route("/logout", methods=['get'])
 @require_login

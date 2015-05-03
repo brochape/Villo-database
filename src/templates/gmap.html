@@ -45,6 +45,10 @@
                 document.getElementById('coordinates').textContent = "".concat('(',stationList[i]["coordX"],',',stationList[i]["coordY"],')');
                 document.getElementById('capacity').textContent = "".concat(stationList[i]["bicycles"],'/',stationList[i]["capacity"]);
                 document.getElementById('seller').textContent = stationList[i]["seller"];
+                id_station = document.getElementById('id_station');
+                if (id_station != null) {
+                  id_station.value = stationList[i]["num"];
+                }
                 infowindow.setContent('<h1 id="firstHeading" class="firstHeading">'+ stationList[i]["name"] +'</h1>');
                 infowindow.open(map, marker);
               }
