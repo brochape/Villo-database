@@ -13,8 +13,8 @@ LOGIN_QUERY="""SELECT users.userID FROM users
 # 	WHERE users.userID=? and users.password=? and (users.expiryDate > datetime('now') or admins.userID = users.userID)"""
 USER_INSERT_QUERY="INSERT INTO users (password, expiryDate, card) VALUES(?, ?, ?)"
 SUBSCRIBER_INSERT_QUERY="INSERT INTO subs(userID, RFID, lastname, firstname, phone, addresscity, addresscp, addressstreet, addressnumber, subscribeDate)\
-VALUES(last_insert_rowid(),?,?,?,?,?,?,?,?,Date('now'))"
-TEMPUSER_INSERT_QUERY="INSERT INTO tempUsers(userID, paymentDate) VALUES(last_insert_rowid(), Date('now'))"
+VALUES(last_insert_rowid(),?,?,?,?,?,?,?,?,datetime('now'))"
+TEMPUSER_INSERT_QUERY="INSERT INTO tempUsers(userID, paymentDate) VALUES(last_insert_rowid(), datetime('now'))"
 
 # TODO accents etc
 attr_regex = {
