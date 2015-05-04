@@ -49,6 +49,27 @@
                 if (id_station != null) {
                   id_station.value = stationList[i]["num"];
                 }
+                submit_station = document.getElementById('submit_station');
+                if (submit_station != null) {
+                  if ("{{ travelling }}" == "True") {
+                    if (stationList[i]["bicycles"] < stationList[i]["capacity"]) {
+                      submit_station.style.visibility = 'visible';
+                      submit_station.value = "Put bicycle in this station";
+                    }
+                    else {
+                      submit_station.style.visibility = 'hidden';
+                    }
+                  }
+                  else {
+                    if (stationList[i]["bicycles"] > 0) {
+                      submit_station.style.visibility = 'visible';
+                      submit_station.value = "Take bicycle from this station";
+                    }
+                    else {
+                      submit_station.style.visibility = 'hidden';
+                    }                    
+                  }
+                }
                 infowindow.setContent('<h1 id="firstHeading" class="firstHeading">'+ stationList[i]["name"] +'</h1>');
                 infowindow.open(map, marker);
               }
