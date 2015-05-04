@@ -5,19 +5,62 @@
 <html lang="en">
 <head>
     <title>{% block title %}{% endblock title %}</title>
+    <style type="text/css">
+    body {
+		background-color: #EBE8E4;
+		color: #222;
+		font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+		font-weight: 300;
+		font-size: 15px;
+	}
+	nav {
+	background-color: #fff;
+	border: 1px solid #dedede;
+	border-radius: 4px;
+	box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.055);
+	color: #888;
+	display: block;
+	margin: 8px 22px 8px 22px;
+	overflow: hidden;
+	width: 90%; 
+}
+nav ul {
+	margin: 0;
+	padding: 0;
+}
+
+	nav ul li {
+		display: inline-block;
+		list-style-type: none;
+		
+		-webkit-transition: all 0.2s;
+		-moz-transition: all 0.2s;
+		-ms-transition: all 0.2s;
+		-o-transition: all 0.2s;
+		transition: all 0.2s; 
+	}
+	
+		nav > ul > li > a {
+			color: #aaa;
+			display: block;
+			line-height: 56px;
+			padding: 0 24px;
+			text-decoration: none;
+		}
+</style>
 </head>
 <body>
-	<div>
+	<nav>
 		<table>
-			<tr>
-				<td><a href="/home">Home</a></td>
-				<td><a href="/logout">Logout</a></td>
-				<td><a href="/trips">Trips</a></td>
-				<td><a href="/register">Register</a></td>
-				<td><a href="/gmap">Map</a></td>
-			</tr>
+			<ul>
+				<li><a href="/home">Home</a></li>
+				<li><a href="/logout">Logout</a></li>
+				<li><a href="/trips">Trips</a></li>
+				<li><a href="/register">Register</a></li>
+				<li><a href="/gmap">Map</a></li>
+			</ul>
 		</table>
-	</div>
+	</nav>
 	<div>
 		{% block content %}
 		{% endblock content %}
