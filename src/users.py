@@ -4,18 +4,33 @@ import datetime
 import random
 from config import db_filename
 
-ISADMIN_QUERY="SELECT userID FROM admins WHERE userID=?"
+ISADMIN_QUERY="""
+    SELECT userID 
+    FROM admins 
+    WHERE userID=?
+"""
 # TODO change login query for production
-LOGIN_QUERY="""SELECT users.userID FROM users 
-    WHERE users.userID=? and users.password=?"""
+LOGIN_QUERY="""
+    SELECT users.userID 
+    FROM users 
+    WHERE users.userID=? AND users.password=?"""
 # LOGIN_QUERY="""SELECT users.userID FROM users 
 #   INNER JOIN admins on admins.userID = users.userID
 #   WHERE users.userID=? and users.password=? and (users.expiryDate > datetime('now') or admins.userID = users.userID)"""
-USER_INSERT_QUERY="INSERT INTO users (password, expiryDate, card) VALUES(?, ?, ?)"
-SUBSCRIBER_INSERT_QUERY="INSERT INTO subs(userID, RFID, lastname, firstname, phone, addresscity, addresscp, addressstreet, addressnumber, subscribeDate)\
-VALUES(last_insert_rowid(),?,?,?,?,?,?,?,?,datetime('now'))"
-TEMPUSER_INSERT_QUERY="INSERT INTO tempUsers(userID, paymentDate) VALUES(last_insert_rowid(), datetime('now'))"
-
+USER_INSERT_QUERY="""
+    INSERT INTO users (password, expiryDate, card) 
+    VALUES(?, ?, ?)"""
+SUBSCRIBER_INSERT_QUERY="""
+    INSERT INTO subs(userID, RFID, lastname, firstname, phone, addresscity, addresscp, addressstreet, addressnumber, subscribeDate)
+    VALUES(last_insert_rowid(),?,?,?,?,?,?,?,?,datetime('now'))"""
+TEMPUSER_INSERT_QUERY="""
+    INSERT INTO tempUsers(userID, paymentDate) 
+    VALUES(last_insert_rowid(), datetime('now'))"""
+USER_IS_TRAVELLING_QUERY="""
+    SELECT COUNT(*)
+    FROM bicycles
+    WHERE user = ?
+"""
 # TODO accents etc
 attr_regex = {
     # subscribers
@@ -84,6 +99,15 @@ def register(user):
         return None
     else:
         return errors
+
+def isTravelling(user):
+    db = sqlite3.connect(db_filename)
+    cursor = db.cursor()
+    cursor.execute(USER_IS_TRAVELLING_QUERY, (user,))
+    ret = cursor.fetchone()
+    cursor.close()
+    db.close()
+    return ret[0] == 1
 
 def isAdmin(user):
     global ISADMIN_QUERY

@@ -57,11 +57,14 @@ def gmap():
 def gmap_user():
     if request.method == "GET":
         myStations = Stations.query_all()
-        return render_template('gmap_user.html', stationList=myStations)
+        return render_template('gmap_user.html', stationList=myStations, travelling=Users.isTravelling(session["user"]))
     elif request.method == "POST":
         if "id" not in request.values:
             return abort(400)
-        Stations.take_bicycle(int(session["user"]), int(request.values["id"]))# TODO:Reste a savoir quel station est celle consideree
+        if Users.isTravelling(session["user"]):
+            Stations.put_bicycle(int(session["user"]), int(request.values["id"]))
+        else:
+            Stations.take_bicycle(int(session["user"]), int(request.values["id"]))
         return redirect(url_for('gmap_user'))
 
 @app.route("/logout", methods=['get'])

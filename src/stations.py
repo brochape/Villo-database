@@ -92,3 +92,6 @@ def take_bicycle(user, station):
         db.commit()
         cursor.close()
         db.close()
+
+def put_bicycle(user, station):
+    pass
