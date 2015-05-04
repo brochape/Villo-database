@@ -22,11 +22,12 @@
 	display: block;
 	margin: 8px 22px 8px 22px;
 	overflow: hidden;
-	width: 90%; 
+	width: 95%; 
 }
 nav ul {
 	margin: 0;
 	padding: 0;
+	width:100%;
 }
 
 	nav ul li {
@@ -42,22 +43,35 @@ nav ul {
 	
 		nav > ul > li > a {
 			color: #aaa;
+
 			display: block;
 			line-height: 56px;
 			padding: 0 24px;
 			text-decoration: none;
 		}
+
+        nav > ul > li:hover {
+          background-color: #222;
+        }
+
+        nav > ul > li:hover > a {
+          color: #fff;
+        }
+
+        nav > ul > li:hover > a > .caret {
+          border-top-color: #fff;
+        }
 </style>
 </head>
 <body>
 	<nav>
 		<table>
 			<ul>
-				<li><a href="/home">Home</a></li>
-				<li><a href="/logout">Logout</a></li>
-				<li><a href="/trips">Trips</a></li>
-				<li><a href="/register">Register</a></li>
-				<li><a href="/gmap">Map</a></li>
+				<li><a href="/home"><b>Home</b></a></li>
+				<li><a href="/logout"><b>Logout</b></a></li>
+				<li><a href="/trips"><b>Trips</b></a></li>
+				<li><a href="/register"><b>Register</b></a></li>
+				<li><a href="/gmap"><b>Map</b></a></li>
 			</ul>
 		</table>
 	</nav>
