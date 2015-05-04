@@ -2,7 +2,7 @@ import sqlite3
 from config import db_filename as DB_FILENAME
 
 def listToSQL(l):
-    return str(l).replace("[", "(").replace("]", ")")
+    return str(l).replace("[", "(").replace("]", ")").replace('\'NULL\'', 'NULL')
 
 
 def escapeToSQL(l):

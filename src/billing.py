@@ -65,9 +65,27 @@ def OneWeekUsers(date):
 	db.close()
 	return nb
 
+def billing_subscribers(date):
+	return subscribers(date) * 30
+
+def billing_oneweek(date):
+	return OneWeekUsers(date) * 7
+
+def billing_oneday(date):
+	return OneDayUsers(date) * 1.5
+
+def billing(date):
+	return billing_subscribers(date) + billing_oneweek(date) + billing_oneday(date)
+
 if __name__ == '__main__':
 	assert(compute_dates("12/2005") == (datetime.datetime(2005, 12, 1, 0, 0), datetime.datetime(2006, 1, 1, 0, 0)))
 	assert(compute_dates("2015") == (datetime.datetime(2015, 1, 1, 0, 0), datetime.datetime(2016, 1, 1, 0, 0)))
 	assert(subscribers("2011") == 552)
 	assert(subscribers("10/2011") == 46)
 	assert(OneDayUsers("2010") == 0)
+
+	subs2011 = sum([subscribers(str(i)+"/2011") for i in range(1,13)])
+	assert(subs2011 == subscribers("2011"))
+
+	sum2011 = sum([billing(str(i)+"/2011") for i in range(1,13)])
+	assert(sum2011 == billing("2011"))
