@@ -33,7 +33,7 @@ def populate_trips(data):
 
     for row in data:
         # trip is still pending
-        if row[4] == "None":
+        if row[4] == "":
             cursor.execute(veloToUser(row[0], row[1]))
             cursor.execute(veloToStation(row[0], "NULL"))
         else:
