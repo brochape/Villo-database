@@ -9,7 +9,7 @@ class CSVParser(object):
             self.columnnames = f.readline().strip().split(';')
             self.itemsList = f.read().splitlines()
             for i in range(len(self.itemsList)):
-                self.itemsList[i] = self.itemsList[i].split(";")
+                self.itemsList[i] = map(lambda s: "NULL" if s == "None" else s, self.itemsList[i].split(";"))
         return self.columnnames, self.itemsList
 
     def __str__(self):

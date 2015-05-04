@@ -2,7 +2,7 @@ import sqlite3
 from config import db_filename as DB_FILENAME
 
 def listToSQL(l):
-    return str(l).replace("[", "(").replace("]", ")")
+    return str(l).replace("[", "(").replace("]", ")").replace('\'NULL\'', 'NULL')
 
 
 def escapeToSQL(l):
@@ -12,6 +12,7 @@ def escapeToSQL(l):
 def create_insert_statement(name, columns, row):
     statement = "INSERT INTO " + name + " " + listToSQL(columns) + " VALUES"
     statement += listToSQL(map(lambda s: '0' if s == 'False' else '1' if s == 'True' else str(s), row))
+    # print statement
     return statement
 
 
