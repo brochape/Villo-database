@@ -1,6 +1,7 @@
 import sqlite3
 from config import db_filename
 import datetime
+import math
 from dateutil.relativedelta import relativedelta
 
 
@@ -17,6 +18,20 @@ TEMP_USERS_QUERY="""
 	INNER JOIN users ON tempUsers.userID = users.userID
 	WHERE users.expiryDate >= ? AND users.expiryDate <= ?
 	AND CAST((julianday(users.expiryDate) - julianday(tempUsers.paymentDate)) AS INTEGER) == ?
+"""
+
+TRIPS_QUERY="""
+	SELECT
+		SUM(CASE 
+			WHEN duration = 1 THEN 0 
+			WHEN duration = 2 THEN 0.5 
+			WHEN duration = 3 THEN 1.5 
+			ELSE (duration-3) * 2 + 1.5 
+		END)
+	FROM 
+	(SELECT CAST((CEIL((julianday(endingTime) - julianday(startTime)) * 48.0)) AS INTEGER) AS duration
+	FROM trips
+	WHERE startTime >= ? AND startTime <= ? AND ending IS NOT NULL AND endingTime IS NOT NULL AND bicycle=5)
 """
 
 def compute_dates(date):
@@ -41,29 +56,23 @@ def subscribers(date):
 	db.close()
 	return nb
 
-def OneDayUsers(date):
-	""" Return number of temporary users on `date` 
-		`date` is "month" or "year" """
+def tempUsers(date, days):
+	""" Return number of temporary users with a ticket for `days` days on `date` 
+		`date` is a year or a month (month/year) """
 	db = sqlite3.connect(db_filename)
 	cursor = db.cursor()
 	dateBeg, dateEnd = compute_dates(date)
-	cursor.execute(TEMP_USERS_QUERY, (dateBeg, dateEnd, 1))
+	cursor.execute(TEMP_USERS_QUERY, (dateBeg, dateEnd, days))
 	nb = cursor.fetchone()[0]
 	cursor.close()
 	db.close()
 	return nb
 
+def OneDayUsers(date):
+	return tempUsers(date, 1)
+
 def OneWeekUsers(date):
-	""" Return number of temporary users on `date` 
-		`date` is "month" or "year" """
-	db = sqlite3.connect(db_filename)
-	cursor = db.cursor()
-	dateBeg, dateEnd = compute_dates(date)
-	cursor.execute(TEMP_USERS_QUERY, (dateBeg, dateEnd, 7))
-	nb = cursor.fetchone()[0]
-	cursor.close()
-	db.close()
-	return nb
+	return tempUsers(date, 7)
 
 def billing_subscribers(date):
 	return subscribers(date) * 30
@@ -73,6 +82,20 @@ def billing_oneweek(date):
 
 def billing_oneday(date):
 	return OneDayUsers(date) * 1.5
+
+def billing_trips(date):
+	db = sqlite3.connect(db_filename)
+	db.create_function("ceil", 1, math.ceil)
+	cursor = db.cursor()
+	dateBeg, dateEnd = compute_dates(date)
+	cursor.execute(TRIPS_QUERY, (dateBeg, dateEnd))
+	result = cursor.fetchone()[0]
+	cursor.close()
+	db.close()
+	if result:
+		return result
+	else:
+		return 0
 
 def billing(date):
 	return billing_subscribers(date) + billing_oneweek(date) + billing_oneday(date)
@@ -89,3 +112,7 @@ if __name__ == '__main__':
 
 	sum2011 = sum([billing(str(i)+"/2011") for i in range(1,13)])
 	assert(sum2011 == billing("2011"))
+
+	assert(billing_trips("2010") == 1406.0)
+	trips2010 = sum([billing_trips(str(i)+"/2010") for i in range(1,13)])
+	assert(trips2010 == billing_trips("2010"))
