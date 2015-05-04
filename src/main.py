@@ -49,8 +49,11 @@ def login():
 
 @app.route("/gmap", methods=['get'])
 def gmap():
-    myStations = Stations.query_all()
-    return render_template('gmap.html', stationList=myStations)
+    if "user" in session:
+        return redirect(url_for('gmap_user'))
+    else:
+        myStations = Stations.query_all()
+        return render_template('gmap.html', stationList=myStations)
 
 @app.route("/gmap_user", methods=['get', 'post'])
 @require_login
