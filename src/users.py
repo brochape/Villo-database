@@ -31,6 +31,16 @@ USER_IS_TRAVELLING_QUERY="""
     FROM bicycles
     WHERE user = ?
 """
+RENEW_SUB_QUERY="""
+    UPDATE users
+    SET expiryDate=(
+        datetime((SELECT expiryDate
+        FROM users
+        INNER JOIN subs ON subs.userID = users.userID
+        WHERE subs.userID), '+1 year')
+        )
+    WHERE userID = ?
+"""
 # TODO accents etc
 attr_regex = {
     # subscribers
@@ -110,7 +120,6 @@ def isTravelling(user):
     return ret[0] == 1
 
 def isAdmin(user):
-    global ISADMIN_QUERY
     db = sqlite3.connect(db_filename)
     cursor = db.cursor()
     cursor.execute(ISADMIN_QUERY, (user,))
@@ -120,3 +129,14 @@ def isAdmin(user):
         return True
     else:
         return False
+
+def reNewSub(user):
+    db = sqlite3.connect(db_filename)
+    cursor = db.cursor()
+    cursor.execute(RENEW_SUB_QUERY, (user,))
+    db.commit()
+    cursor.close()
+    db.close()
+
+if __name__ == '__main__':
+    reNewSub(0)
