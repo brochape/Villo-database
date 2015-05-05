@@ -1,11 +1,50 @@
 {% extends "base.html" %}
 {% block title %}Register{% endblock title %}
 {% block content %}
+<style type="text/css">
+.btn{
+    color: #0000FF;
+    background: #FFFFFF;
+    font-weight: bold;
+    border: 1px solid #0000FF;
+    font-size: 120%;
+    cursor: pointer;
+    position : right;
+
+}
+
+.btn:hover{
+    color: #FFFFFF;
+    background: #0000FF;
+}
+th {
+color:#D5DDE5;
+background:#1b1e24;
+border-bottom:4px solid #9ea7af;
+border-right: 1px solid #343a45;
+font-size:20px;
+font-weight: 100;
+padding:4px;
+text-align:left;
+text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+vertical-align:middle;
+}
+td {
+background:#FFFFFF;
+padding:5px;
+text-align:left;
+vertical-align:middle;
+font-weight:300;
+font-size:14px;
+text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
+border-right: 1px solid #C1C3D1;
+}
+</style>
 <!-- TODO add JS to hide unnecessary input depending on validity time -->
 <table>
 	<form method="POST" action="">
 		<tr>
-			<td>Validity time</td>
+			<th>Validity time</th>
 			<td>
 				<select name="validity">
 					<option value="0">24 hours</option>
@@ -15,38 +54,36 @@
 			</td>
 		</tr>
 		<tr>
-			<td>First name</td>
-			<td><input type="text" name="firstname"  {% if values is defined %}value="{{values["firstname"]}}"{% endif %}/></td>
-			<td>Last name</td>
-			<td><input type="text" name="lastname" {% if values is defined %}value="{{values["lastname"]}}"{% endif %}/></td>
-		</tr>
-		<tr>
-			<td>Password</td>
+			<th>Password</th>
 			<td><input type="password" name="password" {% if values is defined %}value="{{values["password"]}}"{% endif %}/></td>
-		</tr>
-		<tr>
-			<td>Card number</td>
+			<th>Card number</th>
 			<td><input type="text" name="card" {% if values is defined %}value="{{values["card"]}}"{% endif %}/></td>
 		</tr>
 		<tr>
-			<td>Phone number</td>
+			<th>First name</th>
+			<td><input type="text" name="firstname"  {% if values is defined %}value="{{values["firstname"]}}"{% endif %}/></td>
+			<th>Last name</th>
+			<td><input type="text" name="lastname" {% if values is defined %}value="{{values["lastname"]}}"{% endif %}/></td>
+		</tr>
+		<tr>
+			<th>Phone number</th>
 			<td><input type="text" name="phone" {% if values is defined %}value="{{values["phone"]}}"{% endif %}/></td>
 		</tr>
-		<th><td>Address</td></th>
+		<tr><th>Address</th></tr>
 		<tr>
-			<td>Street name</td>
+			<th>Street name</th>
 			<td><input type="text" name="addressstreet" {% if values is defined %}value="{{values["addressstreet"]}}"{% endif %}/></td>
-			<td>Street number</td>
+			<th>Street number</th>
 			<td><input type="text" name="addressnumber" {% if values is defined %}value="{{values["addressnumber"]}}"{% endif %}/></td>
 		</tr>
 		<tr>
-			<td>Postal code</td>
+			<th>Postal code</th>
 			<td><input type="text" name="addresscp" {% if values is defined %}value="{{values["addresscp"]}}"{% endif %}/></td>
-			<td>City</td>
+			<th>City</th>
 			<td><input type="text" name="addresscity" {% if values is defined %}value="{{values["addresscity"]}}"{% endif %}/></td>
 		</tr>
 		<tr>
-			<td><input type="submit" value="Register" /></td>
+			<td><input type="submit" class="btn" value="Register" /></td>
 		</tr>
 	</form>
 	{% if errors is defined %}

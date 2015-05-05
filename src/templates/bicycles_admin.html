@@ -145,6 +145,23 @@ td.text-center {
 td.text-right {
   text-align: right;
 }
+
+.btn{
+    color: #0000FF;
+    background: #FFFFFF;
+    font-weight: bold;
+    border: 1px solid #0000FF;
+    font-size: 120%;
+    cursor: pointer;
+    position : right;
+
+}
+
+.btn:hover{
+    color: #FFFFFF;
+    background: #0000FF;
+}
+
 </style>
 
 <table class="center" id="bicycles">
@@ -167,7 +184,7 @@ td.text-right {
             {% endif %}
         </td>
         <td> 
-            <form method="post" action="" id="button">
+            <form method="post" action="">
                 <input type="hidden" name="id" value="{{ bicycle["id"] }}" />
                 <input class="btn" type="submit" value="Repair this bicycle" />
             </form>
