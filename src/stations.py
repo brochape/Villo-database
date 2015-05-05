@@ -3,13 +3,13 @@ from config import db_filename
 import helpers
 import datetime
 
-STATIONS_QUERY="""
+STATIONS_ALL_QUERY="""
     SELECT stations.num, stations.name, stations.seller, stations.capacity, stations.coordX, stations.coordY, COUNT(bicycles.station)
     FROM stations
     LEFT OUTER JOIN bicycles ON stations.num = bicycles.station
     GROUP BY bicycles.station"""
 
-TAKEBIKE_QUERY="""
+BICYCLE_TAKE_QUERY="""
     UPDATE bicycles
     SET station=NULL, user=?
     WHERE id=?
@@ -20,7 +20,7 @@ START_TRIP_QUERY="""
     VALUES (?,?,?,?)
 """
 
-PUTBIKE_QUERY="""
+BICYCLE_PUT_QUERY="""
     UPDATE bicycles
     SET station=?, user=NULL
     WHERE id=?
@@ -32,13 +32,13 @@ END_TRIP_QUERY="""
     WHERE user=? AND ending IS NULL AND endingTime IS NULL
 """
 
-BICYCLES_QUERY="""
+BICYCLES_STATION_QUERY="""
     SELECT bicycles.id
     FROM bicycles
     WHERE bicycles.station=?
 """
 
-USER_BICYCLE_QUERY="""
+BICYCLES_USER_QUERY="""
     SELECT id
     FROM bicycles
     WHERE user=?
@@ -47,7 +47,7 @@ USER_BICYCLE_QUERY="""
 def query_all():
     db = sqlite3.connect(db_filename)
     cursor = db.cursor()
-    cursor.execute(STATIONS_QUERY)
+    cursor.execute(STATIONS_ALL_QUERY)
     results = []
     for row in cursor.fetchall():
         result = {}
@@ -66,7 +66,7 @@ def query_all():
 def select_bicycles(stationID):
     db = sqlite3.connect(db_filename)
     cursor = db.cursor()
-    cursor.execute(BICYCLES_QUERY,(stationID,))
+    cursor.execute(BICYCLES_STATION_QUERY,(stationID,))
     results = []
     for row in cursor.fetchall():
         results.append(row)
@@ -85,7 +85,7 @@ def take_bicycle(user, station):
         db = sqlite3.connect(db_filename)
         cursor = db.cursor()
         print type(user), type(station), type(bicycleID)
-        cursor.execute(TAKEBIKE_QUERY,(user,bicycleID))
+        cursor.execute(BICYCLE_TAKE_QUERY,(user,bicycleID))
         # TODO strptime ?
         currentTime = datetime.datetime.now();
         timeStr =   str(currentTime.year)+"-"+\
@@ -103,7 +103,7 @@ def put_bicycle(user, station):
     db = sqlite3.connect(db_filename)
     cursor = db.cursor()
     try:
-        cursor.execute(USER_BICYCLE_QUERY, (user,))
+        cursor.execute(BICYCLES_USER_QUERY, (user,))
         bicycleID = cursor.fetchone()[0]
     except Exception, e:
         print e
@@ -111,7 +111,7 @@ def put_bicycle(user, station):
         db.close()
         return None
     else:
-        cursor.execute(PUTBIKE_QUERY, (station, bicycleID))
+        cursor.execute(BICYCLE_PUT_QUERY, (station, bicycleID))
         currentTime = datetime.datetime.now();
         timeStr =   str(currentTime.year)+"-"+\
                     "%02d"%currentTime.month+"-"+\

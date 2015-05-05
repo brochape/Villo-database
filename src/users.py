@@ -4,7 +4,7 @@ import datetime
 import random
 from config import db_filename
 
-ISADMIN_QUERY="""
+USER_IS_ADMIN_QUERY="""
     SELECT userID 
     FROM admins 
     WHERE userID=?
@@ -31,7 +31,7 @@ USER_IS_TRAVELLING_QUERY="""
     FROM bicycles
     WHERE user = ?
 """
-RENEW_SUB_QUERY="""
+SUB_RENEW_QUERY="""
     UPDATE users
     SET expiryDate=(
         datetime((SELECT expiryDate
@@ -41,7 +41,7 @@ RENEW_SUB_QUERY="""
         )
     WHERE userID = ?
 """
-ALL_SUBS_QUERY="""
+SUBS_ALL_QUERY="""
     SELECT subs.userID, lastname, firstname, subscribeDate, (expiryDate >= datetime('now'))
     FROM subs
     INNER JOIN users on users.userID = subs.userID
@@ -128,7 +128,7 @@ def isTravelling(user):
 def isAdmin(user):
     db = sqlite3.connect(db_filename)
     cursor = db.cursor()
-    cursor.execute(ISADMIN_QUERY, (user,))
+    cursor.execute(USER_IS_ADMIN_QUERY, (user,))
     result = cursor.fetchone()
     db.close()
     if result:
@@ -139,7 +139,7 @@ def isAdmin(user):
 def reNewSub(user):
     db = sqlite3.connect(db_filename)
     cursor = db.cursor()
-    cursor.execute(RENEW_SUB_QUERY, (user,))
+    cursor.execute(SUB_RENEW_QUERY, (user,))
     db.commit()
     cursor.close()
     db.close()
@@ -147,7 +147,7 @@ def reNewSub(user):
 def get_all_subs():
     db = sqlite3.connect(db_filename)
     cursor = db.cursor()
-    cursor.execute(ALL_SUBS_QUERY)
+    cursor.execute(SUBS_ALL_QUERY)
     results = cursor.fetchall()
     ret = []
     for result in results:

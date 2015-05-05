@@ -1,10 +1,10 @@
 import sqlite3
 from config import db_filename
 
-BICYCLE_ALL_QUERY="SELECT * FROM bicycles"
+BICYCLES_ALL_QUERY="SELECT * FROM bicycles"
 BICYCLE_ONE_QUERY="SELECT servicedate, model, state FROM bicycles WHERE id=?"
-BICYCLE_BROKEN_QUERY="SELECT id, servicedate, model, state FROM bicycles WHERE state=?"
-BICYCLE_UPDATE_QUERY="UPDATE bicycles SET state=? WHERE id=?"
+BICYCLES_STATE_QUERY="SELECT id, servicedate, model, state FROM bicycles WHERE state=?"
+BICYCLE_UPDATE_STATE_QUERY="UPDATE bicycles SET state=? WHERE id=?"
 
 
 def select(id):
@@ -25,7 +25,7 @@ def select(id):
 def select_broken():
     db = sqlite3.connect(db_filename)
     cursor = db.cursor()
-    cursor.execute(BICYCLE_BROKEN_QUERY, (0,))
+    cursor.execute(BICYCLES_STATE_QUERY, (0,))
     results = cursor.fetchall()
     ret = []
     for result in results:
@@ -39,7 +39,7 @@ def select_broken():
 def report(id):
     db = sqlite3.connect(db_filename)
     cursor = db.cursor()
-    cursor.execute(BICYCLE_UPDATE_QUERY, (0, id))
+    cursor.execute(BICYCLE_UPDATE_STATE_QUERY, (0, id))
     db.commit()
     cursor.close()
     db.close()
@@ -47,7 +47,7 @@ def report(id):
 def repair(id):
     db = sqlite3.connect(db_filename)
     cursor = db.cursor()
-    cursor.execute(BICYCLE_UPDATE_QUERY, (1, id))
+    cursor.execute(BICYCLE_UPDATE_STATE_QUERY, (1, id))
     db.commit()
     cursor.close()
     db.close()
@@ -55,7 +55,7 @@ def repair(id):
 def select_all():
     db = sqlite3.connect(db_filename)
     cursor = db.cursor()
-    cursor.execute(BICYCLE_ALL_QUERY)
+    cursor.execute(BICYCLES_ALL_QUERY)
     results = cursor.fetchall()
     ret = []
     for result in results:

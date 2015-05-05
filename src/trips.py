@@ -1,7 +1,7 @@
 import sqlite3
 from config import db_filename
 
-TRIPS_QUERY="""
+TRIPS_USER_QUERY="""
     SELECT trips.bicycle, trips.startTime, s1.name, trips.endingTime, s2.name
     FROM trips
     INNER JOIN stations as s1 ON trips.start == s1.num
@@ -9,7 +9,7 @@ TRIPS_QUERY="""
     WHERE trips.user=?
     ORDER BY trips.startTime DESC"""
 
-TRIPS_USER_QUERY="""
+TRIPS_USER_PERIOD_QUERY="""
     SELECT trips.startTime, s1.coordX, s1.coordY, trips.endingTime, s2.coordX, s2.coordY
     FROM trips
     INNER JOIN stations as s1 ON trips.start == s1.num
@@ -19,7 +19,7 @@ TRIPS_USER_QUERY="""
     ORDER BY trips.startTime ASC
 """
 
-TRIPS_BICYCLE_QUERY="""
+TRIPS_BICYCLE_PERIOD_QUERY="""
     SELECT trips.startTime, s1.coordX, s1.coordY, trips.endingTime, s2.coordX, s2.coordY
     FROM trips
     INNER JOIN stations as s1 ON trips.start == s1.num
@@ -32,7 +32,7 @@ TRIPS_BICYCLE_QUERY="""
 def query_all(user):
     db = sqlite3.connect(db_filename)
     cursor = db.cursor()
-    cursor.execute(TRIPS_QUERY, (user,))
+    cursor.execute(TRIPS_USER_QUERY, (user,))
     results = []
     for row in cursor.fetchall():
         result = {}
@@ -49,7 +49,7 @@ def query_all(user):
 def query_user_period(user, dateBeg, dateEnd):
     db = sqlite3.connect(db_filename)
     cursor = db.cursor()
-    cursor.execute(TRIPS_USER_QUERY, (user, dateBeg, dateEnd))
+    cursor.execute(TRIPS_USER_PERIOD_QUERY, (user, dateBeg, dateEnd))
     results = cursor.fetchall()
     ret = []
     for result in results:
@@ -68,7 +68,7 @@ def query_user_period(user, dateBeg, dateEnd):
 def query_bicycle_period(bicycle, dateBeg, dateEnd):
     db = sqlite3.connect(db_filename)
     cursor = db.cursor()
-    cursor.execute(TRIPS_BICYCLE_QUERY, (bicycle, dateBeg, dateEnd))
+    cursor.execute(TRIPS_BICYCLE_PERIOD_QUERY, (bicycle, dateBeg, dateEnd))
     results = cursor.fetchall()
     ret = []
     for result in results:
