@@ -3,7 +3,9 @@ from config import db_filename
 
 BICYCLE_ALL_QUERY="SELECT * FROM bicycles"
 BICYCLE_ONE_QUERY="SELECT servicedate, model, state FROM bicycles WHERE id=?"
+BICYCLE_BROKEN_QUERY="SELECT id, servicedate, model, state FROM bicycles WHERE state=?"
 BICYCLE_UPDATE_QUERY="UPDATE bicycles SET state=? WHERE id=?"
+
 
 def select(id):
     db = sqlite3.connect(db_filename)
@@ -20,6 +22,21 @@ def select(id):
     db.close()
     return ret
 
+def select_broken():
+    db = sqlite3.connect(db_filename)
+    cursor = db.cursor()
+    cursor.execute(BICYCLE_BROKEN_QUERY, (0,))
+    results = cursor.fetchall()
+    ret = []
+    for result in results:
+        bicycle = dict(zip(["id", "servicedate", "model", "state"], result))
+        ret.append(bicycle)
+    print ret
+    cursor.close()
+    db.close()
+    return ret
+
+
 def report(id):
     db = sqlite3.connect(db_filename)
     cursor = db.cursor()
@@ -29,6 +46,7 @@ def report(id):
     db.close()
 
 def repair(id):
+    print "REPAIRING"
     db = sqlite3.connect(db_filename)
     cursor = db.cursor()
     cursor.execute(BICYCLE_UPDATE_QUERY, (1, id))
@@ -43,7 +61,7 @@ def select_all():
     results = cursor.fetchall()
     ret = []
     for result in results:
-        bicycle = dict(zip(["id", "servicedate", "mode", "state", "state", "user"], result))
+        bicycle = dict(zip(["id", "servicedate", "mode", "state", "station", "user"], result))
         ret.append(bicycle)
     cursor.close()
     db.close()

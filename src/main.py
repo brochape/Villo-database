@@ -123,6 +123,21 @@ def bicycle():
         Bicycles.report(bicycleID)
         return redirect(url_for('bicycle', id=bicycleID))
 
+@app.route("/bicycles_admin", methods=['get','post'])
+@require_login
+@require_admin
+def bicycles():
+    if request.method == "GET":
+        mybicycles = Bicycles.select_broken()
+        return render_template("bicycles_admin.html", bicycles=mybicycles)
+    elif request.method == "POST":
+        bicycleID = request.values["id"]
+        Bicycles.repair(bicycleID)
+        mybicycles = Bicycles.select_broken()
+        print mybicycles
+        return redirect(url_for('gmap_user'))
+
+
 @app.route("/stations", methods=['get'])
 def stations():
     results = Stations.query_all()
