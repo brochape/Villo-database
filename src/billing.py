@@ -9,7 +9,9 @@ SUBS_QUERY="""
 	SELECT COUNT(*) 
 	FROM users
 	INNER JOIN subs ON subs.userID = users.userID
-	WHERE users.expiryDate >= ? and users.expiryDate <= ?
+	WHERE subs.subscribeDate <= ?
+	AND (strftime('%m/%Y', users.expiryDate) = ? OR strftime('%Y', users.expiryDate) = ?) 
+		OR strftime('%m/%Y', subs.subscribeDate) = ? OR strftime('%Y', subs.subscribeDate) = ?
 """
 
 TEMP_USERS_QUERY="""
@@ -31,7 +33,7 @@ TRIPS_QUERY="""
 	FROM 
 	(SELECT CAST((CEIL((julianday(endingTime) - julianday(startTime)) * 48.0)) AS INTEGER) AS duration
 	FROM trips
-	WHERE startTime >= ? AND startTime <= ? AND ending IS NOT NULL AND endingTime IS NOT NULL AND bicycle=5)
+	WHERE startTime >= ? AND startTime <= ? AND ending IS NOT NULL AND endingTime IS NOT NULL)
 """
 
 def compute_dates(date):
@@ -50,7 +52,7 @@ def subscribers(date):
 	db = sqlite3.connect(db_filename)
 	cursor = db.cursor()
 	dateBeg, dateEnd = compute_dates(date)
-	cursor.execute(SUBS_QUERY, (dateBeg, dateEnd))
+	cursor.execute(SUBS_QUERY, (dateEnd, date, date, date, date))
 	nb = cursor.fetchone()[0]
 	cursor.close()
 	db.close()
@@ -97,8 +99,11 @@ def billing_trips(date):
 	else:
 		return 0
 
-def billing(date):
+def billing_users(date):
 	return billing_subscribers(date) + billing_oneweek(date) + billing_oneday(date)
+
+def billing_total(date):
+	return billing_trips(date) + billing_users(date)
 
 if __name__ == '__main__':
 	assert(compute_dates("12/2005") == (datetime.datetime(2005, 12, 1, 0, 0), datetime.datetime(2006, 1, 1, 0, 0)))
@@ -106,13 +111,28 @@ if __name__ == '__main__':
 	assert(subscribers("2011") == 552)
 	assert(subscribers("10/2011") == 46)
 	assert(OneDayUsers("2010") == 0)
+	assert(OneWeekUsers("2010") == 0)
 
-	subs2011 = sum([subscribers(str(i)+"/2011") for i in range(1,13)])
+	# test present
+	month2010 = [("0"+str(i) if i < 10 else str(i)) +"/2010" for i in range(1,13)]
+
+	assert(billing_users("2010") == 16560.0)
+	users2010 = sum(map(billing_users, month2010))
+	assert(users2010 == billing_users("2010"))
+
+	assert(billing_trips("2010") == 6429433.0)
+	trips2010 = sum(map(billing_trips, month2010))
+	assert(trips2010 == billing_trips("2010"))
+
+	assert(billing_total("2010") == 6445993.0)
+	total2010 = sum(map(billing_total, month2010))
+	assert(total2010 == billing_total("2010"))
+
+	# test future
+	month2011 = [("0"+str(i) if i < 10 else str(i)) +"/2011" for i in range(1,13)]
+
+	subs2011 = sum(map(subscribers, month2011))
 	assert(subs2011 == subscribers("2011"))
 
-	sum2011 = sum([billing(str(i)+"/2011") for i in range(1,13)])
-	assert(sum2011 == billing("2011"))
-
-	assert(billing_trips("2010") == 1406.0)
-	trips2010 = sum([billing_trips(str(i)+"/2010") for i in range(1,13)])
-	assert(trips2010 == billing_trips("2010"))
+	sum2011 = sum(map(billing_users, month2011))
+	assert(sum2011 == billing_users("2011"))
