@@ -58,12 +58,12 @@
 	<tr>
 		<th>Working</th>
 		<td>{{ bicycle["state"] }}</td>
-		{% if bicycle["repair"] is defined %}
-		{% endif %}
 	</tr>
 </table>
+{% if bicycle["state"] == "Yes" %}
 <form method="post" action="" id="button">
 	<input type="hidden" name="id" value="{{ bicycle["id"] }}" />
 	<input class="btn" type="submit" value="Report broken bicycle" />
 </form>
+{% endif %}
 {% endblock content %}
