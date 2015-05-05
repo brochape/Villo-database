@@ -31,7 +31,6 @@ def select_broken():
     for result in results:
         bicycle = dict(zip(["id", "servicedate", "model", "state"], result))
         ret.append(bicycle)
-    print ret
     cursor.close()
     db.close()
     return ret
