@@ -153,7 +153,7 @@ def reNewSub(user):
 def get_expiry_date(user):
     db = sqlite3.connect(db_filename)
     cursor = db.cursor()
-    cursor.execute(ONE_SUB_QUERY,(user))
+    cursor.execute(ONE_SUB_QUERY,(user,))
     ret = cursor.fetchone()
     cursor.close()
     db.close()
