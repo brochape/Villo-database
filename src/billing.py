@@ -58,7 +58,7 @@ def subscribers(date):
 	db.close()
 	return nb
 
-def tempUsers(date, days):
+def temp(date, days):
 	""" Return number of temporary users with a ticket for `days` days on `date` 
 		`date` is a year or a month (month/year) """
 	db = sqlite3.connect(db_filename)
@@ -71,10 +71,13 @@ def tempUsers(date, days):
 	return nb
 
 def OneDayUsers(date):
-	return tempUsers(date, 1)
+	return temp(date, 1)
 
 def OneWeekUsers(date):
-	return tempUsers(date, 7)
+	return temp(date, 7)
+
+def tempUsers(date):
+	return OneDayUsers(date) + OneWeekUsers(date)
 
 def billing_subscribers(date):
 	return subscribers(date) * 30
@@ -84,6 +87,9 @@ def billing_oneweek(date):
 
 def billing_oneday(date):
 	return OneDayUsers(date) * 1.5
+
+def billing_tempusers(date):
+	return billing_oneweek(date) + billing_oneday(date)
 
 def billing_trips(date):
 	db = sqlite3.connect(db_filename)

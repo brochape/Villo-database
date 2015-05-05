@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Billing{% endblock title%}
+{% block content %}
+{% if data is defined %}
+<table class="center" id="onlyonerow">
+	<tr>
+		<td></td>
+		<th>Subscribers</th>
+		<th>Temporary users</th>
+		<th>Trips</th>
+		<th>Total</th>
+	</tr>
+	<tr>
+		<th>Number</th>
+		<td>{{ data["subs"] }}</td>
+		<td>{{ data["temp"] }}</td>
+		<td></td>
+		<td>{{ data["subs"] + data["temp"] }}</td>
+	</tr>
+	<tr>
+		<th>Money</th>
+		<td>{{ data["billing_subs"] }}</td>
+		<td>{{ data["billing_temp"] }}</td>
+		<td>{{ data["billing_trips"] }}</td>
+		<td>{{ data["billing_subs"] + data["billing_temp"] + data["billing_trips"]}}</td>
+	</tr>
+</table>
+{% else %}
+<table class="center" id="login">
+	<form method="post" action="">
+		<tr>
+			<td>
+				<select name="month">
+					<option value="00">All year</option>
+					<option value="01">January</option>
+					<option value="02">February</option>
+					<option value="03">March</option>
+					<option value="04">April</option>
+					<option value="05">May</option>
+					<option value="06">June</option>
+					<option value="07">July</option>
+					<option value="08">August</option>
+					<option value="09">September</option>
+					<option value="10">October</option>
+					<option value="11">November</option>
+					<option value="12">December</option>
+				</select>
+			</td>
+			<td>
+				<input type="text" name="year" />
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<input type="submit" value="Get report" />
+			</td>
+		</tr>
+	</form>
+</table>
+{% endif %}
+{% endblock content %}

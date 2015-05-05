@@ -11,6 +11,7 @@ import users as Users
 import trips as Trips
 import bicycles as Bicycles
 import stations as Stations
+import billing as Billing
 
 navigation_menu = OrderedDict()
 
@@ -35,6 +36,7 @@ def set_navigation_menu(mode):
         navigation_menu["Users"] = "users"
         navigation_menu["Logout"] = 'logout'
 
+set_navigation_menu('public')
 
 def render_template(*args, **kwargs):
     import flask
@@ -178,11 +180,31 @@ def stations():
     results = Stations.query_all()
     return jsonify(data=results)
 
-@app.route("/billing", methods=['get'])
+@app.route("/billing", methods=['get', 'post'])
 @require_login
 @require_admin
 def billing():
-    return ""
+    if request.method == "GET":
+        return render_template("billing.html")
+    elif request.method == "POST":
+        if not "month" in request.values or not "year" in request.values:
+            return abort(400)
+        try:
+            int(request.values["month"])
+            int(request.values["year"])
+        except:
+            return render_template("billing.html")
+        if request.values["month"] == "00":
+            date = request.values["year"]
+        else:
+            date = request.values["month"] + "/" + request.values["year"]
+        data = {}
+        data["subs"] = Billing.subscribers(date)
+        data["temp"] = Billing.tempUsers(date)
+        data["billing_subs"] = Billing.billing_subscribers(date)
+        data["billing_temp"] = Billing.billing_tempusers(date)
+        data["billing_trips"] = Billing.billing_trips(date)
+        return render_template("billing.html", data=data)
 
 @app.route("/users", methods=['get'])
 @require_login
