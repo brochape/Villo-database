@@ -5,17 +5,36 @@ import os
 from functools import wraps
 # TODO secret key secured ?
 Flask.secret_key = os.urandom(512)
+from collections import OrderedDict
 
 import users as Users
 import trips as Trips
 import bicycles as Bicycles
 import stations as Stations
 
-navigation_menu = {
-    "Login": "login",
-    "Register": "register",
-    "Map": "gmap"
-}
+navigation_menu = OrderedDict()
+
+def set_navigation_menu(mode):
+    global navigation_menu
+    navigation_menu = OrderedDict()
+    if mode == "public":
+        navigation_menu['Map'] = 'gmap'
+        navigation_menu['Login'] = 'login'
+        navigation_menu['Register'] = 'register'
+    elif mode == "user":
+        navigation_menu["Home"] = 'home'
+        navigation_menu["Map"] = 'gmap_user'
+        navigation_menu["Trips"] = 'trips'
+        navigation_menu["Logout"] = 'logout'
+    elif mode == "admin":
+        navigation_menu["Home"] = 'home'
+        navigation_menu["Map"] = 'gmap_user'
+        navigation_menu["Trips"] = 'trips'
+        navigation_menu["Bicycles"] = "bicycles"
+        navigation_menu["Billing"] = "billing"
+        navigation_menu["Users"] = "users"
+        navigation_menu["Logout"] = 'logout'
+
 
 def render_template(*args, **kwargs):
     import flask
@@ -52,16 +71,10 @@ def login():
     elif request.method == "POST":
         if Users.login(request.values["user"], request.values["password"]):
             session["user"] = request.values["user"]
-            del navigation_menu["Login"]
-            del navigation_menu["Register"]
-            navigation_menu["Home"] = 'home'
-            navigation_menu["Map"] = 'gmap_user'
-            navigation_menu["Trips"] = 'trips'
-            navigation_menu["Logout"] = 'logout'
             if Users.isAdmin(session["user"]):
-                navigation_menu["Bicycles"] = "bicycles"
-                navigation_menu["Billing"] = "billing"
-                navigation_menu["Users"] = "users"
+                set_navigation_menu('admin')
+            else:
+                set_navigation_menu('user')
             if "redirect_url" in request.values:
                 return redirect(request.values["redirect_url"])
             else:
@@ -96,12 +109,7 @@ def gmap_user():
 @require_login
 def logout():
     del session["user"]
-    global navigation_menu
-    navigation_menu = {
-        "Login": "login",
-        "Register": "register",
-        "Map": "gmap"
-    }
+    set_navigation_menu('public')
     return redirect(url_for('login'))
 
 
