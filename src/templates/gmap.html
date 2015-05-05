@@ -1,175 +1,94 @@
 {% extends "base.html" %}
 {% block title %}Map{% endblock title %}
 {% block content %}
-<style type="text/css">
-      html{
-        height: 100%;
-      }
-      body {
-        min-height: 100%;
-      }
-</style>
-<html>
-  <head>
-    <style>
-      #container {
-        width: 100%;
-        height: 100%; 
-        position: relative;
-      }
-      #left{
-        position: absolute;
-        margin-left: auto;
-        margin-right: auto;
-        z-index: 1;
-        left: 0px;
-        width: 25%; /* largeur obligatoire pour être centré */
-        text-align: center;
-      }
-      #map-canvas {
-        text-align: center;
-        min-height: 500px;
-        width: 100%;
-        height: 100%; 
-        z-index: 0;
+<script src="https://maps.googleapis.com/maps/api/js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script>
+  $.getJSON("/stations", "", function( data ) {
+    var stationList = data["data"];
+    initialize(stationList);
+  });
 
-      }
-      th {
-        color:#D5DDE5;
-        background:#1b1e24;
-        border-bottom:4px solid #9ea7af;
-        border-right: 1px solid #343a45;
-        font-size:20px;
-        font-weight: 100;
-        padding:4px;
-        text-align:left;
-        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-        vertical-align:middle;
-      }
-      tr {
-        border-top: 1px solid #C1C3D1;
-        border-bottom-: 1px solid #C1C3D1;
-        color:#666B85;
-        font-size:16px;
-        font-weight:20;
-        text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
-      }
-      td {
-        min-width: 50%;
-        background:#FFFFFF;
-        padding:5px;
-        text-align:left;
-        vertical-align:middle;
-        font-weight:300;
-        font-size:14px;
-        text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
-        border-right: 1px solid #C1C3D1;
-      }
-    </style>
-    <script src="https://maps.googleapis.com/maps/api/js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-    <script>
-      $.getJSON("/stations", "", function( data ) {
-        var stationList = data["data"];
-        initialize(stationList);
-      });
-
-      function initialize(stationList) {
-        var mapCanvas = document.getElementById('map-canvas');
-        var mapOptions = {
-          center: new google.maps.LatLng(50.846041, 4.352512),
-          zoom: 13,
-          mapTypeId: google.maps.MapTypeId.ROADMAP
-        }
-        var map = new google.maps.Map(mapCanvas, mapOptions);
-        var lglt = new Array(stationList.lenght);
-        var markers = new Array(stationList.lenght);
-        var i;
-        var marker;
-        var infowindow = new google.maps.InfoWindow();
-        for(i = 0; i < stationList.length ; ++i){
-            lglt[i] = new google.maps.LatLng(stationList[i]["coordY"], stationList[i]["coordX"]);
-            marker = new google.maps.Marker({
-                position: lglt[i],
-                map: map,
-                title: stationList[i]["name"],
-                icon: "http://www.google.com/mapfiles/arrow.png"
-            });
-            google.maps.event.addListener(marker, 'click', (function(marker, i) {
-              return function() {
-                document.getElementById('name').textContent = stationList[i]["name"];
-                document.getElementById('coordinates').textContent = "".concat('(',stationList[i]["coordX"],',',stationList[i]["coordY"],')');
-                document.getElementById('capacity').textContent = "".concat(stationList[i]["bicycles"],'/',stationList[i]["capacity"]);
-                document.getElementById('seller').textContent = stationList[i]["seller"];
-                id_station = document.getElementById('id_station');
-                if (id_station != null) {
-                  id_station.value = stationList[i]["num"];
+  function initialize(stationList) {
+    var mapCanvas = document.getElementById('map-canvas');
+    var mapOptions = {
+      center: new google.maps.LatLng(50.846041, 4.352512),
+      zoom: 13,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    }
+    var map = new google.maps.Map(mapCanvas, mapOptions);
+    var lglt = new Array(stationList.lenght);
+    var markers = new Array(stationList.lenght);
+    var i;
+    var marker;
+    var infowindow = new google.maps.InfoWindow();
+    for(i = 0; i < stationList.length ; ++i){
+        lglt[i] = new google.maps.LatLng(stationList[i]["coordY"], stationList[i]["coordX"]);
+        marker = new google.maps.Marker({
+            position: lglt[i],
+            map: map,
+            title: stationList[i]["name"],
+            icon: "http://www.google.com/mapfiles/arrow.png"
+        });
+        google.maps.event.addListener(marker, 'click', (function(marker, i) {
+          return function() {
+            document.getElementById('name').textContent = stationList[i]["name"];
+            document.getElementById('coordinates').textContent = "".concat('(',stationList[i]["coordX"],',',stationList[i]["coordY"],')');
+            document.getElementById('capacity').textContent = "".concat(stationList[i]["bicycles"],'/',stationList[i]["capacity"]);
+            document.getElementById('seller').textContent = stationList[i]["seller"];
+            id_station = document.getElementById('id_station');
+            if (id_station != null) {
+              id_station.value = stationList[i]["num"];
+            }
+            submit_station = document.getElementById('submit_station');
+            if (submit_station != null) {
+              if ("{{ travelling }}" == "True") {
+                if (stationList[i]["bicycles"] < stationList[i]["capacity"]) {
+                  submit_station.style.visibility = 'visible';
+                  submit_station.value = "Put bicycle in this station";
                 }
-                submit_station = document.getElementById('submit_station');
-                if (submit_station != null) {
-                  if ("{{ travelling }}" == "True") {
-                    if (stationList[i]["bicycles"] < stationList[i]["capacity"]) {
-                      submit_station.style.visibility = 'visible';
-                      submit_station.value = "Put bicycle in this station";
-                    }
-                    else {
-                      submit_station.style.visibility = 'hidden';
-                    }
-                  }
-                  else {
-                    if (stationList[i]["bicycles"] > 0) {
-                      submit_station.style.visibility = 'visible';
-                      submit_station.value = "Take bicycle from this station";
-                    }
-                    else {
-                      submit_station.style.visibility = 'hidden';
-                    }                    
-                  }
+                else {
+                  submit_station.style.visibility = 'hidden';
                 }
-                infowindow.setContent('<h1 id="firstHeading" class="firstHeading">'+ stationList[i]["name"] +'</h1>');
-                infowindow.open(map, marker);
               }
-            })(marker, i));
-        }
-        return null;
-      }
-      
-    </script>
-  </head>
-  <body>
-    <div id="container">
-      <div id="left">
-        <table
-        th {
-  color:#D5DDE5;
-  background:#1b1e24;
-  border-bottom:4px solid #9ea7af;
-  border-right: 1px solid #343a45;
-  font-size:20px;
-  font-weight: 100;
-  padding:24px;
-  text-align:left;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
-  vertical-align:middle;
-}>
-          <tr>
-            <th>Name</th><td id="name"></td>
-          </tr>
-          <tr>
-            <th>Coordinates</th><td id="coordinates"></td>
-          </tr>
-          <tr>
-            <th>Capacity</th><td id="capacity"></td>
-          </tr>
-          <tr>
-            <th>Selling Machine</th><td id="seller"></td>
-          </tr>
-        </table>
-        {% block buttons %}
-        {% endblock buttons%}
-      </div>
-      <div id="map-canvas"></div>
-    </div>
-  </body>
-</html>
+              else {
+                if (stationList[i]["bicycles"] > 0) {
+                  submit_station.style.visibility = 'visible';
+                  submit_station.value = "Take bicycle from this station";
+                }
+                else {
+                  submit_station.style.visibility = 'hidden';
+                }                    
+              }
+            }
+            infowindow.setContent('<h1 id="firstHeading" class="firstHeading">'+ stationList[i]["name"] +'</h1>');
+            infowindow.open(map, marker);
+          }
+        })(marker, i));
+    }
+    return null;
+  }
+  
+</script>
+<div id="container">
+  <div id="left">
+    <table id="onlyonerow">
+      <tr>
+        <th>Name</th><td id="name"></td>
+      </tr>
+      <tr>
+        <th>Coordinates</th><td id="coordinates"></td>
+      </tr>
+      <tr>
+        <th>Capacity</th><td id="capacity"></td>
+      </tr>
+      <tr>
+        <th>Selling Machine</th><td id="seller"></td>
+      </tr>
+    </table>
+    {% block buttons %}
+    {% endblock buttons%}
+  </div>
+  <div id="map-canvas"></div>
+</div>
 {% endblock content %}
