@@ -32,7 +32,8 @@ def populate_table(name, columns, data):
     db.close()
 
 def format_date(datetime):
-    res = re.split(r'[:T-]+',datetime)
+    print datetime
+    res = re.split(r'[:T\- ]+',datetime)
     year = res[0]
     month = res[1]
     day = res[2]
