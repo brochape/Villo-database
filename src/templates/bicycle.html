@@ -1,52 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Bicycle{% endblock title %}
 {% block content %}
-<style>
-#bicycle {
-    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-    width: 100%;
-    border-collapse: collapse;
-    color:#222;
-}
-
-#bicycle td, #bicycle th {
-    font-size: 1em;
-    border: 1px solid #EBE8E4;
-    padding: 3px 7px 2px 7px;
-    color:#222;
-}
-
-#bicycle th {
-    font-size: 1.1em;
-    text-align: left;
-    padding-top: 5px;
-    padding-bottom: 4px;
-    background-color: #ffffff;
-    color:#222;
-}
-
-#bicycle tr.alt td {
-    color: #000000;
-    background-color: #EAF2D3;
-}
-
-.btn{
-    color: #FF0000;
-    background: #FFFFFF;
-  	font-weight: bold;
-  	border: 1px solid #FF0000;
-  	font-size: 120%;
-	cursor: pointer;
-    width:70%;
-
-}
-
-.btn:hover{
-	color: #FFFFFF;
- 	background: #FF0000;
-}
-</style>
-<table id="bicycle">
+<table class=".center" id="onlyonerow">
 	<tr>
 		<th>Service date</th>
 		<td>{{ bicycle["servicedate"] }}</td>
@@ -61,7 +16,7 @@
 	</tr>
 </table>
 {% if bicycle["state"] == "Yes" %}
-<form method="post" action="" id="button">
+<form method="post" action="">
 	<input type="hidden" name="id" value="{{ bicycle["id"] }}" />
 	<input class="btn" type="submit" value="Report broken bicycle" />
 </form>

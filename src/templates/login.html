@@ -1,38 +1,18 @@
 {% extends "base.html" %}
 {% block title %}Login{% endblock title %}
 {% block content %}
-<style type="text/css">
-	table.center {
-	    width:300px;
-	    height:300px;
-	    position:fixed;
-	    margin-left:-150px; /* half of width */
-	    margin-top:-150px;  /* half of height */
-	    top:50%;
-	    left:50%;
-  	}
-  	input[type=submit] {
-  		padding:5px 15px; 
-  		background:#ccc; 
-  		border:0 none;
-		cursor:pointer;
-		-webkit-border-radius: 5px;
-		border-radius: 5px; 
-		width:100%;}
-
-</style>
-<table class="center">
+<table class="center" id="login">
 	<form  method="post" action="">
 		<tr>
-			<td><label>Username</label></td>
+			<th>Username</th>
 			<td><input type="text" name="user" /></td>
 		</tr>
 		<tr>
-			<td><label>Password</label></td>
+			<th>Password</th>
 			<td><input type="password" name="password" /></td>
 		</tr>
 		<tr >
-			<td style="width:100%;"><input type="submit" value="Login"/></td>
+			<td><input type="submit" value="Login"/></td>
 		</tr>
 		{% if redirect_url is defined %}
 		<input type="hidden" value="{{ redirect_url }}" name="redirect_url" />

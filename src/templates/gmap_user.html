@@ -1,27 +1,8 @@
 {% extends "gmap.html" %}
 {% block title %}Villo Map{% endblock title %}
 {% block buttons %}
-<style>
-.btn{
-    color: #0000FF;
-    background: #FFFFFF;
-    font-weight: bold;
-    border: 1px solid #0000FF;
-    font-size: 120%;
-    cursor: pointer;
-    position : right;
-
-}
-
-.btn:hover{
-    color: #FFFFFF;
-    background: #0000FF;
-}
-</style>
-<html>
 <form method="post" action="" id="button">
     <input type="hidden" name="id" id="id_station" />
     <input class="btn" type="submit" id="submit_station" style="visibility:hidden;" />
 </form>
-</html>
 {% endblock buttons %}
