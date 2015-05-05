@@ -41,6 +41,12 @@ RENEW_SUB_QUERY="""
         )
     WHERE userID = ?
 """
+ALL_SUBS_QUERY="""
+    SELECT subs.userID, lastname, firstname, subscribeDate, (expiryDate >= datetime('now'))
+    FROM subs
+    INNER JOIN users on users.userID = subs.userID
+    ORDER BY lastname ASC, firstname ASC
+"""
 # TODO accents etc
 attr_regex = {
     # subscribers
@@ -138,5 +144,24 @@ def reNewSub(user):
     cursor.close()
     db.close()
 
+def get_all_subs():
+    db = sqlite3.connect(db_filename)
+    cursor = db.cursor()
+    cursor.execute(ALL_SUBS_QUERY)
+    results = cursor.fetchall()
+    ret = []
+    for result in results:
+        row = {}
+        row["id"] = result[0]
+        row["lastname"] = result[1]
+        row["firstname"] = result[2]
+        row["subscribeDate"] = result[3]
+        row["active"] = True if result[4] == 1 else False
+        ret.append(row)
+    cursor.close()
+    db.close()
+    return ret
+
 if __name__ == '__main__':
     reNewSub(0)
+    print len(get_all_subs())

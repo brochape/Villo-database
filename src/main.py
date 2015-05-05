@@ -1,5 +1,4 @@
 from flask import Flask, request, session, redirect, url_for, jsonify, abort
-import flask
 app = Flask(__name__)
 app.testing=True
 import os
@@ -19,6 +18,7 @@ navigation_menu = {
 }
 
 def render_template(*args, **kwargs):
+    import flask
     return flask.render_template(*args, navigation_menu=navigation_menu, **kwargs)
 
 def require_login(f):
@@ -41,6 +41,8 @@ def require_admin(f):
 
 @app.route("/login", methods=['get', 'post'])
 def login():
+    if "user" in session:
+        redirect(url_for('home'))
     if request.method == "GET":
         if "redirect_url" in request.values:
             return render_template("login.html", redirect_url=request.values["redirect_url"])
