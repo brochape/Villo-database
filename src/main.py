@@ -1,4 +1,5 @@
-from flask import Flask, request, render_template, session, redirect, url_for, jsonify, abort
+from flask import Flask, request, session, redirect, url_for, jsonify, abort
+import flask
 app = Flask(__name__)
 app.testing=True
 import os
@@ -10,6 +11,15 @@ import users as Users
 import trips as Trips
 import bicycles as Bicycles
 import stations as Stations
+
+navigation_menu = {
+    "Login": "login",
+    "Register": "register",
+    "Map": "gmap"
+}
+
+def render_template(*args, **kwargs):
+    return flask.render_template(*args, navigation_menu=navigation_menu, **kwargs)
 
 def require_login(f):
     @wraps(f)
@@ -40,6 +50,16 @@ def login():
     elif request.method == "POST":
         if Users.login(request.values["user"], request.values["password"]):
             session["user"] = request.values["user"]
+            del navigation_menu["Login"]
+            del navigation_menu["Register"]
+            navigation_menu["Home"] = 'home'
+            navigation_menu["Map"] = 'gmap_user'
+            navigation_menu["Trips"] = 'trips'
+            navigation_menu["Logout"] = 'logout'
+            if Users.isAdmin(session["user"]):
+                navigation_menu["Bicycles"] = "bicycles"
+                navigation_menu["Billing"] = "billing"
+                navigation_menu["Users"] = "users"
             if "redirect_url" in request.values:
                 return redirect(request.values["redirect_url"])
             else:
@@ -74,6 +94,12 @@ def gmap_user():
 @require_login
 def logout():
     del session["user"]
+    global navigation_menu
+    navigation_menu = {
+        "Login": "login",
+        "Register": "register",
+        "Map": "gmap"
+    }
     return redirect(url_for('login'))
 
 

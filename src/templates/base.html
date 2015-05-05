@@ -67,11 +67,9 @@ nav ul {
 	<nav>
 		<table>
 			<ul>
-				<li><a href="/home"><b>&#x2302; Home</b></a></li>
-				<li><a href="/logout"><b>Logout</b></a></li>
-				<li><a href="/trips"><b>Trips</b></a></li>
-				<li><a href="/register"><b>Register</b></a></li>
-				<li><a href="/gmap"><b>Map</b></a></li>
+				{% for name, url in navigation_menu.iteritems() %}
+				<li><a href="{{ url_for(url) }}"><b>{{ name }}</b></a></li>
+				{% endfor %}
 			</ul>
 		</table>
 	</nav>
