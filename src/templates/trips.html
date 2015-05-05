@@ -10,6 +10,7 @@
 		<th>End date</th>
     <th>End time</th>
 		<th>End station</th>
+    <th>Show on map</th>
 	</tr>
 	{% for trip in trips %}
 	<tr>
@@ -20,6 +21,7 @@
     <td>{{ trip["endingTime"][2] }} / {{ trip["endingTime"][1] }} / {{ trip["endingTime"][0] }}</td>
     <td>{{ trip["endingTime"][3] }} : {{ trip["endingTime"][4] }} : {{ trip["endingTime"][5] }}</td>
 		<td>{{ trip["ending"] }}</td>
+        <td><input type="submit" value="Show"/></td>
 	</tr>
 	{% endfor %}
 </table>

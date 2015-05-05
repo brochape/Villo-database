@@ -101,7 +101,7 @@ nav > ul > li:hover > a > .caret {
  	background: #FF0000;
 }
 
-#login input[type=submit], #register input[type=submit] {
+#login input[type=submit], #register input[type=submit],#lotsofdata input[type=submit]{
 	padding:5px 15px; 
 	background:#ccc; 
 	border:0 none;
