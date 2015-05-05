@@ -149,17 +149,21 @@ td.text-right {
 <table class="center" id="trips">
 	<tr>
 		<th>Bicycle number</th>
-		<th>Start time</th>
+		<th>Start date</th>
+    <th>Start time</th>
 		<th>Start station</th>
-		<th>End time</th>
+		<th>End date</th>
+    <th>End time</th>
 		<th>End station</th>
 	</tr>
 	{% for trip in trips %}
 	<tr>
 		<td><a href="/bicycle?id={{ trip["bicycle"] }}">{{ trip["bicycle"] }}</a></td>
-		<td>{{ trip["startTime"] }}</td>
+		<td>{{ trip["startTime"][2] }} / {{ trip["startTime"][1] }} / {{ trip["startTime"][0] }}</td>
+    <td>{{ trip["startTime"][3] }} : {{ trip["startTime"][4] }} : {{ trip["startTime"][5] }}</td>
 		<td>{{ trip["start"] }}</td>
-		<td>{{ trip["endingTime"] }}</td>
+    <td>{{ trip["endingTime"][2] }} / {{ trip["endingTime"][1] }} / {{ trip["endingTime"][0] }}</td>
+    <td>{{ trip["endingTime"][3] }} : {{ trip["endingTime"][4] }} : {{ trip["endingTime"][5] }}</td>
 		<td>{{ trip["ending"] }}</td>
 	</tr>
 	{% endfor %}
