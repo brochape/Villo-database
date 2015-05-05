@@ -1,5 +1,6 @@
 import sqlite3
 from config import db_filename as DB_FILENAME
+import re
 
 def listToSQL(l):
     return str(l).replace("[", "(").replace("]", ")").replace('\'NULL\'', 'NULL')
@@ -29,3 +30,13 @@ def populate_table(name, columns, data):
     db.commit()
     cursor.close()
     db.close()
+
+def format_date(datetime):
+    res = re.split(r'[:T-]+',datetime)
+    year = res[0]
+    month = res[1]
+    day = res[2]
+    hour = res[3]
+    minute = res[4]
+    second = res[5]
+    return year,month,day,hour,minute,second

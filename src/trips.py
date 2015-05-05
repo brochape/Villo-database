@@ -1,5 +1,6 @@
 import sqlite3
 from config import db_filename
+import helpers
 
 TRIPS_USER_QUERY="""
     SELECT trips.bicycle, trips.startTime, s1.name, trips.endingTime, s2.name
@@ -37,9 +38,9 @@ def query_all(user):
     for row in cursor.fetchall():
         result = {}
         result["bicycle"] = row[0]
-        result["startTime"] = row[1]
+        result["startTime"] = helpers.format_date(row[1])
         result["start"] = row[2]
-        result["endingTime"] = row[3]
+        result["endingTime"] = helpers.format_date(row[3])
         result["ending"] = row[4]
         results.append(result)
     cursor.close()
