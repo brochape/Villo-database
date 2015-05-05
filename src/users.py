@@ -47,6 +47,12 @@ SUBS_ALL_QUERY="""
     INNER JOIN users on users.userID = subs.userID
     ORDER BY lastname ASC, firstname ASC
 """
+
+ONE_SUB_QUERY="""
+    SELECT expiryDate 
+    FROM users
+    WHERE users.userID=?
+"""
 # TODO accents etc
 attr_regex = {
     # subscribers
@@ -143,6 +149,16 @@ def reNewSub(user):
     db.commit()
     cursor.close()
     db.close()
+
+def get_expiry_date(user):
+    db = sqlite3.connect(db_filename)
+    cursor = db.cursor()
+    cursor.execute(ONE_SUB_QUERY,(user))
+    ret = cursor.fetchone()
+    cursor.close()
+    db.close()
+    return ret
+
 
 def get_all_subs():
     db = sqlite3.connect(db_filename)

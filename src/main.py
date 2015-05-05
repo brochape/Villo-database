@@ -11,6 +11,8 @@ import users as Users
 import trips as Trips
 import bicycles as Bicycles
 import stations as Stations
+import helpers as Helpers
+
 
 navigation_menu = OrderedDict()
 
@@ -128,7 +130,12 @@ def register():
 @require_login
 def home():
     if request.method == "GET":
-        return render_template("home.html")
+        expirydate = Helpers.format_date(Users.get_expiry_date(session["user"])[0])
+        datestring = expirydate[2]+"/" + expirydate[1] +"/"+ expirydate[0] + " a "+expirydate[3] +":"+ expirydate[4]+":" + expirydate[5]
+        return render_template("home.html", date=datestring)
+    elif request.method == "POST":
+        Users.reNewSub(session["user"])
+        return redirect(url_for('home'))
 
 @app.route("/trips", methods=['get'])
 @require_login
