@@ -134,8 +134,7 @@ def bicycles():
         bicycleID = request.values["id"]
         Bicycles.repair(bicycleID)
         mybicycles = Bicycles.select_broken()
-        print mybicycles
-        return redirect(url_for('gmap_user'))
+        return redirect(url_for('bicycles'))
 
 
 @app.route("/stations", methods=['get'])

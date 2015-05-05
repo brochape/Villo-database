@@ -46,7 +46,6 @@ def report(id):
     db.close()
 
 def repair(id):
-    print "REPAIRING"
     db = sqlite3.connect(db_filename)
     cursor = db.cursor()
     cursor.execute(BICYCLE_UPDATE_QUERY, (1, id))
