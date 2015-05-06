@@ -11,3 +11,28 @@
     FROM trips
     GROUP BY trips.user
     HAVING COUNT(trips.user) >= 300;
+
+#R3
+    SELECT DISTINCT trip1.user, trip2.user
+    FROM trips AS trip1
+    INNER JOIN trips AS trip2 ON trip1.start = trip2.start AND trip1.ending = trip2.ending AND trip1.user != trip2.user;
+
+#R4
+    SELECT *
+    FROM
+    (SELECT DISTINCT trip1.ending, trip1.endingTime, trip2.start, trip2.startTime
+    FROM trips AS trip1
+    INNER JOIN trips AS trip2 ON trip1.bicycle = trip2.bicycle AND trip1.startTime < trip2.startTime
+    GROUP BY trip2.startTime
+    ORDER BY trip1.startTime ASC)
+    WHERE ending != start;
+
+#R5
+    
+
+#R6
+    SELECT stations.name, COUNT(trips.ending), COUNT(DISTINCT trips.user)
+    FROM stations
+    INNER JOIN trips ON trips.ending = stations.num
+    GROUP BY trips.ending
+    HAVING COUNT(trips.ending) >= 10;
