@@ -7,7 +7,7 @@
     # Manque le fait que le trajet doit venir de Flagey
 
 #R2
-    SELECT users.userID FROM (trips INNER JOIN users
-    ON trips.user=users.userID)
-    GROUP BY userID
-    HAVING Count(trips.user) = 1;
+    SELECT trips.user
+    FROM trips
+    GROUP BY trips.user
+    HAVING COUNT(trips.user) >= 300;
