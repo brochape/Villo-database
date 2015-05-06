@@ -1,7 +1,8 @@
 #R1 
-    SELECT DISTINCT subs.userID,subs.lastname,subs.firstname from (subs INNER JOIN trips
-    ON subs.userID = trips.user)
-    WHERE subs.addresscity='Ixelles';
+    SELECT DISTINCT subs.userID,subs.lastname,subs.firstname, subs.addresscity, stations.name FROM trips 
+    INNER JOIN subs ON subs.userID = trips.user
+    INNER JOIN stations ON trips.start = stations.num
+    WHERE subs.addresscity='Ixelles' and stations.name = 'FLAGEY';
 
     # Manque le fait que le trajet doit venir de Flagey
 
