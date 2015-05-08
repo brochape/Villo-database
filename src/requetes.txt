@@ -28,7 +28,14 @@
     WHERE ending != start;
 
 #R5
-    
+    SELECT users.userID, 
+        (CASE WHEN subs.subscribeDate IS NOT NULL THEN subs.subscribeDate ELSE tempUsers.paymentDate END),
+        COUNT(trips.user)
+    FROM users
+    LEFT OUTER JOIN trips ON trips.user = users.userID
+    LEFT OUTER JOIN subs ON subs.userID = users.userID
+    LEFT OUTER JOIN tempUsers ON tempUsers.userID = users.userID
+    GROUP BY trips.user;
 
 #R6
     SELECT stations.name, COUNT(trips.ending), COUNT(DISTINCT trips.user)
