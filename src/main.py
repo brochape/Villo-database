@@ -128,13 +128,12 @@ def register():
         else:
             return redirect(url_for('login'))
 
-@app.route("/home", methods=['get'])
+@app.route("/home", methods=['get', 'post'])
 @require_login
 def home():
     if request.method == "GET":
-        expirydate = Helpers.format_date(Users.get_expiry_date(session["user"])[0])
-        datestring = expirydate[2]+"/" + expirydate[1] +"/"+ expirydate[0] + " a "+expirydate[3] +":"+ expirydate[4]+":" + expirydate[5]
-        return render_template("home.html", date=datestring)
+        expirydate = Users.get_expiry_date(session["user"])[0]
+        return render_template("home.html", date=expirydate)
     elif request.method == "POST":
         Users.reNewSub(session["user"])
         return redirect(url_for('home'))

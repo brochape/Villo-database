@@ -33,13 +33,12 @@ USER_IS_TRAVELLING_QUERY="""
 """
 SUB_RENEW_QUERY="""
     UPDATE users
-    SET expiryDate=(
-        datetime((SELECT expiryDate
-        FROM users
-        INNER JOIN subs ON subs.userID = users.userID
-        WHERE subs.userID), '+1 year')
-        )
-    WHERE userID = ?
+    SET expiryDate=
+        datetime((SELECT users.expiryDate
+        FROM subs
+        INNER JOIN users ON users.userID = subs.userID
+        WHERE subs.userID = ?), '+1 year')
+    WHERE users.userID = ?
 """
 SUBS_ALL_QUERY="""
     SELECT subs.userID, lastname, firstname, subscribeDate, (expiryDate >= datetime('now'))
@@ -145,7 +144,7 @@ def isAdmin(user):
 def reNewSub(user):
     db = sqlite3.connect(db_filename)
     cursor = db.cursor()
-    cursor.execute(SUB_RENEW_QUERY, (user,))
+    cursor.execute(SUB_RENEW_QUERY, (user,user))
     db.commit()
     cursor.close()
     db.close()
