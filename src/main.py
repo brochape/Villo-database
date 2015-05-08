@@ -128,7 +128,7 @@ def register():
         else:
             return redirect(url_for('login'))
 
-@app.route("/home", methods=['get', 'post'])
+@app.route("/", methods=['get', 'post'])
 @require_login
 def home():
     if request.method == "GET":
