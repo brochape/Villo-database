@@ -10,7 +10,7 @@
     SELECT trips.user
     FROM trips
     GROUP BY trips.user
-    HAVING COUNT(trips.user) >= 300;
+    HAVING COUNT(trips.user) >= 2;
 
 #R3
     SELECT DISTINCT trip1.user, trip2.user
