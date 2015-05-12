@@ -1,10 +1,19 @@
 import sqlite3
 from config import db_filename
+import helpers
 
 BICYCLES_ALL_QUERY="SELECT * FROM bicycles"
-BICYCLE_ONE_QUERY="SELECT servicedate, model, state FROM bicycles WHERE id=?"
+BICYCLE_ONE_QUERY="SELECT id, servicedate, model, state FROM bicycles WHERE id=?"
 BICYCLES_STATE_QUERY="SELECT id, servicedate, model, state FROM bicycles WHERE state=?"
 BICYCLE_UPDATE_STATE_QUERY="UPDATE bicycles SET state=? WHERE id=?"
+
+def format_bicycle(row):
+    ret = {}
+    ret["id"] = row[0]
+    ret["servicedate"] = helpers.format_datetime(row[1])
+    ret["model"] = row[2]
+    ret["state"] = row[3]
+    return ret
 
 
 def select(id):
@@ -14,10 +23,7 @@ def select(id):
     result = cursor.fetchone()
     ret = None
     if result:
-        ret = {}
-        ret["servicedate"] = result[0]
-        ret["model"] = result[1]
-        ret["state"] = result[2]
+        ret = format_bicycle(result)
     cursor.close()
     db.close()
     return ret
@@ -29,8 +35,7 @@ def select_broken():
     results = cursor.fetchall()
     ret = []
     for result in results:
-        bicycle = dict(zip(["id", "servicedate", "model", "state"], result))
-        ret.append(bicycle)
+        ret.append(format_bicycle(result))
     cursor.close()
     db.close()
     return ret
