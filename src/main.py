@@ -122,11 +122,12 @@ def register():
     if request.method == "GET":
         return render_template("register.html")
     elif request.method == "POST":
-        errors = Users.register(request.values)
+        errors, userID = Users.register(request.values)
         if errors:
             return render_template("register.html", errors=errors, values=request.values)
         else:
-            return redirect(url_for('login'))
+            session["user"] = userID
+            return redirect(url_for('home'))
 
 @app.route("/", methods=['get', 'post'])
 @require_login

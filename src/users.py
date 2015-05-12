@@ -137,11 +137,12 @@ def register(user):
         elif user["validity"] == "0" or user["validity"] == "1":
             cursor.execute(TEMPUSER_INSERT_QUERY)
         db.commit()
+        lastid = cursor.lastrowid
         cursor.close()
         db.close()
-        return None
+        return None, lastid
     else:
-        return errors
+        return errors, None
 
 def isTravelling(user):
     db = sqlite3.connect(db_filename)
