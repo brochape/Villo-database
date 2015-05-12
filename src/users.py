@@ -3,6 +3,7 @@ import re
 import datetime
 import random
 from config import db_filename
+import helpers
 
 USER_IS_ADMIN_QUERY="""
     SELECT userID 
@@ -51,7 +52,7 @@ SUBS_ONE_QUERY="""
     WHERE userID = ?
 """
 SUBS_ALL_QUERY="""
-    SELECT subs.userID, lastname, firstname, subscribeDate, (expiryDate >= datetime('now'))
+    SELECT lastname, firstname, phone, addresscity, addresscp, addressstreet, addressnumber, subscribeDate, (expiryDate >= datetime('now')), subs.userID
     FROM subs
     INNER JOIN users on users.userID = subs.userID
     ORDER BY lastname ASC, firstname ASC
@@ -170,6 +171,18 @@ def get_one_user(user):
     db.close()
     return ret
 
+def format_row(row):
+    ret = {}
+    ret["lastname"] = row[0]
+    ret["firstname"] = row[1]
+    ret["phone"] = row[2]
+    ret["addresscity"] = row[3]
+    ret["addresscp"] = row[4]
+    ret["addressstreet"] = row[5]
+    ret["addressnumber"] = row[6]
+    ret["subscribeDate"] = helpers.format_date(row[7])
+    return ret
+
 def get_one_sub(user):
     db = sqlite3.connect(db_filename)
     cursor = db.cursor()
@@ -177,15 +190,7 @@ def get_one_sub(user):
     result = cursor.fetchone()
     ret = None
     if result:
-        ret = {}
-        ret["lastname"] = result[0]
-        ret["firstname"] = result[1]
-        ret["phone"] = result[2]
-        ret["addresscity"] = result[3]
-        ret["addresscp"] = result[4]
-        ret["addressstreet"] = result[5]
-        ret["addressnumber"] = result[6]
-        ret["subscribeDate"] = result[7]
+        ret = format_row(result)
     cursor.close()
     db.close()
     return ret
@@ -197,12 +202,9 @@ def get_all_subs():
     results = cursor.fetchall()
     ret = []
     for result in results:
-        row = {}
-        row["id"] = result[0]
-        row["lastname"] = result[1]
-        row["firstname"] = result[2]
-        row["subscribeDate"] = result[3]
-        row["active"] = True if result[4] == 1 else False
+        row = format_row(result)
+        row["active"] = True if result[8] == 1 else False
+        row["userID"] = result[9]
         ret.append(row)
     cursor.close()
     db.close()

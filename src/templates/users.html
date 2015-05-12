@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}My trips{% endblock title %}
+{% block content %}
+<table class="center" id="lotsofdata">
+    <tr>
+        <th>User ID</th>
+        <th>Last name</th>
+        <th>First name</th>
+        <th>Phone number</th>
+        <th>Address</th>
+        <th>City</th>
+        <th>Subscribe date</th>
+        <th>Active</th>
+    </tr>
+    {% for user in users %}
+    <tr>
+        <td>{{ user["userID"] }}</td>
+        <td>{{ user["lastname"] }}</td>
+        <td>{{ user["firstname"] }}</td>
+        <td>{{ user["phone"] }}</td>
+        <td>{{ user["addressstreet"] }} {{ user["addressnumber"] }}</td>
+        <td>{{ user["addresscity"] }} {{ user["addresscp"] }}</td>
+        <td>{{ user["subscribeDate"] }}</td>
+        <td>{{ user["active"] }}</td>
+        <td>
+            <form method="post" action="">
+                <input type="hidden" value="{{ user["userID"] }}" />
+                <input type="submit" value="Renew subscription" />
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock content %}

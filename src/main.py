@@ -221,6 +221,7 @@ def billing():
 @require_login
 @require_admin
 def users():
-    return ""
+    users = Users.get_all_subs()
+    return render_template("users.html", users=users)
 
 app.run('0.0.0.0', debug=True)
