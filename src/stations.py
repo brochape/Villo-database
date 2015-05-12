@@ -17,7 +17,7 @@ BICYCLE_TAKE_QUERY="""
 
 START_TRIP_QUERY="""
     INSERT INTO trips (bicycle,user,start,startTime)
-    VALUES (?,?,?,?)
+    VALUES (?,?,?,STRFTIME("%Y-%m-%dT%H:%M:%S",'now'))
 """
 
 BICYCLE_PUT_QUERY="""
@@ -28,7 +28,7 @@ BICYCLE_PUT_QUERY="""
 
 END_TRIP_QUERY="""
     UPDATE trips
-    SET ending=?, endingTime=?
+    SET ending=?, endingTime=STRFTIME("%Y-%m-%dT%H:%M:%S",'now')
     WHERE user=? AND ending IS NULL AND endingTime IS NULL
 """
 
@@ -85,8 +85,7 @@ def take_bicycle(user, station):
         db = sqlite3.connect(db_filename)
         cursor = db.cursor()
         cursor.execute(BICYCLE_TAKE_QUERY,(user,bicycleID))
-        currentTime = datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S")
-        cursor.execute(START_TRIP_QUERY, (bicycleID, user, station, currentTime))
+        cursor.execute(START_TRIP_QUERY, (bicycleID, user, station))
         db.commit()
         cursor.close()
         db.close()
@@ -104,14 +103,7 @@ def put_bicycle(user, station):
         return None
     else:
         cursor.execute(BICYCLE_PUT_QUERY, (station, bicycleID))
-        currentTime = datetime.datetime.now();
-        timeStr =   str(currentTime.year)+"-"+\
-                    "%02d"%currentTime.month+"-"+\
-                    "%02d"%currentTime.day+"T"+\
-                    "%02d"%currentTime.hour+":"+\
-                    "%02d"%currentTime.minute+":"+\
-                    "%02d"%currentTime.second
-        cursor.execute(END_TRIP_QUERY, (station, timeStr, user))
+        cursor.execute(END_TRIP_QUERY, (station, user))
 
     db.commit()
     cursor.close()
