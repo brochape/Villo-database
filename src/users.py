@@ -165,7 +165,7 @@ def get_one_user(user):
         ret["userID"] = result[0]
         ret["expiryDate"] = result[1]
         ret["card"] = result[2]
-        ret["card"] = "".join(['*' for i in range(12)]) + ret["card"][-5:]
+        ret["card"] = "".join(['*' for i in range(13)]) + ret["card"][-4:]
     cursor.close()
     db.close()
     return ret

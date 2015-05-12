@@ -8,9 +8,33 @@
             <tr><th>Expiration date</th>
                 <td>{{ user["expiryDate"] }}</td>
             </tr>
+            <tr>
+                <th>Card number</th>
+                <td>{{ user["card"] }}</td>
+            </tr>
             {% if sub is defined %}
             <tr>
                 <td><form method="post" action=""><input type="submit" value="Renew subscription"/></form></td>
+            </tr>
+            <tr>
+                <th>First name</th><td>{{ sub["firstname"] }}</td>
+            </tr>
+            <tr>
+                <th>Last name</th><td>{{ sub["lastname"] }}</td>
+            </tr>
+            <tr>
+                <th>Phone number</th><td>{{ sub["phone"] }}</td>
+            </tr>
+            <tr>
+                <th>Address</th><td>{{ sub["addressstreet"] }}</td>
+                <td>{{ sub["addressnumber"] }}</td>
+            </tr>
+            <tr>
+                <th>City</th><td>{{ sub["addresscity"] }}</td>
+                <td>{{ sub["addresscp"] }}</td>
+            </tr>
+            <tr>
+                <th>Subscription date</th><td>{{ sub["subscribeDate"] }}</td>
             </tr>
             {% endif %}
         </table>
