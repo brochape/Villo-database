@@ -268,3 +268,12 @@ div.table-title {
 	height: 100%; 
 	z-index: 0;
 }
+#right{
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  z-index: 1;
+  right: 0px;
+  width: 60%; /* largeur obligatoire pour être centré */
+  text-align: center;
+}

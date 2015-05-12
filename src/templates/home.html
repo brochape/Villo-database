@@ -39,9 +39,32 @@
             {% endif %}
         </table>
     </div>
-    <div>
-        <table class="center" id="lotsofdata">
-            <tr><th>cacaacacacaac</th></tr>
+    <div id="right">
+        <h3>Last trip</h3>
+        <table id="lotsofdata">
+            <tr>
+                <th>Bicycle number</th>
+                <td><a href="/bicycle?id={{ last_trip["bicycle"] }}">{{ last_trip["bicycle"] }}</a></td>
+            </tr>
+            <tr>
+                <th>Start date</th>
+                <td>{{ last_trip["startDate"] }}</td>
+                <th>Start time</th>
+                <td>{{ last_trip["startTime"] }}</td>
+                <th>Start station</th>
+                <td>{{ last_trip["start"] }}</td>
+            </tr>
+            <tr>
+                <th>End date</th>
+                <td>{{ last_trip["endingDate"] }}</td>
+                <th>End time</th>
+                <td>{{ last_trip["endingTime"] }}</td>
+                <th>End station</th>
+                <td>{{ last_trip["ending"] }}</td>
+            </tr>
+            <tr>
+                <td><input type="submit" value="Show"/></td>
+            </tr>
         </table>
     </div>
 </div>

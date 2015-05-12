@@ -56,9 +56,15 @@ def query_all(user):
 def query_last(user):
     db = sqlite3.connect(db_filename)
     cursor = db.cursor()
-    cursor.execute()
+    cursor.execute(TRIPS_USER_QUERY + " LIMIT 1", (user,))
+    result = cursor.fetchone()
+    if result:
+        ret = format_trips_row(result)
+    else:
+        ret = None
     cursor.close()
     db.close()
+    return ret
 
 def format_period_row(row):
     ret = {}
