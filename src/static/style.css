@@ -112,6 +112,12 @@ nav > ul > li:hover > a > .caret {
 .normalbtn{
   color:#000000;
   background:#ccc;
+  padding:5px 15px; 
+  border:0 none;
+  cursor:pointer;
+  -webkit-border-radius: 5px;
+  border-radius: 5px; 
+  min-width:100%;
 }
 .normalbtn:hover{
   color:#ccc; 
@@ -127,17 +133,6 @@ nav > ul > li:hover > a > .caret {
 	border-radius: 5px; 
 	min-width:100%;
 }
-
-#renew input[type=submit]{
-  padding:5px 15px; 
-  border:0 none;
-  cursor:pointer;
-  -webkit-border-radius: 5px;
-  border-radius: 5px; 
-  min-width:100%;
-
-}
-
 
 table.lotsofdata{
     margin-left:auto; 

@@ -26,11 +26,11 @@
 	</tr>
 </table>
 {% else %}
-<table class="center" id="login">
+<table id="login">
 	<form method="post" action="">
 		<tr>
 			<td>
-				<select name="month">
+				<select name="month" class="normalbtn">
 					<option value="00">All year</option>
 					<option value="01">January</option>
 					<option value="02">February</option>
@@ -47,12 +47,12 @@
 				</select>
 			</td>
 			<td>
-				<input type="text" name="year" />
+				<input type="text" name="year" class="normalbtn" />
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<input type="submit" value="Get report" />
+				<input type="submit" class="normalbtn" value="Get report" />
 			</td>
 		</tr>
 	</form>
