@@ -53,7 +53,7 @@ def query_all():
         result = {}
         result["num"] = row[0]
         result["name"] = row[1]
-        result["seller"] = row[2]
+        result["seller"] = "Yes" if row[2] else "No"
         result["capacity"] = row[3]
         result["coordX"] = row[4]
         result["coordY"] = row[5]
@@ -84,17 +84,9 @@ def take_bicycle(user, station):
     else:
         db = sqlite3.connect(db_filename)
         cursor = db.cursor()
-        print type(user), type(station), type(bicycleID)
         cursor.execute(BICYCLE_TAKE_QUERY,(user,bicycleID))
-        # TODO strptime ?
-        currentTime = datetime.datetime.now();
-        timeStr =   str(currentTime.year)+"-"+\
-                    "%02d"%currentTime.month+"-"+\
-                    "%02d"%currentTime.day+"T"+\
-                    "%02d"%currentTime.hour+":"+\
-                    "%02d"%currentTime.minute+":"+\
-                    "%02d"%currentTime.second
-        cursor.execute(START_TRIP_QUERY, (bicycleID, user, station, timeStr))
+        currentTime = datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S")
+        cursor.execute(START_TRIP_QUERY, (bicycleID, user, station, currentTime))
         db.commit()
         cursor.close()
         db.close()
