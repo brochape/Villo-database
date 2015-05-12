@@ -3,7 +3,8 @@
 {% block content %}
 <div id="container">
     <div id="left">
-        <table id="onlyonerow">
+        <h3>Your profile</h3>
+        <table class="onlyonerow">
             <tr><th>Login</th><td>{{ user["userID"] }}</td></tr>
             <tr><th>Expiration date</th>
                 <td>{{ user["expiryDate"] }}</td>
@@ -50,7 +51,7 @@
     </div>
     <div id="right">
         <h3>Your last trip</h3>
-        <table id="lotsofdata">
+        <table class="onlyonerow">
             <tr>
                 <th>Bicycle number</th>
                 <td><a href="/bicycle?id={{ last_trip["bicycle"] }}">{{ last_trip["bicycle"] }}</a></td>
@@ -58,16 +59,24 @@
             <tr>
                 <th>Start date</th>
                 <td>{{ last_trip["startDate"] }}</td>
+            </tr>
+            <tr>
                 <th>Start time</th>
                 <td>{{ last_trip["startTime"] }}</td>
+            </tr>
+            <tr>
                 <th>Start station</th>
                 <td>{{ last_trip["start"] }}</td>
             </tr>
             <tr>
                 <th>End date</th>
                 <td>{{ last_trip["endingDate"] }}</td>
+            </tr>
+            <tr>
                 <th>End time</th>
                 <td>{{ last_trip["endingTime"] }}</td>
+            </tr>
+            <tr>
                 <th>End station</th>
                 <td>{{ last_trip["ending"] }}</td>
             </tr>
