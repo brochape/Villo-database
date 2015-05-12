@@ -6,7 +6,7 @@
 CREATE TABLE IF NOT EXISTS stations (
     num INTEGER NOT NULL, 
     name TEXT NOT NULL, 
-    seller INTEGER NOT NULL, 
+    seller BOOLEAN NOT NULL, 
     capacity INTEGER NOT NULL, 
     coordX REAL NOT NULL, 
     coordY REAL NOT NULL
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS users (
     userID INTEGER PRIMARY KEY,
     password TEXT NOT NULL, 
     expiryDate TEXT NOT NULL, 
-    card INTEGER NOT NULL
+    card TEXT NOT NULL
 
 );
 

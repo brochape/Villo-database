@@ -1,12 +1,25 @@
 {% extends "base.html" %}
 {% block title %}Home{% endblock title %}
 {% block content %}
-<table class="center" id="onlyonerow">
-    <form method="post" action="">
-        <tr><td>Votre compte expire le</td></tr>
-        <tr><td>{{ date }}</td></tr>
-        <tr><td><input type="submit" value="Renew"/></td></tr>
-    </form>
-</table>
+<div id="container">
+    <div id="left">
+        <table id="onlyonerow">
+            <tr><th>Login</th><td>{{ user["userID"] }}</td></tr>
+            <tr><th>Expiration date</th>
+                <td>{{ user["expiryDate"] }}</td>
+            </tr>
+            {% if sub is defined %}
+            <tr>
+                <td><form method="post" action=""><input type="submit" value="Renew subscription"/></form></td>
+            </tr>
+            {% endif %}
+        </table>
+    </div>
+    <div>
+        <table class="center" id="lotsofdata">
+            <tr><th>cacaacacacaac</th></tr>
+        </table>
+    </div>
+</div>
 
 {% endblock content %}

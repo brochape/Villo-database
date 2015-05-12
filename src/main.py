@@ -132,8 +132,12 @@ def register():
 @require_login
 def home():
     if request.method == "GET":
-        expirydate = Users.get_expiry_date(session["user"])[0]
-        return render_template("home.html", date=expirydate)
+        user = Users.get_one_user(session["user"])
+        sub = Users.get_one_sub(session["user"])
+        if sub:
+            return render_template("home.html", user=user, sub=sub)
+        else:
+            return render_template("home.html", user=user)
     elif request.method == "POST":
         Users.reNewSub(session["user"])
         return redirect(url_for('home'))

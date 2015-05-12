@@ -40,6 +40,16 @@ SUB_RENEW_QUERY="""
         WHERE subs.userID = ?), '+1 year')
     WHERE users.userID = ?
 """
+USERS_ONE_QUERY="""
+    SELECT userID, expiryDate, card
+    FROM users
+    WHERE userID = ?
+"""
+SUBS_ONE_QUERY="""
+    SELECT lastname, firstname, phone, addresscity, addresscp, addressstreet, addressnumber, subscribeDate
+    FROM subs
+    WHERE userID = ?
+"""
 SUBS_ALL_QUERY="""
     SELECT subs.userID, lastname, firstname, subscribeDate, (expiryDate >= datetime('now'))
     FROM subs
@@ -47,11 +57,6 @@ SUBS_ALL_QUERY="""
     ORDER BY lastname ASC, firstname ASC
 """
 
-ONE_SUB_QUERY="""
-    SELECT expiryDate 
-    FROM users
-    WHERE users.userID=?
-"""
 # TODO accents etc
 attr_regex = {
     # subscribers
@@ -149,15 +154,41 @@ def reNewSub(user):
     cursor.close()
     db.close()
 
-def get_expiry_date(user):
+def get_one_user(user):
     db = sqlite3.connect(db_filename)
     cursor = db.cursor()
-    cursor.execute(ONE_SUB_QUERY,(user,))
-    ret = cursor.fetchone()
+    cursor.execute(USERS_ONE_QUERY,(user,))
+    result = cursor.fetchone()
+    ret = None
+    if result:
+        ret = {}
+        ret["userID"] = result[0]
+        ret["expiryDate"] = result[1]
+        ret["card"] = result[2]
+        ret["card"] = "".join(['*' for i in range(12)]) + ret["card"][-5:]
     cursor.close()
     db.close()
     return ret
 
+def get_one_sub(user):
+    db = sqlite3.connect(db_filename)
+    cursor = db.cursor()
+    cursor.execute(SUBS_ONE_QUERY, (user,))
+    result = cursor.fetchone()
+    ret = None
+    if result:
+        ret = {}
+        ret["lastname"] = result[0]
+        ret["firstname"] = result[1]
+        ret["phone"] = result[2]
+        ret["addresscity"] = result[3]
+        ret["addresscp"] = result[4]
+        ret["addressstreet"] = result[5]
+        ret["addressnumber"] = result[6]
+        ret["subscribeDate"] = result[7]
+    cursor.close()
+    db.close()
+    return ret
 
 def get_all_subs():
     db = sqlite3.connect(db_filename)
