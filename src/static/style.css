@@ -119,7 +119,7 @@ nav > ul > li:hover > a > .caret {
   border-radius: 5px; 
   min-width:100%;
 }
-.normalbtn:hover{
+input[type=submit].normalbtn:hover{
   color:#ccc; 
   background:#000000;
 
