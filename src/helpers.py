@@ -33,7 +33,7 @@ def populate_table(name, columns, data):
     db.close()
 
 def format_date(date):
-    return datetime.strptime(date, "%Y-%m-%dT%H:%M:%S").strftime("%d/%m/%Y")
+    return datetime.strptime(date, "%Y-%m-%dT%H:%M:%S").strftime("%d/%m/%Y %H:%M:%S")
 
 def format_time(date):
     return datetime.strptime(date, "%Y-%m-%dT%H:%M:%S").strftime("%H:%M:%S")

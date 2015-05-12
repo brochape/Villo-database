@@ -36,7 +36,7 @@ USER_IS_TRAVELLING_QUERY="""
 SUB_RENEW_QUERY="""
     UPDATE users
     SET expiryDate=
-        datetime((SELECT MAX(users.expiryDate, DATETIME('now'))
+        strftime("%Y-%m-%dT%H:%M:%S", (SELECT MAX(users.expiryDate, DATETIME('now'))
         FROM subs
         INNER JOIN users ON users.userID = subs.userID
         WHERE subs.userID = ?), '+1 year')
@@ -181,7 +181,7 @@ def get_one_user(user):
     if result:
         ret = {}
         ret["userID"] = result[0]
-        ret["expiryDate"] = result[1]
+        ret["expiryDate"] = helpers.format_date(result[1])
         ret["card"] = result[2]
         ret["card"] = "".join(['*' for i in range(13)]) + ret["card"][-4:]
     cursor.close()
