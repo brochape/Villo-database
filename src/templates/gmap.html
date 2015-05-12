@@ -33,7 +33,8 @@
         google.maps.event.addListener(marker, 'click', (function(marker, i) {
           return function() {
             document.getElementById('name').textContent = stationList[i]["name"];
-            document.getElementById('coordinates').textContent = "".concat('(',stationList[i]["coordX"],',',stationList[i]["coordY"],')');
+            document.getElementById('coordX').textContent = stationList[i]["coordX"];
+            document.getElementById('coordY').textContent = stationList[i]["coordY"];
             document.getElementById('capacity').textContent = "".concat(stationList[i]["bicycles"],'/',stationList[i]["capacity"]);
             document.getElementById('seller').textContent = stationList[i]["seller"];
             id_station = document.getElementById('id_station');
@@ -77,7 +78,10 @@
         <th>Name</th><td id="name"></td>
       </tr>
       <tr>
-        <th>Coordinates</th><td id="coordinates"></td>
+        <th>Longitude</th><td id="coordX"></td>
+      </tr>
+      <tr>
+        <th>Latitude</th><td id="coordY"></td>
       </tr>
       <tr>
         <th>Capacity</th><td id="capacity"></td>
