@@ -24,7 +24,7 @@
         <td>{{ user["active"] }}</td>
         <td>
             <form method="post" action="">
-                <input type="hidden" value="{{ user["userID"] }}" />
+                <input type="hidden" name="id" value="{{ user["userID"] }}" />
                 <input type="submit" value="Renew subscription" />
             </form>
         </td>

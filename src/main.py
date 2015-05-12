@@ -217,11 +217,18 @@ def billing():
         data["billing_trips"] = Billing.billing_trips(date)
         return render_template("billing.html", data=data)
 
-@app.route("/users", methods=['get'])
+@app.route("/users", methods=['get', 'post'])
 @require_login
 @require_admin
 def users():
-    users = Users.get_all_subs()
-    return render_template("users.html", users=users)
+    if request.method == "GET":
+        users = Users.get_all_subs()
+        return render_template("users.html", users=users)
+    elif request.method == "POST":
+        if "id" not in request.values:
+            return abort(400)
+        user = request.values["id"]
+        Users.reNewSub(user)
+        return redirect(url_for('users'))
 
 app.run('0.0.0.0', debug=True)
