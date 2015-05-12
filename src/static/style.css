@@ -120,7 +120,7 @@ nav > ul > li:hover > a > .caret {
   min-width:100%;
   text-decoration: none;
 }
-input[type=submit].normalbtn:hover{
+input[type=submit].normalbtn:hover,a.normalbtn:hover{
   color:#ccc; 
   background:#000000;
 
