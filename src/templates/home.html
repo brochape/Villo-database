@@ -9,7 +9,7 @@
             <tr><th>Expiration date</th>
                 <td>{{ user["expiryDate"] }}</td>
                 {% if sub is defined %}
-                <td><form method="post" action=""><input class="normalbtn" type="submit" value="Renew subscription"/></form></td>
+                <td style="background:transparent;"><form method="post" action=""><input class="normalbtn" type="submit" value="Renew subscription"/></form></td>
                 {% endif %}
             </tr>
             <tr>
@@ -81,7 +81,7 @@
                 <td>{{ last_trip["ending"] }}</td>
             </tr>
             <tr>
-                <td><input class="normalbtn" type="submit" value="Show on map"/></td>
+                <td style="background:transparent;"><input class="normalbtn" type="submit" value="Show on map"/></td>
             </tr>
         </table>
     </div>
