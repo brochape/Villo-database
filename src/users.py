@@ -181,7 +181,7 @@ def get_one_user(user):
     if result:
         ret = {}
         ret["userID"] = result[0]
-        ret["expiryDate"] = helpers.format_date(result[1])
+        ret["expiryDate"] = helpers.format_datetime(result[1])
         ret["card"] = result[2]
         ret["card"] = "".join(['*' for i in range(13)]) + ret["card"][-4:]
     cursor.close()
@@ -197,7 +197,7 @@ def format_row(row):
     ret["addresscp"] = row[4]
     ret["addressstreet"] = row[5]
     ret["addressnumber"] = row[6]
-    ret["subscribeDate"] = helpers.format_date(row[7])
+    ret["subscribeDate"] = helpers.format_datetime(row[7])
     return ret
 
 def get_one_sub(user):
