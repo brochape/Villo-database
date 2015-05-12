@@ -28,6 +28,7 @@
                 <input type="submit" value="Renew subscription" />
             </form>
         </td>
+        <td><a href="{{ url_for("trips_admin", id=user["userID"]) }}">See trips</a></td>
     </tr>
     {% endfor %}
 </table>

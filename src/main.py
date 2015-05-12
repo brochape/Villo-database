@@ -149,6 +149,15 @@ def trips():
     myTrips = Trips.query_all(session["user"])
     return render_template("trips.html", trips=myTrips)
 
+@app.route("/trips_admin", methods=['get'])
+@require_login
+@require_admin
+def trips_admin():
+    if "id" not in request.values:
+        return abort(400)
+    user_trips = Trips.query_all(request.values["id"])
+    return render_template("trips.html", trips=user_trips)
+
 @app.route("/bicycle", methods=['get', 'post'])
 @require_login
 def bicycle():
