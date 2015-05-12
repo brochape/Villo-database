@@ -30,6 +30,17 @@ TRIPS_BICYCLE_PERIOD_QUERY="""
         AND trips.ending IS NOT NULL AND trips.endingTime IS NOT NULL
     ORDER BY trips.startTime ASC
 """
+def format_trips_row(row):
+    result = {}
+    result["bicycle"] = row[0]
+    result["startDate"] = helpers.format_date(row[1])
+    result["startTime"] = helpers.format_time(row[1])
+    result["start"] = row[2]
+    result["endingDate"] = helpers.format_date(row[3])
+    result["endingTime"] = helpers.format_time(row[3])
+    result["ending"] = row[4]
+    return result
+
 
 def query_all(user):
     db = sqlite3.connect(db_filename)
@@ -37,18 +48,27 @@ def query_all(user):
     cursor.execute(TRIPS_USER_QUERY, (user,))
     results = []
     for row in cursor.fetchall():
-        result = {}
-        result["bicycle"] = row[0]
-        result["startDate"] = datetime.strptime(row[1], "%Y-%m-%dT%H:%M:%S").strftime("%d/%m/%Y")
-        result["startTime"] = datetime.strptime(row[1], "%Y-%m-%dT%H:%M:%S").strftime("%H:%M:%S")
-        result["start"] = row[2]
-        result["endingDate"] = datetime.strptime(row[3], "%Y-%m-%dT%H:%M:%S").strftime("%d/%m/%Y")
-        result["endingTime"] = datetime.strptime(row[3], "%Y-%m-%dT%H:%M:%S").strftime("%H:%M:%S")
-        result["ending"] = row[4]
-        results.append(result)
+        results.append(format_trips_row(row))
     cursor.close()
     db.close()
     return results
+
+def query_last(user):
+    db = sqlite3.connect(db_filename)
+    cursor = db.cursor()
+    cursor.execute()
+    cursor.close()
+    db.close()
+
+def format_period_row(row):
+    ret = {}
+    ret["startTime"] = row[0]
+    ret["s1.coordX"] = row[1]
+    ret["s1.coordY"] = row[2]
+    ret["endingTime"] = row[3]
+    ret["s2.coordX"] = row[4]
+    ret["s2.coordY"] = row[5]
+    return ret
 
 def query_user_period(user, dateBeg, dateEnd):
     db = sqlite3.connect(db_filename)
@@ -56,15 +76,8 @@ def query_user_period(user, dateBeg, dateEnd):
     cursor.execute(TRIPS_USER_PERIOD_QUERY, (user, dateBeg, dateEnd))
     results = cursor.fetchall()
     ret = []
-    for result in results:
-        row = {}
-        row["startTime"] = result[0]
-        row["s1.coordX"] = result[1]
-        row["s1.coordY"] = result[2]
-        row["endingTime"] = result[3]
-        row["s2.coordX"] = result[4]
-        row["s2.coordY"] = result[5]
-        ret.append(row)
+    for row in results:
+        ret.append(format_period_row(row))
     cursor.close()
     db.close()
     return ret
@@ -75,15 +88,8 @@ def query_bicycle_period(bicycle, dateBeg, dateEnd):
     cursor.execute(TRIPS_BICYCLE_PERIOD_QUERY, (bicycle, dateBeg, dateEnd))
     results = cursor.fetchall()
     ret = []
-    for result in results:
-        row = {}
-        row["startTime"] = result[0]
-        row["s1.coordX"] = result[1]
-        row["s1.coordY"] = result[2]
-        row["endingTime"] = result[3]
-        row["s2.coordX"] = result[4]
-        row["s2.coordY"] = result[5]
-        ret.append(row)
+    for row in results:
+        ret.append(format_period_row(row))
     cursor.close()
     db.close()
     return ret
