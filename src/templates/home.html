@@ -18,6 +18,8 @@
             {% if sub is defined %}
             <tr>
                 <th>First name</th><td>{{ sub["firstname"] }}</td>
+            </tr>
+            <tr>
                 <th>Last name</th><td>{{ sub["lastname"] }}</td>
             </tr>
             <tr>
@@ -37,6 +39,8 @@
             {% endif %}
             <tr>
                 <th>Total trips</th><td>{{ stats["total_trips"] }}</td>
+            </tr>
+            <tr>
                 <th>Total distance</th><td>{{ stats["total_distance"] }}</td>
             </tr>
             <tr>
