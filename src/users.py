@@ -58,6 +58,21 @@ SUBS_ALL_QUERY="""
     ORDER BY lastname ASC, firstname ASC
 """
 
+STATS_QUERY="""
+    SELECT total_trips, total_distance, total_distance/total_trips
+    FROM(
+        SELECT COUNT(*) AS total_trips,
+            SUM(sqrt(power((s1.coordX-s2.coordX)*71, 2) + power((s1.coordY-s2.coordY)*111, 2))) AS total_distance
+        FROM trips
+        INNER JOIN users ON users.userID = trips.user
+        INNER JOIN stations AS s1 ON s1.num = trips.start
+        INNER JOIN stations AS s2 ON s2.num = trips.ending
+        LEFT OUTER JOIN subs ON subs.userID = users.userID
+        GROUP BY trips.user
+        ORDER BY COUNT(trips.user)
+    )
+"""
+
 # TODO accents etc
 attr_regex = {
     # subscribers
@@ -209,6 +224,22 @@ def get_all_subs():
     cursor.close()
     db.close()
     return ret
+
+def get_stats(user):
+    db = sqlite3.connect(db_filename)
+    cursor = db.cursor()
+    cursor.execute(STATS_QUERY, (user,))
+    result = cursor.fetchone()
+    if result:
+        ret = {}
+        ret["total_trips"] = result[0]
+        ret["total_distance"] = result[1]
+        ret["mean_distance"] = result[2]
+    else:
+        ret = None
+    cursor.close()
+    db.close()
+    return ret    
 
 if __name__ == '__main__':
     reNewSub(0)
