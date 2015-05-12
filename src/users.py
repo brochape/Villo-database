@@ -35,7 +35,7 @@ USER_IS_TRAVELLING_QUERY="""
 SUB_RENEW_QUERY="""
     UPDATE users
     SET expiryDate=
-        datetime((SELECT users.expiryDate
+        datetime((SELECT MAX(users.expiryDate, DATETIME('now'))
         FROM subs
         INNER JOIN users ON users.userID = subs.userID
         WHERE subs.userID = ?), '+1 year')
