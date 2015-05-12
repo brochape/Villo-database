@@ -169,6 +169,7 @@ def bicycle():
     # show bicycle information
     if request.method == "GET":
         result = Bicycles.select(bicycleID)
+        print result
         if not result:
             return abort(400)
         result["id"] = bicycleID
