@@ -7,6 +7,9 @@
             <tr><th>Login</th><td>{{ user["userID"] }}</td></tr>
             <tr><th>Expiration date</th>
                 <td>{{ user["expiryDate"] }}</td>
+                {% if sub is defined %}
+                <td style="background-color:transparent"><form id="renew" method="post" action=""><input class="normalbtn" type="submit" value="Renew subscription"/></form></td>
+                {% endif %}
             </tr>
             <tr>
                 <th>Card number</th>
@@ -14,12 +17,7 @@
             </tr>
             {% if sub is defined %}
             <tr>
-                <td><form method="post" action=""><input type="submit" value="Renew subscription"/></form></td>
-            </tr>
-            <tr>
                 <th>First name</th><td>{{ sub["firstname"] }}</td>
-            </tr>
-            <tr>
                 <th>Last name</th><td>{{ sub["lastname"] }}</td>
             </tr>
             <tr>
@@ -40,6 +38,8 @@
             <tr>
                 <th>Total trips</th><td>{{ stats["total_trips"] }}</td>
                 <th>Total distance</th><td>{{ stats["total_distance"] }}</td>
+            </tr>
+            <tr>
                 <th>Mean distance per trip</th><td>{{ stats["mean_distance"] }}</td>
             </tr>
         </table>
@@ -68,7 +68,7 @@
                 <td>{{ last_trip["ending"] }}</td>
             </tr>
             <tr>
-                <td><input type="submit" value="Show"/></td>
+                <td style="background-color:transparent"><input id="renew" class="normalbtn" type="submit" value="Show on map"/></td>
             </tr>
         </table>
     </div>
