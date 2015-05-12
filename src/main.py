@@ -135,10 +135,11 @@ def home():
         user = Users.get_one_user(session["user"])
         sub = Users.get_one_sub(session["user"])
         last_trip = Trips.query_last(session["user"])
+        stats = Users.get_stats(session["user"])
         if sub:
-            return render_template("home.html", user=user, sub=sub, last_trip=last_trip)
+            return render_template("home.html", user=user, sub=sub, last_trip=last_trip, stats=stats)
         else:
-            return render_template("home.html", user=user, last_trip=last_trip)
+            return render_template("home.html", user=user, last_trip=last_trip, stats=stats)
     elif request.method == "POST":
         Users.reNewSub(session["user"])
         return redirect(url_for('home'))

@@ -37,6 +37,11 @@
                 <th>Subscription date</th><td>{{ sub["subscribeDate"] }}</td>
             </tr>
             {% endif %}
+            <tr>
+                <th>Total trips</th><td>{{ stats["total_trips"] }}</td>
+                <th>Total distance</th><td>{{ stats["total_distance"] }}</td>
+                <th>Mean distance per trip</th><td>{{ stats["mean_distance"] }}</td>
+            </tr>
         </table>
     </div>
     <div id="right">

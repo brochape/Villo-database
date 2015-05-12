@@ -4,6 +4,7 @@ import datetime
 import random
 from config import db_filename
 import helpers
+import math
 
 USER_IS_ADMIN_QUERY="""
     SELECT userID 
@@ -67,7 +68,7 @@ STATS_QUERY="""
         INNER JOIN users ON users.userID = trips.user
         INNER JOIN stations AS s1 ON s1.num = trips.start
         INNER JOIN stations AS s2 ON s2.num = trips.ending
-        LEFT OUTER JOIN subs ON subs.userID = users.userID
+        WHERE users.userID = ?
         GROUP BY trips.user
         ORDER BY COUNT(trips.user)
     )
@@ -227,6 +228,8 @@ def get_all_subs():
 
 def get_stats(user):
     db = sqlite3.connect(db_filename)
+    db.create_function("sqrt", 1, math.sqrt)
+    db.create_function("power", 2, math.pow)
     cursor = db.cursor()
     cursor.execute(STATS_QUERY, (user,))
     result = cursor.fetchone()
