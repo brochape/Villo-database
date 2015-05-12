@@ -33,7 +33,7 @@ def set_navigation_menu(mode):
         navigation_menu["Home"] = 'home'
         navigation_menu["Map"] = 'gmap_user'
         navigation_menu["Trips"] = 'trips'
-        navigation_menu["Bicycles"] = "bicycles"
+        navigation_menu["Broken Bicycles"] = "bicycles"
         navigation_menu["Billing"] = "billing"
         navigation_menu["Users"] = "users"
         navigation_menu["Logout"] = 'logout'
