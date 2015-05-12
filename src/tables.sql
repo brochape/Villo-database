@@ -15,40 +15,40 @@ CREATE TABLE IF NOT EXISTS stations (
 
 CREATE TABLE IF NOT EXISTS subs (
     userID INTEGER PRIMARY KEY REFERENCES users(userID),
-    RFID INTEGER NOT NULL, -- -> TEXT pour checker facilement les premiers char?
+    RFID TEXT NOT NULL,
     lastname TEXT NOT NULL,  
-    firstname TEXT, 
-    phone INTEGER, -- -> TEXT pour checker facilement les premiers char?
-    addresscity TEXT, 
-    addresscp INTEGER, 
-    addressstreet TEXT, 
-    addressnumber INTEGER, 
+    firstname TEXT NOT NULL, 
+    phone TEXT NOT NULL,
+    addresscity TEXT NOT NULL, 
+    addresscp TEXT NOT NULL, 
+    addressstreet TEXT NOT NULL, 
+    addressnumber INTEGER NOT NULL, 
     subscribeDate TEXT NOT NULL
 
 );
 
 CREATE TABLE IF NOT EXISTS admins (
-    userID INTEGER PRIMARY KEY REFERENCES users(userID)
+    userID INTEGER  NOT NULL PRIMARY KEY REFERENCES users(userID)
     
 );
 
 CREATE TABLE IF NOT EXISTS tempUsers (
-    userID INTEGER PRIMARY KEY REFERENCES users(userID),
-    paymentDate TEXT
+    userID INTEGER  NOT NULL PRIMARY KEY REFERENCES users(userID),
+    paymentDate TEXT NOT NULL
 
 );
 
 CREATE TABLE IF NOT EXISTS users (
     userID INTEGER PRIMARY KEY,
     password TEXT NOT NULL, 
-    expiryDate TEXT , 
+    expiryDate TEXT NOT NULL, 
     card INTEGER NOT NULL
 
 );
 
 CREATE TABLE IF NOT EXISTS bicycles (
     id INTEGER PRIMARY KEY,
-    servicedate TEXT,
+    servicedate TEXT NOT NULL,
     model TEXT NOT NULL,
     state BOOLEAN NOT NULL,
     station INTEGER REFERENCES stations(num) NULL,

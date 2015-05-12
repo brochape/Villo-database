@@ -2,7 +2,7 @@ import sqlite3
 from collections import OrderedDict
 from CSVParser import CSVParser
 from XMLParser import XMLParser
-from datetime import datetime
+from datetime import datetime, timedelta
 from helpers import create_insert_statement, populate_table
 
 DB_FILENAME = "../data/villo.sq3"
@@ -69,7 +69,7 @@ def main():
         ["userID", "RFID", "lastname", "firstname", "phone", "addresscity", "addresscp", "addressstreet", "addressnumber", "subscribeDate"],
         map(lambda sub: [sub[i] for i in range(0,4)] + [sub[i] for i in range(5,11)], subscribers))
     populate_table("users", ["userID", "password", "expiryDate", "card"], temporary)
-    populate_table("tempUsers", ["userID"], map(lambda sub: [sub[0]], temporary))
+    populate_table("tempUsers", ["userID", "paymentDate"], map(lambda sub: [sub[0], datetime.strptime(sub[2], "%Y-%m-%dT%H:%M:%S") - timedelta(days=7)], temporary))
     # trajets
     parser = CSVParser("../data/trips.csv")
     _, parsedData = parser.parse()
