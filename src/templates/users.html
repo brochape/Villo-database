@@ -22,8 +22,8 @@
         <td>{{ user["addresscity"] }} {{ user["addresscp"] }}</td>
         <td>{{ user["subscribeDate"] }}</td>
         <td>{{ user["active"] }}</td>
-        <td><a class="normalbtn" href="{{ url_for("trips_admin", id=user["userID"]) }}">Trips</a></td>
-        <td><a class="normalbtn" href="{{ url_for("stats_admin", id=user["userID"]) }}">Stats</a></td>
+        <td style="background:transparent;"><a class="normalbtn" href="{{ url_for("trips_admin", id=user["userID"]) }}">Trips</a></td>
+        <td style="background:transparent;"><a class="normalbtn" href="{{ url_for("stats_admin", id=user["userID"]) }}">Stats</a></td>
     </tr>
     {% endfor %}
 </table>
