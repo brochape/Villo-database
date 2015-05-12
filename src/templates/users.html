@@ -29,6 +29,7 @@
             </form>
         </td>
         <td><a href="{{ url_for("trips_admin", id=user["userID"]) }}">See trips</a></td>
+        <td><a href="{{ url_for("stats_admin", id=user["userID"]) }}">See stats</a></td>
     </tr>
     {% endfor %}
 </table>

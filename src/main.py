@@ -241,4 +241,13 @@ def users():
         Users.reNewSub(user)
         return redirect(url_for('users'))
 
+@app.route("/stats_admin", methods=['get'])
+@require_login
+@require_admin
+def stats_admin():
+    if "id" not in request.values:
+        return abort(400)
+    stats = Users.get_stats(request.values["id"])
+    return render_template("stats.html", stats=stats)
+
 app.run('0.0.0.0', debug=True)
