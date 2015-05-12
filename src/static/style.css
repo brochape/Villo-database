@@ -279,7 +279,7 @@ div.table-title {
   float:left;
 	z-index: 1;
 	left: 0px;
-	width: 58%; /* largeur obligatoire pour être centré */
+	width: 52%; /* largeur obligatoire pour être centré */
 	text-align: center;
 }
 #map-canvas {
@@ -289,6 +289,7 @@ div.table-title {
 	height: 100%; 
 	z-index: 0;
 }
+
 #right{
   position: absolute;
   float : right;
@@ -296,6 +297,17 @@ div.table-title {
   margin-right: auto;
   z-index: 1;
   right: 0px;
-  width: 38%; /* largeur obligatoire pour être centré */
+  width: 43%; /* largeur obligatoire pour être centré */
   text-align: center;
+}
+
+#right h3{
+  color:#D5DDE5;
+  background:#1b1e24;
+  font-size: 25px;
+
+  font-style:normal;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
+  border-radius: 7px;
 }
