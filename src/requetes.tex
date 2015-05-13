@@ -11,6 +11,7 @@
 \usepackage{amssymb}
 \usepackage{color}
 \usepackage{listings}
+\usepackage{seqsplit}
 \DeclareMathOperator*{\join}{\bowtie}
 \DeclareMathOperator*{\alpham}{\alpha}
 
@@ -33,12 +34,17 @@
     filteredTables \leftarrow \sigma_{addresscity=Ixelles \bigwedge name=FLAGEY}(joinedTables)
     \end{align}
 
+    \begin{align}
+    {u.userID | subs(u) \wedge \exists t, trips(t) \wedge t.userID=u.userID \exists s, stations(s) \wedge t.startStation=s \wedge s.name=Flagey \wedge u.addresscity=Ixelles }
+    \end{align}
+
 \section{Requ\^ete 2}
     \begin{lstlisting}
-    SELECT user
-    FROM trips
-    GROUP BY user
-    HAVING COUNT(trips.user) >= 2;
+    SELECT DISTINCT trips2.userID
+    FROM trips AS trips1
+    INNER JOIN trips AS trips2 ON trips1.userID = trips2.userID AND trips1.startTime != trips2.startTime
+    ORDER BY trips2.userID;
+
     \end{lstlisting}
 
     \begin{align}
@@ -82,21 +88,19 @@
 
 \section{Requ\^ete 5}
     \begin{lstlisting}
-    SELECT userID, lastname, firstname, subscribeDate, total_trips, total_distance, total_distance/total_trips
-    FROM(
-        SELECT users.userID AS userID, subs.lastname AS lastname, subs.firstname AS firstname,
-            (CASE WHEN subs.subscribeDate IS NOT NULL THEN subs.subscribeDate ELSE tempUsers.paymentDate END) AS subscribeDate,
-            COUNT(*) AS total_trips,
-            SUM(sqrt(power((s1.coordX-s2.coordX)*71, 2) + power((s1.coordY-s2.coordY)*111, 2))) AS total_distance
-        FROM trips
-        INNER JOIN users ON users.userID = trips.user
-        INNER JOIN stations AS s1 ON s1.stationID = trips.start
-        INNER JOIN stations AS s2 ON s2.stationID = trips.ending
-        LEFT OUTER JOIN subs ON subs.userID = users.userID
-        LEFT OUTER JOIN tempUsers ON tempUsers.userID = users.userID
-        GROUP BY trips.user
-        ORDER BY COUNT(trips.user)
-    );
+    SELECT users.userID, subs.lastname, subs.firstname,
+        (CASE WHEN subs.subscribeDate IS NOT NULL THEN subs.subscribeDate ELSE tempUsers.paymentDate END) AS subscribeDate,
+        COUNT(*) AS total_trips,
+        SUM(sqrt(power((s1.coordX-s2.coordX)*71, 2) + power((s1.coordY-s2.coordY)*111, 2))) AS total_distance
+    FROM trips
+    INNER JOIN users ON users.userID = trips.userID
+    INNER JOIN stations AS s1 ON s1.stationID = trips.startStation
+    INNER JOIN stations AS s2 ON s2.stationID = trips.endingStation
+    LEFT OUTER JOIN subs ON subs.userID = users.userID
+    LEFT OUTER JOIN tempUsers ON tempUsers.userID = users.userID
+    GROUP BY trips.userID
+    HAVING total_distance/total_trips
+    ORDER BY COUNT(trips.userID);
     \end{lstlisting}
 
 
