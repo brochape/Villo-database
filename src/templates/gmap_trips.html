@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Map Trips{% endblock title %}
+{% block content %}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="https://maps.googleapis.com/maps/api/js"></script>
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<script>
+function initialize(){
+    var mapCanvas = document.getElementById('map-canvas');
+    var mapOptions = {
+      center: new google.maps.LatLng(50.846041, 4.352512),
+      zoom: 13,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    }
+    var map = new google.maps.Map(mapCanvas, mapOptions);
+
+    $(function(){
+      $("#startDate").datepicker();
+      $("#startDate").datepicker( "option", "dateFormat", "dd/mm/yy" );
+      $("#endDate").datepicker();
+      $("#endDate").datepicker("option", "dateFormat", "dd/mm/yy");
+    });
+  }
+  window.onload = initialize;
+  
+</script>
+<div id="container">
+  <div id="leftmap">
+    <table class="onlyonerow">
+      <form method="post" action="">
+        <tr>
+          <td style="background-color:transparent;">
+            <input id="startDate" type="text" name="startDate" class="normalbtn"/>
+          </td>
+        </tr>
+        <tr>
+          <td style="background-color:transparent;">
+            <input id="endDate" type="text" name="endDate" class="normalbtn"/>
+          </td>
+        </tr>
+        <tr>
+          <td style="background-color:transparent;">
+            <input class="normalbtn" type="submit" value="Show trips"/>
+          </td>
+        </tr>
+      </form>
+    </table>
+  </div>
+  <div id="map-canvas"></div>
+</div>
+{% endblock content %}
