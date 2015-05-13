@@ -250,20 +250,25 @@ def stats_admin():
 @app.route("/trips.json", methods=['get'])
 @require_login
 def trips_json():
-    if "startDate" not in request.values or "endDate" not in request.values:
+    try:
+        startDate = datetime.strptime(request.values["startDate"], "%d/%m/%Y").strftime("%Y-%m-%dT%H-%M-%S")
+        endDate = datetime.strptime(request.values["endDate"], "%d/%m/%Y").strftime("%Y-%m-%dT%H-%M-%S")
+    except:
         return abort(400)
-    startDate = request.values["startDate"]
-    endDate = request.values["endDate"]
     if Users.isAdmin(session["user"]):
-        pass
-    else:
         try:
-            startDate = datetime.strptime(startDate, "%d/%m/%Y").strftime("%Y-%m-%dT%H-%M-%S")
-            endDate = datetime.strptime(endDate, "%d/%m/%Y").strftime("%Y-%m-%dT%H-%M-%S")
-            data = Trips.query_user_period(session["user"], startDate, endDate)
+            userID = request.values["userID"]
+            data = Trips.query_user_period(userID, startDate, endDate)
             return jsonify(data=data)
-        except Exception, e:
-            print e
-            return abort(400)
+        except:
+            try:
+                bicycleID = request.values["bicycleID"]
+                data = Trips.query_bicycle_period(bicycleID, startDate, endDate)
+                return jsonify(data=data)
+            except:
+                return abort(400)
+    else:
+        data = Trips.query_user_period(session["user"], startDate, endDate)
+        return jsonify(data=data)
 
 app.run('0.0.0.0', debug=True)
