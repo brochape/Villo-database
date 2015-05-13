@@ -16,12 +16,12 @@ dicodegros = {
 }
 
 def veloToStation(velo, station):
-    statement = "UPDATE bicycles SET station=" + station + " WHERE id=" + velo
+    statement = "UPDATE bicycles SET station=" + station + " WHERE bicycleID=" + velo
     return statement
 
 
 def veloToUser(velo, user):
-    statement = "UPDATE bicycles SET user=" + user + " WHERE id=" + velo
+    statement = "UPDATE bicycles SET user=" + user + " WHERE bicycleID=" + velo
     return statement
 
 
@@ -29,7 +29,7 @@ def populate_trips(data):
     db = sqlite3.connect(DB_FILENAME)
     cursor = db.cursor()
     cursor.execute("PRAGMA temp_store = 2")
-    populate_table("trips", ["bicycle", "user", "start", "startTime", "ending", "endingTime"], data)
+    populate_table("trips", ["bicycleID", "userID", "startStation", "startTime", "endingStation", "endingTime"], data)
 
     for row in data:
         # trip is still pending
@@ -56,11 +56,11 @@ def main():
     # stations
     parser = CSVParser("../data/stations.csv")
     _, parsedData = parser.parse()
-    populate_table("stations", ["num", "name", "seller", "capacity", "coordX", "coordY"], parsedData)
+    populate_table("stations", ["stationID", "name", "seller", "capacity", "coordX", "coordY"], parsedData)
     # velos
     parser = CSVParser("../data/villos.csv")
     _, parsedData = parser.parse()
-    populate_table("bicycles", ["id", "servicedate", "model", "state"], parsedData)
+    populate_table("bicycles", ["bicycleID", "servicedate", "model", "state"], parsedData)
     # utilisateurs
     parser = XMLParser("../data/users.xml")
     subscribers, temporary = parser.parseUsers()

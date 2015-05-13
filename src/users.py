@@ -13,9 +13,9 @@ USER_IS_ADMIN_QUERY="""
 """
 # TODO change login query for production
 LOGIN_QUERY="""
-    SELECT users.userID 
+    SELECT userID 
     FROM users 
-    WHERE users.userID=? AND users.password=?"""
+    WHERE userID=? AND password=?"""
 # LOGIN_QUERY="""SELECT users.userID FROM users 
 #   INNER JOIN admins on admins.userID = users.userID
 #   WHERE users.userID=? and users.password=? and (users.expiryDate > datetime('now') or admins.userID = users.userID)"""
@@ -31,7 +31,7 @@ TEMPUSER_INSERT_QUERY="""
 USER_IS_TRAVELLING_QUERY="""
     SELECT COUNT(*)
     FROM bicycles
-    WHERE user = ?
+    WHERE userID = ?
 """
 SUB_RENEW_QUERY="""
     UPDATE users
@@ -65,12 +65,12 @@ STATS_QUERY="""
         SELECT COUNT(*) AS total_trips,
             SUM(sqrt(power((s1.coordX-s2.coordX)*71, 2) + power((s1.coordY-s2.coordY)*111, 2))) AS total_distance
         FROM trips
-        INNER JOIN users ON users.userID = trips.user
-        INNER JOIN stations AS s1 ON s1.num = trips.start
-        INNER JOIN stations AS s2 ON s2.num = trips.ending
+        INNER JOIN users ON users.userID = trips.userID
+        INNER JOIN stations AS s1 ON s1.stationID = trips.startStation
+        INNER JOIN stations AS s2 ON s2.stationID = trips.endingStation
         WHERE users.userID = ?
-        GROUP BY trips.user
-        ORDER BY COUNT(trips.user)
+        GROUP BY trips.userID
+        ORDER BY COUNT(trips.userID)
     )
 """
 

@@ -4,41 +4,41 @@ import helpers
 from datetime import datetime
 
 TRIPS_USER_QUERY="""
-    SELECT trips.bicycle, trips.startTime, s1.name, trips.endingTime, s2.name
+    SELECT trips.bicycleID, trips.startTime, s1.name, trips.endingTime, s2.name
     FROM trips
-    INNER JOIN stations as s1 ON trips.start == s1.num
-    INNER JOIN stations as s2 ON trips.ending == s2.num
-    WHERE trips.user=?
+    INNER JOIN stations AS s1 ON trips.startStation == s1.stationID
+    INNER JOIN stations AS s2 ON trips.endingStation == s2.stationID
+    WHERE trips.userID=?
     ORDER BY trips.startTime DESC"""
 
 TRIPS_USER_PERIOD_QUERY="""
     SELECT trips.startTime, s1.coordX, s1.coordY, trips.endingTime, s2.coordX, s2.coordY
     FROM trips
-    INNER JOIN stations as s1 ON trips.start == s1.num
-    INNER JOIN stations as s2 ON trips.ending == s2.num
-    WHERE trips.user=? AND trips.startTime >= ? AND trips.startTime <= ? 
-        AND trips.ending IS NOT NULL AND trips.endingTime IS NOT NULL
+    INNER JOIN stations AS s1 ON trips.startStation == s1.stationID
+    INNER JOIN stations AS s2 ON trips.endingStation == s2.stationID
+    WHERE trips.userID=? AND trips.startTime >= ? AND trips.startTime <= ? 
+        AND trips.endingStation IS NOT NULL AND trips.endingTime IS NOT NULL
     ORDER BY trips.startTime ASC
 """
 
 TRIPS_BICYCLE_PERIOD_QUERY="""
     SELECT trips.startTime, s1.coordX, s1.coordY, trips.endingTime, s2.coordX, s2.coordY
     FROM trips
-    INNER JOIN stations as s1 ON trips.start == s1.num
-    INNER JOIN stations as s2 ON trips.ending == s2.num
-    WHERE trips.bicycle=? AND trips.startTime >= ? AND trips.startTime <= ? 
-        AND trips.ending IS NOT NULL AND trips.endingTime IS NOT NULL
+    INNER JOIN stations AS s1 ON trips.startStation == s1.stationID
+    INNER JOIN stations AS s2 ON trips.endingStation == s2.stationID
+    WHERE trips.bicycleID=? AND trips.startTime >= ? AND trips.startTime <= ? 
+        AND trips.endingStation IS NOT NULL AND trips.endingTime IS NOT NULL
     ORDER BY trips.startTime ASC
 """
 def format_trips_row(row):
     result = {}
-    result["bicycle"] = row[0]
+    result["bicycleID"] = row[0]
     result["startDate"] = helpers.format_date(row[1])
     result["startTime"] = helpers.format_time(row[1])
-    result["start"] = row[2]
+    result["startStation"] = row[2]
     result["endingDate"] = helpers.format_date(row[3])
     result["endingTime"] = helpers.format_time(row[3])
-    result["ending"] = row[4]
+    result["endingStation"] = row[4]
     return result
 
 

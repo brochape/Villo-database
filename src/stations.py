@@ -4,44 +4,44 @@ import helpers
 import datetime
 
 STATIONS_ALL_QUERY="""
-    SELECT stations.num, stations.name, stations.seller, stations.capacity, stations.coordX, stations.coordY, COUNT(bicycles.station)
+    SELECT stations.stationID, stations.name, stations.seller, stations.capacity, stations.coordX, stations.coordY, COUNT(bicycles.stationID)
     FROM stations
-    LEFT OUTER JOIN bicycles ON stations.num = bicycles.station
-    GROUP BY bicycles.station"""
+    LEFT OUTER JOIN bicycles ON stations.stationID = bicycles.stationID
+    GROUP BY bicycles.stationID"""
 
 BICYCLE_TAKE_QUERY="""
     UPDATE bicycles
-    SET station=NULL, user=?
-    WHERE id=?
+    SET stationID=NULL, userID=?
+    WHERE bicycleID=?
 """
 
 START_TRIP_QUERY="""
-    INSERT INTO trips (bicycle,user,start,startTime)
+    INSERT INTO trips (bicycleID,userID,startStation,startTime)
     VALUES (?,?,?,STRFTIME("%Y-%m-%dT%H:%M:%S",'now'))
 """
 
 BICYCLE_PUT_QUERY="""
     UPDATE bicycles
-    SET station=?, user=NULL
-    WHERE id=?
+    SET stationID=?, userID=NULL
+    WHERE bicycleID=?
 """
 
 END_TRIP_QUERY="""
     UPDATE trips
-    SET ending=?, endingTime=STRFTIME("%Y-%m-%dT%H:%M:%S",'now')
-    WHERE user=? AND ending IS NULL AND endingTime IS NULL
+    SET endingStation=?, endingTime=STRFTIME("%Y-%m-%dT%H:%M:%S",'now')
+    WHERE userID=? AND endingStation IS NULL AND endingTime IS NULL
 """
 
 BICYCLES_STATION_QUERY="""
-    SELECT bicycles.id
+    SELECT bicycleID
     FROM bicycles
-    WHERE bicycles.station=?
+    WHERE stationID=?
 """
 
 BICYCLES_USER_QUERY="""
-    SELECT id
+    SELECT bicycleID
     FROM bicycles
-    WHERE user=?
+    WHERE userID=?
 """
 
 def query_all():
@@ -51,7 +51,7 @@ def query_all():
     results = []
     for row in cursor.fetchall():
         result = {}
-        result["num"] = row[0]
+        result["stationID"] = row[0]
         result["name"] = row[1]
         result["seller"] = "Yes" if row[2] else "No"
         result["capacity"] = row[3]

@@ -173,7 +173,7 @@ def bicycle():
         print result
         if not result:
             return abort(400)
-        result["id"] = bicycleID
+        result["bicycleID"] = bicycleID
         result["state"] = "No" if result["state"] == 0 else "Yes"
         if result["state"] == "Yes":
             result["repair"] = True
