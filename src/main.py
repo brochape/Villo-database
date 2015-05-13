@@ -6,6 +6,7 @@ from functools import wraps
 # TODO secret key secured ?
 Flask.secret_key = os.urandom(512)
 from collections import OrderedDict
+from datetime import datetime
 
 import helpers as Helpers
 
@@ -198,7 +199,7 @@ def bicycles():
         return redirect(url_for('bicycles'))
 
 
-@app.route("/stations", methods=['get'])
+@app.route("/stations.json", methods=['get'])
 def stations():
     results = Stations.query_all()
     return jsonify(data=results)
@@ -245,5 +246,24 @@ def stats_admin():
         return abort(400)
     stats = Users.get_stats(request.values["id"])
     return render_template("stats.html", stats=stats)
+
+@app.route("/trips.json", methods=['get'])
+@require_login
+def trips_json():
+    if "startDate" not in request.values or "endDate" not in request.values:
+        return abort(400)
+    startDate = request.values["startDate"]
+    endDate = request.values["endDate"]
+    if Users.isAdmin(session["user"]):
+        pass
+    else:
+        try:
+            startDate = datetime.strptime(startDate, "%d/%m/%Y").strftime("%Y-%m-%dT%H-%M-%S")
+            endDate = datetime.strptime(endDate, "%d/%m/%Y").strftime("%Y-%m-%dT%H-%M-%S")
+            data = Trips.query_user_period(session["user"], startDate, endDate)
+            return jsonify(data=data)
+        except Exception, e:
+            print e
+            return abort(400)
 
 app.run('0.0.0.0', debug=True)

@@ -4,12 +4,8 @@
 <script src="https://maps.googleapis.com/maps/api/js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script>
-  $.getJSON("/stations", "", function( data ) {
+  $.getJSON("/stations.json", "", function( data ) {
     var stationList = data["data"];
-    initialize(stationList);
-  });
-
-  function initialize(stationList) {
     var mapCanvas = document.getElementById('map-canvas');
     var mapOptions = {
       center: new google.maps.LatLng(50.846041, 4.352512),
@@ -68,7 +64,7 @@
         })(marker, i));
     }
     return null;
-  }
+  });
   
 </script>
 <div id="container">
