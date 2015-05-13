@@ -18,6 +18,7 @@ function initialize(){
     var directionsDisplay = new google.maps.DirectionsRenderer();
     directionsDisplay.setMap(map);
 
+
     $(function(){
       $("#startDate").datepicker();
       $("#startDate").datepicker( "option", "dateFormat", "dd/mm/yy" );
@@ -32,23 +33,30 @@ function initialize(){
                 function(data) {
                   var tripsList = data["data"];
                   var coord1, coord2, request;
-                  for (trip in tripsList) {
-                    alert(trip["s1_coordY"]);
-                    alert(trip["s1_coordX"]);
-                    coord1 = new google.maps.LatLng(trip["s1_coordY"], trip["s1_coordX"]);
-                    coord2 = new google.maps.LatLng(trip["s2_coordY"], trip["s2_coordX"]);
-                    request = {
-                      origin: coord1,
-                      destination: coord2,
-                      travelMode: google.maps.TravelMode.BICYCLING
-                    };
-                    directionsService.route(request, function(result, status) {
-                      if (status == google.maps.DirectionsStatus.OK) {
-                        directionsDisplay.setDirections(result);
-                        alert(result);
-                      }
+                  var trip;
+                  var coordsStart = new google.maps.LatLng(tripsList[0]["s1_coordY"], tripsList[0]["s1_coordX"]);
+                  var coordsEnd = new google.maps.LatLng(tripsList[tripsList.length-1]["s2_coordY"], tripsList[tripsList.length-1]["s2_coordX"]);
+                  var waypts = [];
+                  for (i in tripsList) {
+                    trip = tripsList[i];                
+                    waypts.push({
+                      location: new google.maps.LatLng(trip["s1_coordY"], trip["s1_coordX"])
+                    });
+                    waypts.push({
+                      location: new google.maps.LatLng(trip["s2_coordY"], trip["s2_coordX"])
                     });
                   }
+                  request = {
+                    origin: coordsStart,
+                    destination: coordsEnd,
+                    waypoints: waypts,
+                    travelMode: google.maps.TravelMode.BICYCLING
+                  };
+                  directionsService.route(request, function(result, status) {
+                    if (status == google.maps.DirectionsStatus.OK) {
+                      directionsDisplay.setDirections(result);
+                    }
+                  });
                 });
   });
 }
