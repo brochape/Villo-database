@@ -33,24 +33,36 @@
     filteredTables \leftarrow \sigma_{addresscity=Ixelles \bigwedge name=FLAGEY}(joinedTables)
     \end{align}
 
-\section{Requ\^ete 1}
+\section{Requ\^ete 2}
     \begin{lstlisting}
-    SELECT trips.user
+    SELECT user
     FROM trips
-    GROUP BY trips.user
+    GROUP BY user
     HAVING COUNT(trips.user) >= 2;
     \end{lstlisting}
 
+    \begin{align}
+    caca
+    \end{align}
 
-\section{Requ\^ete 1}
+
+\section{Requ\^ete 3}
     \begin{lstlisting}
     SELECT DISTINCT trip1.user, trip2.user
     FROM trips AS trip1
     INNER JOIN trips AS trip2 ON trip1.start = trip2.start AND trip1.ending = trip2.ending AND trip1.user != trip2.user;
     \end{lstlisting}
 
+    \begin{gather}
+    trips1 \leftarrow \alpha_{attributes:t1.attributes}(trips)\\
+    trips2 \leftarrow \alpha_{attributes:t2.attributes}(trips)\\
+    joinedTables \leftarrow trips1 \bowtie_{t1.startStation = t2.startStation
+    \bigwedge t1.endingStation = t2.endingStation \bigwedge t1.userID != t2.userID } trips2 \\
+    result \leftarrow \pi_{t1.user,t2.user}(joinedTables)
+    \end{gather}
 
-\section{Requ\^ete 1}
+
+\section{Requ\^ete 4}
     \begin{lstlisting}
     SELECT DISTINCT trip1.endingStation, trip1.endingTime, trip2.startStation, trip2.startTime
     FROM trips AS trip1
@@ -63,11 +75,12 @@
     trips1 \leftarrow \alpha_{attributes:t1.attributes}(trips)\\
     trips2 \leftarrow \alpha_{attributes:t2.attributes}(trips)\\
     joinedTables \leftarrow trips1 \bowtie_{t1.bicycleID = t2.bicycleID \bigwedge t1.startTime < t2.startTime} trips2 \\
-    result \leftarrow \sigma_{t1.endingStation != t2.startStation} (\gamma_{t2.startTime}(joinedTables))
+    filteredTables \leftarrow \sigma_{t1.endingStation != t2.startStation} (\gamma_{t2.startTime}(joinedTables))
+    result \leftarrow \pi t1.endingStation, t1.endingTime, t2.startStation, t2.startTime
     \end{gather}
 
 
-\section{Requ\^ete 1}
+\section{Requ\^ete 5}
     \begin{lstlisting}
     SELECT userID, lastname, firstname, subscribeDate, total_trips, total_distance, total_distance/total_trips
     FROM(
@@ -87,7 +100,7 @@
     \end{lstlisting}
 
 
-\section{Requ\^ete 1}
+\section{Requ\^ete 6}
     \begin{lstlisting}
     SELECT stations.name, COUNT(trips.ending), COUNT(DISTINCT trips.user)
     FROM stations
