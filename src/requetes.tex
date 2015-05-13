@@ -23,12 +23,12 @@
     \begin{lstlisting}
     SELECT DISTINCT subs.userID,subs.lastname,subs.firstname, subs.addresscity, stations.name FROM trips 
     INNER JOIN subs ON subs.userID = trips.user
-    INNER JOIN stations ON trips.start = stations.num
+    INNER JOIN stations ON trips.start = stations.stationID
     WHERE subs.addresscity='Ixelles' and stations.name = 'FLAGEY';
     \end{lstlisting}
 
     \begin{displaymath}
-    \sigma_{addresscity=Ixelles \bigwedge name=FLAGEY}(trips \join\limits_{user=userID}^{} subs)
+    \sigma_{addresscity=Ixelles \bigwedge name=FLAGEY}(trips \join\limits_{user=userID}^{} subs \join\limits_{stationID=})
     \end{displaymath}
 
 \section{Requ\^ete 1}
@@ -71,8 +71,8 @@
             SUM(sqrt(power((s1.coordX-s2.coordX)*71, 2) + power((s1.coordY-s2.coordY)*111, 2))) AS total_distance
         FROM trips
         INNER JOIN users ON users.userID = trips.user
-        INNER JOIN stations AS s1 ON s1.num = trips.start
-        INNER JOIN stations AS s2 ON s2.num = trips.ending
+        INNER JOIN stations AS s1 ON s1.stationID = trips.start
+        INNER JOIN stations AS s2 ON s2.stationID = trips.ending
         LEFT OUTER JOIN subs ON subs.userID = users.userID
         LEFT OUTER JOIN tempUsers ON tempUsers.userID = users.userID
         GROUP BY trips.user
@@ -85,7 +85,7 @@
     \begin{lstlisting}
     SELECT stations.name, COUNT(trips.ending), COUNT(DISTINCT trips.user)
     FROM stations
-    INNER JOIN trips ON trips.ending = stations.num
+    INNER JOIN trips ON trips.ending = stations.stationID
     GROUP BY trips.ending
     HAVING COUNT(trips.ending) >= 10;
     \end{lstlisting}

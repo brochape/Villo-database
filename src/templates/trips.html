@@ -14,7 +14,7 @@
 	</tr>
 	{% for trip in trips %}
 	<tr>
-		<td><a class="normalbtn" href="/bicycle?id={{ trip["bicycle"] }}">{{ trip["bicycle"] }}</a></td>
+		<td><a class="normalbtn" href="/bicycle?id={{ trip["bicycleID"] }}">{{ trip["bicycleID"] }}</a></td>
 		<td>{{ trip["startDate"] }}</td>
         <td>{{ trip["startTime"] }}</td>
 		<td>{{ trip["startStation"] }}</td>

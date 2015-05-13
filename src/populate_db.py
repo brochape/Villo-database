@@ -16,12 +16,12 @@ dicodegros = {
 }
 
 def veloToStation(velo, station):
-    statement = "UPDATE bicycles SET station=" + station + " WHERE bicycleID=" + velo
+    statement = "UPDATE bicycles SET stationID=" + station + " WHERE bicycleID=" + velo
     return statement
 
 
 def veloToUser(velo, user):
-    statement = "UPDATE bicycles SET user=" + user + " WHERE bicycleID=" + velo
+    statement = "UPDATE bicycles SET userID=" + user + " WHERE bicycleID=" + velo
     return statement
 
 

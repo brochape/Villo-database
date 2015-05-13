@@ -24,10 +24,10 @@ USER_INSERT_QUERY="""
     VALUES(?, ?, ?)"""
 SUBSCRIBER_INSERT_QUERY="""
     INSERT INTO subs(userID, RFID, lastname, firstname, phone, addresscity, addresscp, addressstreet, addressnumber, subscribeDate)
-    VALUES(last_insert_rowid(),?,?,?,?,?,?,?,?,datetime('now'))"""
+    VALUES(last_insert_rowid(),?,?,?,?,?,?,?,?,strftime("%Y-%m-%dT%H:%M:%S", 'now'))"""
 TEMPUSER_INSERT_QUERY="""
     INSERT INTO tempUsers(userID, paymentDate) 
-    VALUES(last_insert_rowid(), datetime('now'))"""
+    VALUES(last_insert_rowid(), strftime("%Y-%m-%dT%H:%M:%S", 'now'))"""
 USER_IS_TRAVELLING_QUERY="""
     SELECT COUNT(*)
     FROM bicycles
@@ -129,7 +129,7 @@ def register(user):
             duration = datetime.timedelta(days=1)
         elif user["validity"] == "1":
             duration = datetime.timedelta(days=7)
-        cursor.execute(USER_INSERT_QUERY, (user["password"], datetime.datetime.now() + duration, user["card"]))
+        cursor.execute(USER_INSERT_QUERY, (user["password"], (datetime.datetime.now() + duration).strftime("%Y-%m-%dT%H:%M:%S"), user["card"]))
         if user["validity"] == "2":
             cursor.execute(SUBSCRIBER_INSERT_QUERY, 
                 (random.randint(10000000000,999999999999), user["lastname"], user["firstname"],

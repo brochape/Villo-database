@@ -128,6 +128,7 @@ def register():
             return render_template("register.html", errors=errors, values=request.values)
         else:
             session["user"] = userID
+            set_navigation_menu('user')
             return redirect(url_for('home'))
 
 @app.route("/", methods=['get', 'post'])
