@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block title %}Login{% endblock title %}
 {% block content %}
-<table class="center" id="login">
-	<form  method="post" action="">
+<table class="center" id="login" style="background-color:#fafafa;border-radius: 10px; ">
+	<form  method="post" action="" >
 		<tr>
 			<th>Username</th>
 			<td><input type="text" name="user" /></td>
@@ -11,8 +11,8 @@
 			<th>Password</th>
 			<td><input type="password" name="password" /></td>
 		</tr>
-		<tr >
-			<td><input type="submit" value="Login"/></td>
+		<tr>
+			<td colspan = "2" style="height:20%;"><input  style="height:80%;" type="submit" value="Login"/></td>
 		</tr>
 		{% if redirect_url is defined %}
 		<input type="hidden" value="{{ redirect_url }}" name="redirect_url" />
