@@ -33,7 +33,7 @@ TRIPS_QUERY="""
 	FROM 
 	(SELECT CAST((CEIL((julianday(endingTime) - julianday(startTime)) * 48.0)) AS INTEGER) AS duration
 	FROM trips
-	WHERE startTime >= ? AND startTime <= ? AND ending IS NOT NULL AND endingTime IS NOT NULL)
+	WHERE startTime >= ? AND startTime <= ? AND endingStation IS NOT NULL AND endingTime IS NOT NULL)
 """
 
 def compute_dates(date):

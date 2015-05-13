@@ -1,7 +1,7 @@
 -- TODO unique constraints
 
 CREATE TABLE IF NOT EXISTS stations (
-    num INTEGER NOT NULL, 
+    stationID INTEGER NOT NULL, 
     name TEXT NOT NULL, 
     seller BOOLEAN NOT NULL, 
     capacity INTEGER NOT NULL, 
@@ -44,19 +44,19 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS bicycles (
-    id INTEGER PRIMARY KEY,
+    bicycleID INTEGER PRIMARY KEY,
     servicedate TEXT NOT NULL,
     model TEXT NOT NULL,
     state BOOLEAN NOT NULL,
-    station INTEGER REFERENCES stations(num) NULL,
-    user INTEGER REFERENCES users(id) NULL
+    stationID INTEGER REFERENCES stations(stationID) NULL,
+    userID INTEGER REFERENCES users(userID) NULL
 );
 
 CREATE TABLE IF NOT EXISTS trips (
-    bicycle INTEGER REFERENCES bicycles(id) NOT NULL,
-    user INTEGER REFERENCES users(userID),
-    start INTEGER REFERENCES stations(num),
+    bicycleID INTEGER REFERENCES bicycles(bicycleID) NOT NULL,
+    userID INTEGER REFERENCES users(userID),
+    startStation INTEGER REFERENCES stations(stationID),
     startTime TEXT,
-    ending INTEGER REFERENCES stations(num),
+    endingStation INTEGER REFERENCES stations(stationID),
     endingTime TEXT
 );
