@@ -69,11 +69,11 @@ def query_last(user):
 def format_period_row(row):
     ret = {}
     ret["startTime"] = row[0]
-    ret["s1.coordX"] = row[1]
-    ret["s1.coordY"] = row[2]
+    ret["s1_coordX"] = row[1]
+    ret["s1_coordY"] = row[2]
     ret["endingTime"] = row[3]
-    ret["s2.coordX"] = row[4]
-    ret["s2.coordY"] = row[5]
+    ret["s2_coordX"] = row[4]
+    ret["s2_coordY"] = row[5]
     return ret
 
 def query_user_period(user, dateBeg, dateEnd):

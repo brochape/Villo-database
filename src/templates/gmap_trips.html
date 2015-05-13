@@ -14,24 +14,44 @@ function initialize(){
       mapTypeId: google.maps.MapTypeId.ROADMAP
     }
     var map = new google.maps.Map(mapCanvas, mapOptions);
+    var directionsService = new google.maps.DirectionsService();
+    var directionsDisplay = new google.maps.DirectionsRenderer();
+    directionsDisplay.setMap(map);
 
     $(function(){
       $("#startDate").datepicker();
       $("#startDate").datepicker( "option", "dateFormat", "dd/mm/yy" );
       $("#endDate").datepicker();
       $("#endDate").datepicker("option", "dateFormat", "dd/mm/yy");
-      $("#tripsBtn").click(function() {
-        var startDate = $("#startDate").val();
-        var endDate = $("#endDate").val();
-        alert(startDate);
-        $.getJSON("/trips.json", 
-                  { "startDate": startDate, "endDate": endDate }, 
-                  function(data) {
-                    var tripsList = data["data"];
-        });
-      });
     });
-  }
+    $("#tripsBtn").click(function() {
+      var startDate = $("#startDate").val();
+      var endDate = $("#endDate").val();
+      $.getJSON("/trips.json", 
+                { "startDate": startDate, "endDate": endDate }, 
+                function(data) {
+                  var tripsList = data["data"];
+                  var coord1, coord2, request;
+                  for (trip in tripsList) {
+                    alert(trip["s1_coordY"]);
+                    alert(trip["s1_coordX"]);
+                    coord1 = new google.maps.LatLng(trip["s1_coordY"], trip["s1_coordX"]);
+                    coord2 = new google.maps.LatLng(trip["s2_coordY"], trip["s2_coordX"]);
+                    request = {
+                      origin: coord1,
+                      destination: coord2,
+                      travelMode: google.maps.TravelMode.BICYCLING
+                    };
+                    directionsService.route(request, function(result, status) {
+                      if (status == google.maps.DirectionsStatus.OK) {
+                        directionsDisplay.setDirections(result);
+                        alert(result);
+                      }
+                    });
+                  }
+                });
+  });
+}
   window.onload = initialize;
   
 </script>
