@@ -17,7 +17,7 @@
 </table>
 {% if bicycle["state"] == "Yes" %}
 <form method="post" action="">
-	<input type="hidden" name="id" value="{{ bicycle["id"] }}" />
+	<input type="hidden" name="id" value="{{ bicycle["bicycleID"] }}" />
 	<input class="btn" type="submit" value="Report broken bicycle" />
 </form>
 {% endif %}
