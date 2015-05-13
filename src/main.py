@@ -253,19 +253,22 @@ def trips_json():
     try:
         startDate = datetime.strptime(request.values["startDate"], "%d/%m/%Y").strftime("%Y-%m-%dT%H-%M-%S")
         endDate = datetime.strptime(request.values["endDate"], "%d/%m/%Y").strftime("%Y-%m-%dT%H-%M-%S")
-    except:
+    except Exception, e:
+        print e
         return abort(400)
     if Users.isAdmin(session["user"]):
         try:
             userID = request.values["userID"]
             data = Trips.query_user_period(userID, startDate, endDate)
             return jsonify(data=data)
-        except:
+        except Exception, e:
+            print e
             try:
                 bicycleID = request.values["bicycleID"]
                 data = Trips.query_bicycle_period(bicycleID, startDate, endDate)
                 return jsonify(data=data)
-            except:
+            except Exception, e:
+                print e
                 return abort(400)
     else:
         data = Trips.query_user_period(session["user"], startDate, endDate)

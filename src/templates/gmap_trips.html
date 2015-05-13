@@ -20,6 +20,16 @@ function initialize(){
       $("#startDate").datepicker( "option", "dateFormat", "dd/mm/yy" );
       $("#endDate").datepicker();
       $("#endDate").datepicker("option", "dateFormat", "dd/mm/yy");
+      $("#tripsBtn").click(function() {
+        var startDate = $("#startDate").val();
+        var endDate = $("#endDate").val();
+        alert(startDate);
+        $.getJSON("/trips.json", 
+                  { "startDate": startDate, "endDate": endDate }, 
+                  function(data) {
+                    var tripsList = data["data"];
+        });
+      });
     });
   }
   window.onload = initialize;
@@ -28,23 +38,21 @@ function initialize(){
 <div id="container">
   <div id="leftmap">
     <table class="onlyonerow">
-      <form method="post" action="">
-        <tr>
-          <td style="background-color:transparent;">
-            <input id="startDate" type="text" name="startDate" class="normalbtn"/>
-          </td>
-        </tr>
-        <tr>
-          <td style="background-color:transparent;">
-            <input id="endDate" type="text" name="endDate" class="normalbtn"/>
-          </td>
-        </tr>
-        <tr>
-          <td style="background-color:transparent;">
-            <input class="normalbtn" type="submit" value="Show trips"/>
-          </td>
-        </tr>
-      </form>
+      <tr>
+        <td style="background-color:transparent;">
+          <input id="startDate" type="text" name="startDate" class="normalbtn"/>
+        </td>
+      </tr>
+      <tr>
+        <td style="background-color:transparent;">
+          <input id="endDate" type="text" name="endDate" class="normalbtn"/>
+        </td>
+      </tr>
+      <tr>
+        <td style="background-color:transparent;">
+          <input id="tripsBtn" class="normalbtn" type="submit" value="Show trips"/>
+        </td>
+      </tr>
     </table>
   </div>
   <div id="map-canvas"></div>
