@@ -1,23 +1,55 @@
-#R1 
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[french]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[left=2.5cm,top=2cm,right=2.5cm,nohead,nofoot]{geometry}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{color}
+\usepackage{listings}
+\DeclareMathOperator*{\join}{\bowtie}
+
+
+
+\linespread{1.1}
+
+\begin{document}
+
+\section{Requ\^ete 1}
+    \begin{lstlisting}
     SELECT DISTINCT subs.userID,subs.lastname,subs.firstname, subs.addresscity, stations.name FROM trips 
     INNER JOIN subs ON subs.userID = trips.user
     INNER JOIN stations ON trips.start = stations.num
     WHERE subs.addresscity='Ixelles' and stations.name = 'FLAGEY';
+    \end{lstlisting}
 
-    # Manque le fait que le trajet doit venir de Flagey
+    \begin{displaymath}
+    \sigma_{addresscity=Ixelles \bigwedge name=FLAGEY}(trips \join\limits_{user=userID}^{} subs)
+    \end{displaymath}
 
-#R2
+\section{Requ\^ete 1}
+    \begin{lstlisting}
     SELECT trips.user
     FROM trips
     GROUP BY trips.user
     HAVING COUNT(trips.user) >= 2;
+    \end{lstlisting}
 
-#R3
+
+\section{Requ\^ete 1}
+    \begin{lstlisting}
     SELECT DISTINCT trip1.user, trip2.user
     FROM trips AS trip1
     INNER JOIN trips AS trip2 ON trip1.start = trip2.start AND trip1.ending = trip2.ending AND trip1.user != trip2.user;
+    \end{lstlisting}
 
-#R4
+
+\section{Requ\^ete 1}
+    \begin{lstlisting}
     SELECT *
     FROM
     (SELECT DISTINCT trip1.ending, trip1.endingTime, trip2.start, trip2.startTime
@@ -26,8 +58,11 @@
     GROUP BY trip2.startTime
     ORDER BY trip1.startTime ASC)
     WHERE ending != start;
+    \end{lstlisting}
 
-#R5
+
+\section{Requ\^ete 1}
+    \begin{lstlisting}
     SELECT userID, lastname, firstname, subscribeDate, total_trips, total_distance, total_distance/total_trips
     FROM(
         SELECT users.userID AS userID, subs.lastname AS lastname, subs.firstname AS firstname,
@@ -43,10 +78,17 @@
         GROUP BY trips.user
         ORDER BY COUNT(trips.user)
     );
+    \end{lstlisting}
 
-#R6
+
+\section{Requ\^ete 1}
+    \begin{lstlisting}
     SELECT stations.name, COUNT(trips.ending), COUNT(DISTINCT trips.user)
     FROM stations
     INNER JOIN trips ON trips.ending = stations.num
     GROUP BY trips.ending
     HAVING COUNT(trips.ending) >= 10;
+    \end{lstlisting}
+
+
+\end{document}
