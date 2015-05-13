@@ -11,7 +11,7 @@
     </tr>
     {% for bicycle in bicycles %}
     <tr>
-        <td>{{ bicycle["id"] }}</td>
+        <td>{{ bicycle["bicycleID"] }}</td>
         <td>{{ bicycle["servicedate"] }}</td>
         <td>{{ bicycle["model"] }}</td>
         <td> {% if bicycle["state"] == 1 %}
@@ -22,7 +22,7 @@
         </td>
         <td> 
             <form method="post" action="">
-                <input type="hidden" name="id" value="{{ bicycle["id"] }}" />
+                <input type="hidden" name="id" value="{{ bicycle["bicycleID"] }}" />
                 <input class="btn" type="submit" value="Repair this bicycle" />
             </form>
         </td>
