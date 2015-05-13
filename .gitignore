@@ -62,3 +62,9 @@ target/
 
 # Database
 *.sq3
+
+# latex
+*.out
+*.aux
+*.log
+*.pdf
