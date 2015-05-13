@@ -271,4 +271,9 @@ def trips_json():
         data = Trips.query_user_period(session["user"], startDate, endDate)
         return jsonify(data=data)
 
+@app.route("/gmap_trips", methods=['get'])
+@require_login
+def gmap_trips():
+    return render_template("gmap_trips.html", admin=Users.isAdmin(session["user"]))
+
 app.run('0.0.0.0', debug=True)
