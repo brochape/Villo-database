@@ -20,6 +20,16 @@
 
 \begin{document}
 
+\lstset{
+    breakatwhitespace=false,
+    breaklines=true,
+    escapeinside={\%*}{*},
+    xleftmargin=5pt,
+    xrightmargin=5pt,
+    aboveskip=\bigskipamount,
+    belowskip=\bigskipamount
+}
+
 \section{Requ\^ete 1}
     \begin{lstlisting}
     SELECT DISTINCT subs.userID, subs.lastname, subs.firstname, subs.addresscity, stations.name FROM trips 
