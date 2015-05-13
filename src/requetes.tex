@@ -12,6 +12,7 @@
 \usepackage{color}
 \usepackage{listings}
 \DeclareMathOperator*{\join}{\bowtie}
+\DeclareMathOperator*{\alpham}{\alpha}
 
 
 
@@ -21,15 +22,16 @@
 
 \section{Requ\^ete 1}
     \begin{lstlisting}
-    SELECT DISTINCT subs.userID,subs.lastname,subs.firstname, subs.addresscity, stations.name FROM trips 
-    INNER JOIN subs ON subs.userID = trips.user
-    INNER JOIN stations ON trips.start = stations.stationID
+    SELECT DISTINCT subs.userID, subs.lastname, subs.firstname, subs.addresscity, stations.name FROM trips 
+    INNER JOIN subs ON subs.userID = trips.userID
+    INNER JOIN stations ON trips.startStation = stations.stationID
     WHERE subs.addresscity='Ixelles' and stations.name = 'FLAGEY';
     \end{lstlisting}
 
-    \begin{displaymath}
-    \sigma_{addresscity=Ixelles \bigwedge name=FLAGEY}(trips \join\limits_{user=userID}^{} subs \join\limits_{stationID=})
-    \end{displaymath}
+    \begin{align}
+    joinedTables \leftarrow trips \bowtie subs \bowtie_{startStation = stationID} \\
+    filteredTables \leftarrow \sigma_{addresscity=Ixelles \bigwedge name=FLAGEY}(joinedTables)
+    \end{align}
 
 \section{Requ\^ete 1}
     \begin{lstlisting}
@@ -50,15 +52,19 @@
 
 \section{Requ\^ete 1}
     \begin{lstlisting}
-    SELECT *
-    FROM
-    (SELECT DISTINCT trip1.ending, trip1.endingTime, trip2.start, trip2.startTime
+    SELECT DISTINCT trip1.endingStation, trip1.endingTime, trip2.startStation, trip2.startTime
     FROM trips AS trip1
-    INNER JOIN trips AS trip2 ON trip1.bicycle = trip2.bicycle AND trip1.startTime < trip2.startTime
+    INNER JOIN trips AS trip2 ON trip1.bicycleID = trip2.bicycleID AND trip1.startTime < trip2.startTime
     GROUP BY trip2.startTime
-    ORDER BY trip1.startTime ASC)
-    WHERE ending != start;
+    HAVING trip1.endingStation != trip2.startStation
+    ORDER BY trip1.startTime ASC
     \end{lstlisting}
+    \begin{gather}
+    trips1 \leftarrow \alpha_{attributes:t1.attributes}(trips)\\
+    trips2 \leftarrow \alpha_{attributes:t2.attributes}(trips)\\
+    joinedTables \leftarrow trips1 \bowtie_{t1.bicycleID = t2.bicycleID \bigwedge t1.startTime < t2.startTime} trips2 \\
+    result \leftarrow \sigma_{t1.endingStation != t2.startStation} (\gamma_{t2.startTime}(joinedTables))
+    \end{gather}
 
 
 \section{Requ\^ete 1}
