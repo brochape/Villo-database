@@ -72,9 +72,9 @@
 
 \section{Requ\^ete 3}
     \begin{lstlisting}[language=sql]
-    SELECT DISTINCT trip1.user, trip2.user
+    SELECT DISTINCT trip1.userID, trip2.userID
     FROM trips AS trip1
-    INNER JOIN trips AS trip2 ON trip1.start = trip2.start AND trip1.ending = trip2.ending AND trip1.user != trip2.user;
+    INNER JOIN trips AS trip2 ON trip1.startStation = trip2.startStation AND trip1.endingStation = trip2.endingStation AND trip1.userID != trip2.userID;
     \end{lstlisting}
 
     \begin{align}
@@ -140,11 +140,11 @@
 
 \section{Requ\^ete 6}
     \begin{lstlisting}[language=sql]
-    SELECT stations.name, COUNT(trips.ending), COUNT(DISTINCT trips.user)
+    SELECT stations.name, COUNT(trips.endingStation), COUNT(DISTINCT trips.userID)
     FROM stations
-    INNER JOIN trips ON trips.ending = stations.stationID
-    GROUP BY trips.ending
-    HAVING COUNT(trips.ending) >= 10;
+    INNER JOIN trips ON trips.endingStation = stations.stationID
+    GROUP BY trips.endingStation
+    HAVING COUNT(trips.endingStation) >= 10;
     \end{lstlisting}
 
 
