@@ -53,6 +53,13 @@ Nous avons également décidé de choisir Flask. Ce framework pour Python, assoc
 \section{Base de données}
 
 \section{Modèle et importation des données}
+Nous avons légèrement modifié le modèle de données proposées dans les fichiers CSV et XML.
+Premièrement, nous avons rajouté une table \textbf{admin} qui représente les administrateurs de l'application. Ceux-ci ont la possibilité d'effectuer des tâches de maintenance et de gestion telles que la visualisation des factures, la réparation des vélos, la visualisation des utilisateurs et de leurs voyages.
+Deuxièmement, nous avons rajouté un attribut \textbf{paymentDate} dans la table \textbf{tempUsers} qui permet de déterminer à l'aide de l'attribut \textbf{expiryDate} de la table \textbf{users} la durée d'un ticket acheté par un utilisateur temporaire à des fins de facturation.
+Troisièmement, nous avons rajouté une référence à la table \textbf{users} et à la table \textbf{stations} dans la table \textbf{bicycles} qui permet de faciliter les requêtes pour déterminer où se trouve un vélo, au prix d'une requête plus compliquée pour prendre un vélo et rendre un vélo.
+
+Pour mieux refléter ces changements, le programme d'importation des données effectue deux tâches importantes.
+Tout d'abord, il crée des \textbf{paymentDate} pour chaque \textbf{tempUsers} afin que la base de données soit cohérente. 
 
 \chapter{Requêtes}
 
