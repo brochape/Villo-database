@@ -173,5 +173,42 @@ Nous avons également décidé de choisir Flask. Ce framework pour Python, assoc
     HAVING COUNT(trips.endingStation) >= 10;
     \end{lstlisting}
 
+\chapter{Requ\^etes additionnelles}
+
+    \section{Billing}
+    \begin{lstlisting}[language=sql]
+    SELECT COUNT(*) 
+    FROM users
+    INNER JOIN subs ON subs.userID = users.userID
+    WHERE subs.subscribeDate <= ?
+    AND (strftime('%m/%Y', users.expiryDate) = ? OR strftime('%Y', users.expiryDate) = ?) 
+        OR strftime('%m/%Y', subs.subscribeDate) = ? OR strftime('%Y', subs.subscribeDate) = ?
+    \end{lstlisting}
+
+    \begin{lstlisting}[language=sql]
+
+    SELECT COUNT(*)
+    FROM tempUsers
+    INNER JOIN users ON tempUsers.userID = users.userID
+    WHERE users.expiryDate >= ? AND users.expiryDate <= ?
+    AND CAST((julianday(users.expiryDate) - julianday(tempUsers.paymentDate)) AS INTEGER) == ?
+    \end{lstlisting}
+
+    \begin{lstlisting}[language=sql]
+
+    SELECT
+        SUM(CASE 
+            WHEN duration = 1 THEN 0 
+            WHEN duration = 2 THEN 0.5 
+            WHEN duration = 3 THEN 1.5 
+            ELSE (duration-3) * 2 + 1.5 
+        END)
+    FROM 
+    (SELECT CAST((CEIL((julianday(endingTime) - julianday(startTime)) * 48.0)) AS INTEGER) AS duration
+    FROM trips
+    WHERE startTime >= ? AND startTime <= ? AND endingStation IS NOT NULL AND endingTime IS NOT NULL)
+    \end{lstlisting}
+
+
 
 \end{document}
