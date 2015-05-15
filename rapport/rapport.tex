@@ -153,7 +153,7 @@ Finalement, il crée un administrateur afin de pouvoir maintenir l'application.
     \subsection{Algèbre relationnelle}
     \begin{align}
     joinedTables \leftarrow trips \bowtie subs \bowtie_{startStation = stationID} stations \\
-    filteredTables \leftarrow \sigma_{addresscity=Ixelles \bigwedge name=FLAGEY}(joinedTables)\\
+    filteredTables \leftarrow \sigma_{addresscity=Ixelles \wedge name=FLAGEY}(joinedTables)\\
     result \leftarrow \pi_{userID, lastname, firstname, addresscity, name}(filteredTables)
     \end{align}
 
@@ -178,14 +178,14 @@ Finalement, il crée un administrateur afin de pouvoir maintenir l'application.
     \begin{align}
     trips1 \leftarrow \alpha_{attributes:t1.attributes}(trips)\\
     trips2 \leftarrow \alpha_{attributes:t2.attributes}(trips)\\
-    joinedTables \leftarrow trips1 \bowtie_{t1.userID=t2.userID \bigwedge t1.startTime != t2.startTime} trips2\\
+    joinedTables \leftarrow trips1 \bowtie_{t1.userID=t2.userID \wedge t1.startTime != t2.startTime} trips2\\
     result \leftarrow \pi{t2.userID}
     \end{align}
 
     \subsection{Calcul relationnel tuple}
     \begin{align}
-    \{ u.userID | users(u) \wedge \exists t1, t2, trips(t1), trips(t2) \\
-    \wedge t1.userID = t2.userID \wedge t1 != t2 \}
+    \{ t1.userID | trips(t1) \wedge \exists t2 (trips(t2) \\
+    \wedge t2.userID = t1.userID \wedge t2 != t1 \wedge t1.startTime != t2.startTime ) \}
     \end{align}
 
 
