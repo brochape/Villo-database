@@ -142,6 +142,7 @@ Finalement, il crée un administrateur afin de pouvoir maintenir l'application.
 \chapter{Requêtes}
 
 \section{Requ\^ete 1}
+    \subsection{SQL}
     \begin{lstlisting}[language=sql]
     SELECT DISTINCT subs.userID, subs.lastname, subs.firstname, subs.addresscity, stations.name FROM trips 
     INNER JOIN subs ON subs.userID = trips.userID
@@ -149,17 +150,22 @@ Finalement, il crée un administrateur afin de pouvoir maintenir l'application.
     WHERE subs.addresscity='Ixelles' and stations.name = 'FLAGEY';
     \end{lstlisting}
 
+    \subsection{Algèbre relationnelle}
     \begin{align}
-    joinedTables \leftarrow trips \bowtie subs \bowtie_{startStation = stationID} \\
-    filteredTables \leftarrow \sigma_{addresscity=Ixelles \bigwedge name=FLAGEY}(joinedTables)
+    joinedTables \leftarrow trips \bowtie subs \bowtie_{startStation = stationID} stations \\
+    filteredTables \leftarrow \sigma_{addresscity=Ixelles \bigwedge name=FLAGEY}(joinedTables)\\
+    result \leftarrow \pi_{userID, lastname, firstname, addresscity, name}(filteredTables)
     \end{align}
 
+    \subsection{Calcul relationnel tuple}
     \begin{align}
-    \{ u.userID | subs(u) \wedge \exists t, trips(t) \wedge t.userID=u.userID \exists s, stations(s) \\
-     \wedge t.startStation=s \wedge s.name=Flagey \wedge u.addresscity=Ixelles \}
+    \{ u.userID | subs(u) \wedge u.addresscity=Ixelles \wedge \\
+    \exists s (stations(s) \wedge s.name=Flagey) \wedge \\
+    \exists t (trips(t) \wedge t.userID=u.userID \wedge t.startStation=s) \}
     \end{align}
 
 \section{Requ\^ete 2}
+    \subsection{SQL}
     \begin{lstlisting}[language=sql]
     SELECT DISTINCT trips2.userID
     FROM trips AS trips1
@@ -168,6 +174,7 @@ Finalement, il crée un administrateur afin de pouvoir maintenir l'application.
 
     \end{lstlisting}
 
+    \subsection{Algèbre relationnelle}
     \begin{align}
     trips1 \leftarrow \alpha_{attributes:t1.attributes}(trips)\\
     trips2 \leftarrow \alpha_{attributes:t2.attributes}(trips)\\
@@ -175,6 +182,7 @@ Finalement, il crée un administrateur afin de pouvoir maintenir l'application.
     result \leftarrow \pi{t2.userID}
     \end{align}
 
+    \subsection{Calcul relationnel tuple}
     \begin{align}
     \{ u.userID | users(u) \wedge \exists t1, t2, trips(t1), trips(t2) \\
     \wedge t1.userID = t2.userID \wedge t1 != t2 \}
@@ -182,12 +190,14 @@ Finalement, il crée un administrateur afin de pouvoir maintenir l'application.
 
 
 \section{Requ\^ete 3}
+    \subsection{SQL}
     \begin{lstlisting}[language=sql]
     SELECT DISTINCT trip1.userID, trip2.userID
     FROM trips AS trip1
     INNER JOIN trips AS trip2 ON trip1.startStation = trip2.startStation AND trip1.endingStation = trip2.endingStation AND trip1.userID != trip2.userID;
     \end{lstlisting}
 
+    \subsection{Algèbre relationnelle}
     \begin{align}
     trips1 \leftarrow \alpha_{attributes:t1.attributes}(trips)\\
     trips2 \leftarrow \alpha_{attributes:t2.attributes}(trips)\\
@@ -196,6 +206,7 @@ Finalement, il crée un administrateur afin de pouvoir maintenir l'application.
     result \leftarrow \pi_{t1.userID,t2.userID}(joinedTables)
     \end{align}
 
+    \subsection{Calcul relationnel tuple}
     \begin{align}
     \{u1.userID, u2.userID | users(u1), users(u2) \\
     \wedge \exists t1, t2, trips(t1), trips(t2) \\
@@ -206,6 +217,7 @@ Finalement, il crée un administrateur afin de pouvoir maintenir l'application.
 
 
 \section{Requ\^ete 4}
+    \subsection{SQL}
     \begin{lstlisting}[language=sql]
     SELECT DISTINCT trip1.endingStation, trip1.endingTime, trip2.startStation, trip2.startTime
     FROM trips AS trip1
@@ -214,6 +226,8 @@ Finalement, il crée un administrateur afin de pouvoir maintenir l'application.
     HAVING trip1.endingStation != trip2.startStation
     ORDER BY trip1.startTime ASC
     \end{lstlisting}
+
+    \subsection{Algèbre relationnelle}
     \begin{align}
     trips1 \leftarrow \alpha_{attributes:t1.attributes}(trips)\\
     trips2 \leftarrow \alpha_{attributes:t2.attributes}(trips)\\
@@ -222,6 +236,7 @@ Finalement, il crée un administrateur afin de pouvoir maintenir l'application.
     result \leftarrow \pi t1.endingStation, t1.endingTime, t2.startStation, t2.startTime
     \end{align}
 
+    \subsection{Calcul relationnel tuple}
     \begin{align}
     \{ b.bicycleID | bicycles(b) \wedge \exists t1, t2, trips(t1), trips(t2) \\
     \wedge t1.bicycleID = b.bicycleID \wedge t2.bicycleID = b.bicycleID \\
@@ -232,6 +247,7 @@ Finalement, il crée un administrateur afin de pouvoir maintenir l'application.
 
 
 \section{Requ\^ete 5}
+    \subsection{SQL}
     \begin{lstlisting}[language=sql]
     SELECT users.userID, subs.lastname, subs.firstname,
         (CASE WHEN subs.subscribeDate IS NOT NULL THEN subs.subscribeDate ELSE tempUsers.paymentDate END) AS subscribeDate,
@@ -250,6 +266,7 @@ Finalement, il crée un administrateur afin de pouvoir maintenir l'application.
 
 
 \section{Requ\^ete 6}
+    \subsection{SQL}
     \begin{lstlisting}[language=sql]
     SELECT stations.name, COUNT(trips.endingStation), COUNT(DISTINCT trips.userID)
     FROM stations
