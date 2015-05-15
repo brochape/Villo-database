@@ -202,17 +202,17 @@ Finalement, il crée un administrateur afin de pouvoir maintenir l'application.
     trips1 \leftarrow \alpha_{attributes:t1.attributes}(trips)\\
     trips2 \leftarrow \alpha_{attributes:t2.attributes}(trips)\\
     joinedTables \leftarrow trips1 \bowtie_{t1.startStation = t2.startStation
-    \bigwedge t1.endingStation = t2.endingStation \bigwedge t1.userID != t2.userID } trips2 \\
+    \wedge t1.endingStation = t2.endingStation \wedge t1.userID != t2.userID } trips2 \\
     result \leftarrow \pi_{t1.userID,t2.userID}(joinedTables)
     \end{align}
 
     \subsection{Calcul relationnel tuple}
     \begin{align}
-    \{u1.userID, u2.userID | users(u1), users(u2) \\
-    \wedge \exists t1, t2, trips(t1), trips(t2) \\
+    \{u1.userID, u2.userID | users(u1) \wedge users(u2) \\
+    \wedge \exists t1, t2 (trips(t1) \wedge trips(t2) \\
     \wedge t1.userID=u1.userID \wedge t2.userID=u2.userID \\
     \wedge t1.startStation = t2.startStation \\
-    \wedge t1.endingStation = t2.endingStation\}
+    \wedge t1.endingStation = t2.endingStation)\}
     \end{align}
 
 
