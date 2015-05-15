@@ -11,6 +11,7 @@
 \usepackage{amssymb}
 \usepackage{color}
 \usepackage{listings}
+\usepackage{float}
 \DeclareMathOperator*{\join}{\bowtie}
 \DeclareMathOperator*{\alpham}{\alpha}
 
@@ -40,26 +41,103 @@
 Le but de ce projet est de réaliser une application de gestion des Villos à Bruxelles en utilisant une base de données SQL et de traduire certaines requêtes en SQL, en algèbre relationnelle et en calcul relationnel tuple.
 L'application doit permettre à différents types d'utilisateurs de s'inscrire, de se connecter et d'utiliser les Villos et à un administrateur de gérer les paiements qu'ils effectuent, d'effectuer des statistiques et de maintenir l'application.
 Un programme permet d'importer les données fournies sous forme de fichiers CSV et XML dans une base de données SQL.
-Le premier chapitre détaille les choix effectués quant au langage de programmation, à la base de données et les modifications apportées au modèle de données fourni.
-Le deuxième chapitre concerne les requêtes demandées en SQL, en algèbre relationnelle et en calcul relationnel tuple.
+Le premier chapitre explique les choix effectués quant au langage de programmation, à la base de données et les modifications apportées au modèle de données fourni.
+Le deuxième chapitre détaille le modèle de données à l'aide des diagrammes entités associations et relationnels.
+Le troisième chapitre concerne les requêtes demandées en SQL, en algèbre relationnelle et en calcul relationnel tuple.
 
 \chapter{Choix de conception}
 
 \section{Langages}
 
-Nous avons choisi python car il contient un module de gestion Sqlite3. Sqlite3 est une gestionnaire de bases de données qui permet de gérer des bases de données sans avoir besoin de serveur, en se basant simplement sur des fichiers.
-Nous avons également décidé de choisir Flask. Ce framework pour Python, associé au moteur de template Jinja, permet de générer facilement et dynamiquement des pages HTML. Pour compléter les pages HTML générées, nous avons rajouté du CSS pour les embellir et du Javascript pour pouvoir y ajouter une Google Map.
+Nous avons choisi \textbf{Python} car il contient un module de gestion pour \textbf{Sqlite3}. 
+Nous avons également décidé d'utiliser \textbf{Flask}. Ce framework pour \textbf{Python}, associé au moteur de template \textbf{Jinja}, permet de générer facilement des pages HTML dynamiques. Pour compléter les pages HTML générées, nous avons rajouté du CSS pour les embellir et du Javascript pour pouvoir y ajouter une Google Map.
 
 \section{Base de données}
+Nous avons choisi \textbf{Sqlite3} comme gestionnaire de bases de données pour trois raisons. Tout d'abord, il permet de gérer des bases de données sans avoir besoin de serveur, en se basant simplement sur des fichiers. Ensuite, il est rapide et léger. Pour finir, \textbf{Python} gère nativement un accès a ces bases de données grâce au module \textbf{sqlite3}.
+Le seul inconvénient est que \textbf{Sqlite3} ne possède pas beaucoup de fonctions natives mais il est extensible facilement en langage C.
+Nous avons donc dû implémenter certaines fonctions mathématiques en C et les charger dans \textbf{Sqlite3}.
 
-\section{Modèle et importation des données}
+\chapter{Modèle et importation des données}
+
+\section{Changements}
 Nous avons légèrement modifié le modèle de données proposées dans les fichiers CSV et XML.
-Premièrement, nous avons rajouté une table \textbf{admin} qui représente les administrateurs de l'application. Ceux-ci ont la possibilité d'effectuer des tâches de maintenance et de gestion telles que la visualisation des factures, la réparation des vélos, la visualisation des utilisateurs et de leurs voyages.
-Deuxièmement, nous avons rajouté un attribut \textbf{paymentDate} dans la table \textbf{tempUsers} qui permet de déterminer à l'aide de l'attribut \textbf{expiryDate} de la table \textbf{users} la durée d'un ticket acheté par un utilisateur temporaire à des fins de facturation.
-Troisièmement, nous avons rajouté une référence à la table \textbf{users} et à la table \textbf{stations} dans la table \textbf{bicycles} qui permet de faciliter les requêtes pour déterminer où se trouve un vélo, au prix d'une requête plus compliquée pour prendre un vélo et rendre un vélo.
+Premièrement, nous avons rajouté une entité \textbf{Administrateur} qui représente les administrateurs de l'application. Ceux-ci ont la possibilité d'effectuer des tâches de maintenance et de gestion telles que la visualisation des factures, la réparation des vélos, la visualisation des utilisateurs et de leurs voyages.
+Deuxièmement, nous avons rajouté un attribut \textbf{Date de paiement} dans l'entité \textbf{Utilisateur Temporaire} qui permet de déterminer à l'aide de l'attribut \textbf{Date d'expiration} de la table \textbf{Utilisateur} la durée d'un ticket acheté par un utilisateur temporaire à des fins de facturation.
+Troisièmement, nous avons rajouté une association à l'entité \textbf{Utilisateur} et à l'entité \textbf{Station} dans l'entité \textbf{Vélo} qui permet de faciliter les requêtes pour déterminer où se trouve un vélo, au prix d'une requête plus compliquée pour prendre un vélo et rendre un vélo.
 
-Pour mieux refléter ces changements, le programme d'importation des données effectue deux tâches importantes.
-Tout d'abord, il crée des \textbf{paymentDate} pour chaque \textbf{tempUsers} afin que la base de données soit cohérente. 
+\section{Modèle Entités-Associations}
+
+\begin{figure}[H]
+\includegraphics[scale=0.45]{MEA.png}
+\centering
+\caption{Modèle Entités-Associations}
+\end{figure}
+
+\subsection{Contraintes d'intégrités}
+\begin{itemize}
+\item Date mise en service d'un vélo plus petit que la date de départ d'un trajet avec ce vélo plus petit que date d'arrivée de ce trajet
+\item Date d'expiration du compte utilisateur plus grand que la date d'inscription de ce compte
+\item Date d'expiration du compte utilisateur plus grand que l'heure de départ d'un nouveau trajet de cet utilisateur
+\item Deux abonnés ne peuvent pas avoir le même numéro RFID
+\item Deux trajets ne peuvent pas utiliser le même vélo à la même période
+\item Un vélo doit être en état de fonctionnement pour être utilisé dans un trajet
+\item Le nombre de vélos dans une station donnée plus petit ou égal à la capacité de cette station
+\item Deux stations différentes ne peuvent pas avoir les mêmes coordonnées GPS
+\item Le nombre de vélos dans une station donnée plus grand ou égal à 0
+\item Un utilisateur ne peut pas se connecter après la date d'expiration
+\item Le nombre de vélos à la station de départ d'un trajet à l'heure du départ plus grand que 0
+\item Le nombre de vélos à la station d'arrivée à l'heure d'arrivée plus petit que la capacité de cette station
+\end{itemize}
+\pagebreak
+\section{Modèle Relationnel}
+
+\textbf{Utilisateur} (\underline{NumUtilisateur}, MotDePasse, DateExpiration, CarteDeCredit)
+
+\textbf{UtilisateurTemporaire} (\underline{NumUtilisateur})\\
+  \phantom{Trajet}UtilisateurTemporaire.NumUtilisateur référence Utilisateur.NumUtilisateur
+
+\textbf{Administrateur} (\underline{NumUtilisateur})\\
+  \phantom{Trajet}Administrateur.NumUtilisateur référence Utilisateur.NumUtilisateur
+
+\textbf{Abonné} (\underline{NumUtilisateur}, NumeroRFID, NomDeFamille, Prénom, Téléphone, AdresseVille,   AdresseCodePostal, AdresseRue, AdresseNumero, DateInscription)\\
+  \phantom{Trajet}Abonné.NumUtilisateur référence Utilisateur.NumUtilisateur
+
+\textbf{Vélo} (\underline{NumVelo}, DateMiseService, Modèle, Etat, Station, Utilisateur)\\
+  \phantom{Trajet}Station référence Station.NumStation\\
+  \phantom{Trajet}Utilisateur référence Utilisateur.NumUtilisateur
+
+\textbf{Station} (\underline{NumStation}, Nom, CoordGPS, Capacité, BornePaiement)\\
+
+\textbf{Trajet} (\underline{NumVelo, NumUtilisateur, StationDépart, HeureDépart, StationArrivée, HeureArrivée})\\
+  \phantom{Trajet}NumVelo référence Vélo.NumVelo\\
+  \phantom{Trajet}NumUtilisateur référence Utilisateur.NumUtilisateur\\
+  \phantom{Trajet}StationDépart référence Station.NumStation\\
+  \phantom{Trajet}StationArrivée référence Station.NumStation
+  
+  
+\subsection{Contraintes d'intégrité}
+
+\begin{itemize}
+\item Pour tout Trajet, Trajet.HeureDépart doit être plus petit que Trajet.HeureArrivée.
+\item Pour tout Trajet, Trajet.HeureDépart doit etre plus grand que Vélo.DateMiseEnService avec Trajet.NumVeo égal à Vélo.NumVelo
+\item Il ne peut pas y avoir deux Trajet.NumUtilisateur identiques au même moment.
+\item Il ne peut pas y avoir deux Trajet.NumVelo identiques au même moment.
+\item Il ne peut pas y avoir deux Utilisateur.NumeroRFID identiques
+\item Le nombre de Vélo.NumStation identiques à chaque Station.NumStation doit être plus petit que Station.Capacité
+\item Il ne peut pas y avoir deux Station.CoordGPS identiques
+
+\end{itemize}
+
+\section{Programme d'importation des données}
+
+Voici le script SQL de création de la base de données.
+
+\lstinputlisting[language=sql]{../src/tables.sql}
+
+Pour refléter les changements par rapport au modèle initial, le programme d'importation des données effectue trois tâches importantes.
+Tout d'abord, il crée des \textbf{paymentDate} pour chaque \textbf{tempUsers} afin que la base de données soit cohérente. Les utilisateurs temporaires ainsi importés ont un ticket pour 7 jours.
+Ensuite, à chaque insertion d'un enregistrement dans la table \textbf{trips}, il modifie les attributs \textbf{stationID} et \textbf{userID} de l'enregistrement correspondant dans la table \textbf{bicycles} afin de garder la trace de la position de chaque vélo.
+Finalement, il crée un administrateur afin de pouvoir maintenir l'application.
 
 \chapter{Requêtes}
 
