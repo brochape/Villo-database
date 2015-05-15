@@ -261,6 +261,7 @@ Finalement, il crée un administrateur afin de pouvoir maintenir l'application.
 \chapter{Requ\^etes additionnelles}
 
     \section{Billing}
+    Cette requ\^ete renvoie le nombre d'abonnés qui vont payer leur abonnement à une certaine date.
     \begin{lstlisting}[language=sql]
     SELECT COUNT(*) 
     FROM users
@@ -270,8 +271,8 @@ Finalement, il crée un administrateur afin de pouvoir maintenir l'application.
         OR strftime('%m/%Y', subs.subscribeDate) = ? OR strftime('%Y', subs.subscribeDate) = ?
     \end{lstlisting}
 
+    Cette requ\^ete permet de compter le nombre d'utilisateurs temporaires qui ont pris un ticket pour un certain nombre de jours à une certaine date.
     \begin{lstlisting}[language=sql]
-
     SELECT COUNT(*)
     FROM tempUsers
     INNER JOIN users ON tempUsers.userID = users.userID
@@ -279,8 +280,9 @@ Finalement, il crée un administrateur afin de pouvoir maintenir l'application.
     AND CAST((julianday(users.expiryDate) - julianday(tempUsers.paymentDate)) AS INTEGER) == ?
     \end{lstlisting}
 
+    Cette requ\^ete renvoie l'argent gagné gr\^ace au voyages, entre deux dates.
+    La fonction CEIL n'existe pas en sqlite 3 et a donc été rajoutée en python.
     \begin{lstlisting}[language=sql]
-
     SELECT
         SUM(CASE 
             WHEN duration = 1 THEN 0 
@@ -294,6 +296,37 @@ Finalement, il crée un administrateur afin de pouvoir maintenir l'application.
     WHERE startTime >= ? AND startTime <= ? AND endingStation IS NOT NULL AND endingTime IS NOT NULL)
     \end{lstlisting}
 
+    \section{Trips}
+    Cette requ\^ete renvoie tous les voyages en Villo! effectués par un utilisateur.
+    \begin{lstlisting}[language=sql]
+    SELECT trips.bicycleID, trips.startTime, s1.name, trips.endingTime, s2.name
+    FROM trips
+    INNER JOIN stations AS s1 ON trips.startStation == s1.stationID
+    INNER JOIN stations AS s2 ON trips.endingStation == s2.stationID
+    WHERE trips.userID=?
+    ORDER BY trips.startTime DESC"""
+    \end{lstlisting}
 
+    Cette requ\^ete renvoie tous les voyages en Villo! effectués par un utilisateur dans un certain intervalle de temps.
+    \begin{lstlisting}[language=sql]
+    SELECT trips.startTime, s1.coordX, s1.coordY, trips.endingTime, s2.coordX, s2.coordY
+    FROM trips
+    INNER JOIN stations AS s1 ON trips.startStation == s1.stationID
+    INNER JOIN stations AS s2 ON trips.endingStation == s2.stationID
+    WHERE trips.userID=? AND trips.startTime >= ? AND trips.startTime <= ? 
+        AND trips.endingStation IS NOT NULL AND trips.endingTime IS NOT NULL
+    ORDER BY trips.startTime ASC
+    \end{lstlisting}
+
+    Cette requ\^ete renvoie tous les voyages en Villo! effectués avec un Villo!.
+    \begin{lstlisting}[language=sql]
+    SELECT trips.startTime, s1.coordX, s1.coordY, trips.endingTime, s2.coordX, s2.coordY
+    FROM trips
+    INNER JOIN stations AS s1 ON trips.startStation == s1.stationID
+    INNER JOIN stations AS s2 ON trips.endingStation == s2.stationID
+    WHERE trips.bicycleID=? AND trips.startTime >= ? AND trips.startTime <= ? 
+        AND trips.endingStation IS NOT NULL AND trips.endingTime IS NOT NULL
+    ORDER BY trips.startTime ASC
+    \end{lstlisting}
 
 \end{document}
