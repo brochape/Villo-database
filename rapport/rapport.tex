@@ -59,6 +59,12 @@ Nous avons donc dû implémenter certaines fonctions mathématiques en C et les 
 
 \chapter{Modèle et importation des données}
 
+\section{Changements}
+Nous avons légèrement modifié le modèle de données proposées dans les fichiers CSV et XML.
+Premièrement, nous avons rajouté une entité \textbf{Administrateur} qui représente les administrateurs de l'application. Ceux-ci ont la possibilité d'effectuer des tâches de maintenance et de gestion telles que la visualisation des factures, la réparation des vélos, la visualisation des utilisateurs et de leurs voyages.
+Deuxièmement, nous avons rajouté un attribut \textbf{Date de paiement} dans l'entité \textbf{Utilisateur Temporaire} qui permet de déterminer à l'aide de l'attribut \textbf{Date d'expiration} de la table \textbf{Utilisateur} la durée d'un ticket acheté par un utilisateur temporaire à des fins de facturation.
+Troisièmement, nous avons rajouté une association à l'entité \textbf{Utilisateur} et à l'entité \textbf{Station} dans l'entité \textbf{Vélo} qui permet de faciliter les requêtes pour déterminer où se trouve un vélo, au prix d'une requête plus compliquée pour prendre un vélo et rendre un vélo.
+
 \section{Modèle Entités-Associations}
 
 \begin{figure}[H]
@@ -120,13 +126,18 @@ Nous avons donc dû implémenter certaines fonctions mathématiques en C et les 
 \item Le nombre de Vélo.NumStation identiques à chaque Station.NumStation doit être plus petit que Station.Capacité
 \item Il ne peut pas y avoir deux Station.CoordGPS identiques
 
-
 \end{itemize}
 
 \section{Programme d'importation des données}
 
-Pour mieux refléter ces changements, le programme d'importation des données effectue deux tâches importantes.
-Tout d'abord, il crée des \textbf{paymentDate} pour chaque \textbf{tempUsers} afin que la base de données soit cohérente. 
+Voici le script SQL de création de la base de données.
+
+\lstinputlisting[language=sql]{../src/tables.sql}
+
+Pour refléter les changements par rapport au modèle initial, le programme d'importation des données effectue trois tâches importantes.
+Tout d'abord, il crée des \textbf{paymentDate} pour chaque \textbf{tempUsers} afin que la base de données soit cohérente. Les utilisateurs temporaires ainsi importés ont un ticket pour 7 jours.
+Ensuite, à chaque insertion d'un enregistrement dans la table \textbf{trips}, il modifie les attributs \textbf{stationID} et \textbf{userID} de l'enregistrement correspondant dans la table \textbf{bicycles} afin de garder la trace de la position de chaque vélo.
+Finalement, il crée un administrateur afin de pouvoir maintenir l'application.
 
 \chapter{Requêtes}
 
