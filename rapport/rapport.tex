@@ -40,8 +40,9 @@
 Le but de ce projet est de réaliser une application de gestion des Villos à Bruxelles en utilisant une base de données SQL et de traduire certaines requêtes en SQL, en algèbre relationnelle et en calcul relationnel tuple.
 L'application doit permettre à différents types d'utilisateurs de s'inscrire, de se connecter et d'utiliser les Villos et à un administrateur de gérer les paiements qu'ils effectuent, d'effectuer des statistiques et de maintenir l'application.
 Un programme permet d'importer les données fournies sous forme de fichiers CSV et XML dans une base de données SQL.
-Le premier chapitre détaille les choix effectués quant au langage de programmation, à la base de données et les modifications apportées au modèle de données fourni.
-Le deuxième chapitre concerne les requêtes demandées en SQL, en algèbre relationnelle et en calcul relationnel tuple.
+Le premier chapitre explique les choix effectués quant au langage de programmation, à la base de données et les modifications apportées au modèle de données fourni.
+Le deuxième chapitre détaille le modèle de données à l'aide des diagrammes entités associations et relationnels.
+Le troisième chapitre concerne les requêtes demandées en SQL, en algèbre relationnelle et en calcul relationnel tuple.
 
 \chapter{Choix de conception}
 
@@ -52,11 +53,69 @@ Nous avons également décidé de choisir Flask. Ce framework pour Python, assoc
 
 \section{Base de données}
 
-\section{Modèle et importation des données}
-Nous avons légèrement modifié le modèle de données proposées dans les fichiers CSV et XML.
-Premièrement, nous avons rajouté une table \textbf{admin} qui représente les administrateurs de l'application. Ceux-ci ont la possibilité d'effectuer des tâches de maintenance et de gestion telles que la visualisation des factures, la réparation des vélos, la visualisation des utilisateurs et de leurs voyages.
-Deuxièmement, nous avons rajouté un attribut \textbf{paymentDate} dans la table \textbf{tempUsers} qui permet de déterminer à l'aide de l'attribut \textbf{expiryDate} de la table \textbf{users} la durée d'un ticket acheté par un utilisateur temporaire à des fins de facturation.
-Troisièmement, nous avons rajouté une référence à la table \textbf{users} et à la table \textbf{stations} dans la table \textbf{bicycles} qui permet de faciliter les requêtes pour déterminer où se trouve un vélo, au prix d'une requête plus compliquée pour prendre un vélo et rendre un vélo.
+\chapter{Modèle et importation des données}
+\section{Modèle Entités-Associations}
+
+\begin{figure}[H]
+\includegraphics[scale=0.45]{MEA.png}
+\centering
+\caption{Modèle Entités-Associations}
+\end{figure}
+
+\subsection{Contraintes d'intégrités}
+\begin{itemize}
+\item Date mise en service d'un vélo < date de départ d'un trajet avec ce vélo < date d'arrivée de ce trajet
+\item Date d'expiration du compte utilisateur > date d'inscription de ce compte
+\item Date d'expiration du compte utilisateur > heure de départ d'un nouveau trajet de cet utilisateur
+\item Deux abonnés ne peuvent pas avoir le même numéro RFID
+\item Deux trajets ne peuvent pas utiliser le même vélo à la même période
+\item Un vélo doit être en état de fonctionnement pour être utilisé dans un trajet
+\item Le nombre de vélos dans une station donnée <= capacité de cette station
+\item Deux stations différentes ne peuvent pas avoir les mêmes coordonnées GPS
+\item Le nombre de vélos dans une station donnée >= 0
+\item Un utilisateur ne peut pas se connecter après la date d'expiration
+\item Le nombre de vélos à la station de départ d'un trajet à l'heure du départ > 0
+\item Le nombre de vélos à la station d'arrivée à l'heure d'arrivée < capacité de cette station
+\end{itemize}
+\pagebreak
+\section{Modèle Relationnel}
+
+\textbf{Utilisateur} (\underline{NumUtilisateur}, MotDePasse, DateExpiration, CarteDeCredit)
+
+\textbf{UtilisateurTemporaire} (\underline{NumUtilisateur})\\
+  \phantom{Trajet}UtilisateurTemporaire.NumUtilisateur référence Utilisateur.NumUtilisateur
+
+\textbf{Abonné} (\underline{NumUtilisateur}, NumeroRFID, NomDeFamille, Prénom, Téléphone, AdresseVille,   AdresseCodePostal, AdresseRue, AdresseNumero, DateInscription)\\
+  \phantom{Trajet}Abonné.NumUtilisateur référence Utilisateur.NumUtilisateur
+
+\textbf{Vélo} (\underline{NumVelo}, DateMiseService, Modèle, Etat, Station, Utilisateur)\\
+  \phantom{Trajet}Station référence Station.NumStation\\
+  \phantom{Trajet}Utilisateur référence Utilisateur.NumUtilisateur
+
+\textbf{Station} (\underline{NumStation}, Nom, CoordGPS, Capacité, BornePaiement)\\
+
+\textbf{Trajet} (\underline{NumVelo, NumUtilisateur, StationDépart, HeureDépart, StationArrivée, HeureArrivée})\\
+  \phantom{Trajet}NumVelo référence Vélo.NumVelo\\
+  \phantom{Trajet}NumUtilisateur référence Utilisateur.NumUtilisateur\\
+  \phantom{Trajet}StationDépart référence Station.NumStation\\
+  \phantom{Trajet}StationArrivée référence Station.NumStation
+  
+  
+\subsection{Contraintes d'intégrité}
+
+\begin{itemize}
+\item Pour tout Trajet, Trajet.HeureDépart doit être plus petit que Trajet.HeureArrivée.
+\item Pour tout Trajet, Trajet.HeureDépart doit etre plus grand que Vélo.DateMiseEnService avec Trajet.NumVeo == Vélo.NumVelo
+\item Il ne peut pas y avoir deux Trajet.NumUtilisateur identiques au même moment.
+\item Il ne peut pas y avoir deux Trajet.NumVelo identiques au même moment.
+\item Il ne peut pas y avoir deux Utilisateur.NumeroRFID identiques
+\item Le nombre de Vélo.NumStation identiques à chaque Station.NumStation doit être plus petit que Station.Capacité
+\item Il ne peut pas y avoir deux Station.CoordGPS identiques
+
+
+\end{itemize}
+
+\section{Programme d'importation des données}
 
 Pour mieux refléter ces changements, le programme d'importation des données effectue deux tâches importantes.
 Tout d'abord, il crée des \textbf{paymentDate} pour chaque \textbf{tempUsers} afin que la base de données soit cohérente. 
