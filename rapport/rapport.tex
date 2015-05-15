@@ -11,6 +11,7 @@
 \usepackage{amssymb}
 \usepackage{color}
 \usepackage{listings}
+\usepackage{float}
 \DeclareMathOperator*{\join}{\bowtie}
 \DeclareMathOperator*{\alpham}{\alpha}
 
@@ -48,12 +49,16 @@ Le troisième chapitre concerne les requêtes demandées en SQL, en algèbre rel
 
 \section{Langages}
 
-Nous avons choisi python car il contient un module de gestion Sqlite3. Sqlite3 est une gestionnaire de bases de données qui permet de gérer des bases de données sans avoir besoin de serveur, en se basant simplement sur des fichiers.
-Nous avons également décidé de choisir Flask. Ce framework pour Python, associé au moteur de template Jinja, permet de générer facilement et dynamiquement des pages HTML. Pour compléter les pages HTML générées, nous avons rajouté du CSS pour les embellir et du Javascript pour pouvoir y ajouter une Google Map.
+Nous avons choisi \textbf{Python} car il contient un module de gestion pour \textbf{Sqlite3}. 
+Nous avons également décidé d'utiliser \textbf{Flask}. Ce framework pour \textbf{Python}, associé au moteur de template \textbf{Jinja}, permet de générer facilement des pages HTML dynamiques. Pour compléter les pages HTML générées, nous avons rajouté du CSS pour les embellir et du Javascript pour pouvoir y ajouter une Google Map.
 
 \section{Base de données}
+Nous avons choisi \textbf{Sqlite3} comme gestionnaire de bases de données pour trois raisons. Tout d'abord, il permet de gérer des bases de données sans avoir besoin de serveur, en se basant simplement sur des fichiers. Ensuite, il est rapide et léger. Pour finir, \textbf{Python} gère nativement un accès a ces bases de données grâce au module \textbf{sqlite3}.
+Le seul inconvénient est que \textbf{Sqlite3} ne possède pas beaucoup de fonctions natives mais il est extensible facilement en langage C.
+Nous avons donc dû implémenter certaines fonctions mathématiques en C et les charger dans \textbf{Sqlite3}.
 
 \chapter{Modèle et importation des données}
+
 \section{Modèle Entités-Associations}
 
 \begin{figure}[H]
@@ -64,18 +69,18 @@ Nous avons également décidé de choisir Flask. Ce framework pour Python, assoc
 
 \subsection{Contraintes d'intégrités}
 \begin{itemize}
-\item Date mise en service d'un vélo < date de départ d'un trajet avec ce vélo < date d'arrivée de ce trajet
-\item Date d'expiration du compte utilisateur > date d'inscription de ce compte
-\item Date d'expiration du compte utilisateur > heure de départ d'un nouveau trajet de cet utilisateur
+\item Date mise en service d'un vélo plus petit que la date de départ d'un trajet avec ce vélo plus petit que date d'arrivée de ce trajet
+\item Date d'expiration du compte utilisateur plus grand que la date d'inscription de ce compte
+\item Date d'expiration du compte utilisateur plus grand que l'heure de départ d'un nouveau trajet de cet utilisateur
 \item Deux abonnés ne peuvent pas avoir le même numéro RFID
 \item Deux trajets ne peuvent pas utiliser le même vélo à la même période
 \item Un vélo doit être en état de fonctionnement pour être utilisé dans un trajet
-\item Le nombre de vélos dans une station donnée <= capacité de cette station
+\item Le nombre de vélos dans une station donnée plus petit ou égal à la capacité de cette station
 \item Deux stations différentes ne peuvent pas avoir les mêmes coordonnées GPS
-\item Le nombre de vélos dans une station donnée >= 0
+\item Le nombre de vélos dans une station donnée plus grand ou égal à 0
 \item Un utilisateur ne peut pas se connecter après la date d'expiration
-\item Le nombre de vélos à la station de départ d'un trajet à l'heure du départ > 0
-\item Le nombre de vélos à la station d'arrivée à l'heure d'arrivée < capacité de cette station
+\item Le nombre de vélos à la station de départ d'un trajet à l'heure du départ plus grand que 0
+\item Le nombre de vélos à la station d'arrivée à l'heure d'arrivée plus petit que la capacité de cette station
 \end{itemize}
 \pagebreak
 \section{Modèle Relationnel}
@@ -84,6 +89,9 @@ Nous avons également décidé de choisir Flask. Ce framework pour Python, assoc
 
 \textbf{UtilisateurTemporaire} (\underline{NumUtilisateur})\\
   \phantom{Trajet}UtilisateurTemporaire.NumUtilisateur référence Utilisateur.NumUtilisateur
+
+\textbf{Administrateur} (\underline{NumUtilisateur})\\
+  \phantom{Trajet}Administrateur.NumUtilisateur référence Utilisateur.NumUtilisateur
 
 \textbf{Abonné} (\underline{NumUtilisateur}, NumeroRFID, NomDeFamille, Prénom, Téléphone, AdresseVille,   AdresseCodePostal, AdresseRue, AdresseNumero, DateInscription)\\
   \phantom{Trajet}Abonné.NumUtilisateur référence Utilisateur.NumUtilisateur
@@ -105,7 +113,7 @@ Nous avons également décidé de choisir Flask. Ce framework pour Python, assoc
 
 \begin{itemize}
 \item Pour tout Trajet, Trajet.HeureDépart doit être plus petit que Trajet.HeureArrivée.
-\item Pour tout Trajet, Trajet.HeureDépart doit etre plus grand que Vélo.DateMiseEnService avec Trajet.NumVeo == Vélo.NumVelo
+\item Pour tout Trajet, Trajet.HeureDépart doit etre plus grand que Vélo.DateMiseEnService avec Trajet.NumVeo égal à Vélo.NumVelo
 \item Il ne peut pas y avoir deux Trajet.NumUtilisateur identiques au même moment.
 \item Il ne peut pas y avoir deux Trajet.NumVelo identiques au même moment.
 \item Il ne peut pas y avoir deux Utilisateur.NumeroRFID identiques
