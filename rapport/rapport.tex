@@ -137,7 +137,7 @@ Voici le script SQL de création de la base de données.
 Pour refléter les changements par rapport au modèle initial, le programme d'importation des données effectue trois tâches importantes.
 Tout d'abord, il crée des \textbf{paymentDate} pour chaque \textbf{tempUsers} afin que la base de données soit cohérente. Les utilisateurs temporaires ainsi importés ont un ticket pour 7 jours.
 Ensuite, à chaque insertion d'un enregistrement dans la table \textbf{trips}, il modifie les attributs \textbf{stationID} et \textbf{userID} de l'enregistrement correspondant dans la table \textbf{bicycles} afin de garder la trace de la position de chaque vélo.
-Finalement, il crée un administrateur afin de pouvoir maintenir l'application.
+Finalement, il crée un \textbf{admin} afin de pouvoir maintenir l'application.
 
 \chapter{Requêtes}
 
@@ -276,7 +276,7 @@ Finalement, il crée un administrateur afin de pouvoir maintenir l'application.
     \end{lstlisting}
 
 \chapter{Requ\^etes additionnelles}
-
+    Cette section comprend et explique les requ\^etes utilisées dans l'application. Pour des raisons de concision, les requ\^etes les plus élémentaires ont été omises pour ne laisser place qu'aux plus intéressantes à analyser et détailler.
     \section{Billing}
     Cette requ\^ete renvoie le nombre d'abonnés qui vont payer leur abonnement à une certaine date.
     \begin{lstlisting}[language=sql]
@@ -321,7 +321,7 @@ Finalement, il crée un administrateur afin de pouvoir maintenir l'application.
     INNER JOIN stations AS s1 ON trips.startStation == s1.stationID
     INNER JOIN stations AS s2 ON trips.endingStation == s2.stationID
     WHERE trips.userID=?
-    ORDER BY trips.startTime DESC"""
+    ORDER BY trips.startTime DESC
     \end{lstlisting}
 
     Cette requ\^ete renvoie tous les voyages en Villo! effectués par un utilisateur dans un certain intervalle de temps.
