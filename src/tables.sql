@@ -1,7 +1,6 @@
--- TODO unique constraints
 
 CREATE TABLE IF NOT EXISTS stations (
-    stationID INTEGER NOT NULL, 
+    stationID INTEGER PRIMARY KEY, 
     name TEXT NOT NULL, 
     seller BOOLEAN NOT NULL, 
     capacity INTEGER NOT NULL, 
@@ -20,7 +19,8 @@ CREATE TABLE IF NOT EXISTS subs (
     addresscp TEXT NOT NULL, 
     addressstreet TEXT NOT NULL, 
     addressnumber INTEGER NOT NULL, 
-    subscribeDate TEXT NOT NULL
+    subscribeDate TEXT NOT NULL,
+    UNIQUE (RFID)
 
 );
 
@@ -58,5 +58,6 @@ CREATE TABLE IF NOT EXISTS trips (
     startStation INTEGER REFERENCES stations(stationID),
     startTime TEXT,
     endingStation INTEGER REFERENCES stations(stationID),
-    endingTime TEXT
+    endingTime TEXT,
+    PRIMARY KEY(bicycleID, userID, startStation, startTime, endingStation, endingTime)
 );
