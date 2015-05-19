@@ -35,7 +35,7 @@ END_TRIP_QUERY="""
 BICYCLES_STATION_QUERY="""
     SELECT bicycleID
     FROM bicycles
-    WHERE stationID=?
+    WHERE stationID=? AND state=1
 """
 
 BICYCLES_USER_QUERY="""
