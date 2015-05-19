@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS stations (
 );
 
 CREATE TABLE IF NOT EXISTS subs (
-    userID INTEGER PRIMARY KEY REFERENCES users(userID),
+    userID INTEGER PRIMARY KEY REFERENCES users(userID) ON DELETE CASCADE,
     RFID TEXT NOT NULL,
     lastname TEXT NOT NULL,  
     firstname TEXT NOT NULL, 
@@ -25,12 +25,12 @@ CREATE TABLE IF NOT EXISTS subs (
 );
 
 CREATE TABLE IF NOT EXISTS admins (
-    userID INTEGER  NOT NULL PRIMARY KEY REFERENCES users(userID)
+    userID INTEGER  NOT NULL PRIMARY KEY REFERENCES users(userID) ON DELETE CASCADE
     
 );
 
 CREATE TABLE IF NOT EXISTS tempUsers (
-    userID INTEGER  NOT NULL PRIMARY KEY REFERENCES users(userID),
+    userID INTEGER  NOT NULL PRIMARY KEY REFERENCES users(userID) ON DELETE CASCADE,
     paymentDate TEXT NOT NULL
 
 );
@@ -48,13 +48,13 @@ CREATE TABLE IF NOT EXISTS bicycles (
     servicedate TEXT NOT NULL,
     model TEXT NOT NULL,
     state BOOLEAN NOT NULL,
-    stationID INTEGER REFERENCES stations(stationID) NULL,
-    userID INTEGER REFERENCES users(userID) NULL
+    stationID INTEGER REFERENCES stations(stationID) NULL ON DELETE SET NULL,
+    userID INTEGER REFERENCES users(userID) NULL ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS trips (
-    bicycleID INTEGER REFERENCES bicycles(bicycleID) NOT NULL,
-    userID INTEGER REFERENCES users(userID),
+    bicycleID INTEGER REFERENCES bicycles(bicycleID) NOT NULL ON DELETE SET NULL,
+    userID INTEGER REFERENCES users(userID) ON DELETE SET NULL,
     startStation INTEGER REFERENCES stations(stationID),
     startTime TEXT,
     endingStation INTEGER REFERENCES stations(stationID),
